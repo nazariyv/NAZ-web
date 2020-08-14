@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
+import Share from "./components/Share";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -14,9 +15,6 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import { green, red } from "@material-ui/core/colors";
-// import RestoreIcon from "@material-ui/icons/Restore";
-// import FavoriteIcon from "@material-ui/icons/Favorite";
-// import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Web3 from "web3";
 import Fortmatic from "fortmatic";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -24,39 +22,10 @@ import Torus from "@toruslabs/torus-embed";
 import Authereum from "authereum";
 import UniLogin from "@unilogin/provider";
 import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
-// import Portis from "@portis/web3";
 import MewConnect from "@myetherwallet/mewconnect-web-client";
 import Web3Modal from "web3modal";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
-// import DcentProvider from "dcent-provider";
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  LinkedinShareButton,
-  MailruShareButton,
-  PinterestShareButton,
-  RedditShareButton,
-  TelegramShareButton,
-  TumblrShareButton,
-  ViberShareButton,
-  VKShareButton,
-  WhatsappShareButton,
-} from "react-share";
-
-import {
-  EmailIcon,
-  FacebookIcon,
-  LinkedinIcon,
-  MailruIcon,
-  PinterestIcon,
-  RedditIcon,
-  TelegramIcon,
-  TumblrIcon,
-  ViberIcon,
-  VKIcon,
-  WhatsappIcon,
-} from "react-share";
 
 const providerOptions = {
   walletconnect: {
@@ -96,24 +65,12 @@ const providerOptions = {
       defaultNetwork: "100", // TODO: ? what is this
     },
   },
-  // portis: {
-  //   package: Portis, // required
-  //   options: {
-  //     id: "f88f7a22-440b-49b1-a945-4202d595d517", // required. TODO: this is mainnet
-  //   },
-  // },
   mewconnect: {
     package: MewConnect, // required
     options: {
       infuraId: "4a5295521e87487ea515d984c82d3a80", // required
     },
   },
-  // dcentwallet: {
-  //   package: DcentProvider, // required
-  //   options: {
-  //     rpcUrl: "INSERT_RPC_URL" // required
-  //   }
-  // }
 };
 
 const web3Modal = new Web3Modal({
@@ -157,13 +114,13 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: "100vh",
+    height: "100%",
     width: "100%",
     flexDirection: "column",
     justifyContent: "center",
+    padding: "32px",
   },
   topAutoM: {
     marginTop: "auto",
@@ -175,9 +132,12 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
   },
   paddingBot: {
+    position: "fixed",
+    left: 0,
+    bottom: 0,
     paddingBottom: "32px",
-    flexWrap: "wrap",
-    display: "flex",
+    textAlign: "center",
+    width: "100%",
     "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(16),
@@ -224,6 +184,7 @@ const App = () => {
           >
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
             <Tab label="WTF?" {...a11yProps(1)} />
+            <Tab label="SHARE" {...a11yProps(2)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
@@ -231,6 +192,9 @@ const App = () => {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <WhatIsThis />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <Share />
         </TabPanel>
       </Box>
       <Box className={classes.root}>
@@ -240,7 +204,7 @@ const App = () => {
             setBottomNavValue(bottomNavValue);
           }}
           showLabels
-          className={classes.topAutoM}
+          className={classes.paddingBot}
         >
           <Button disabled>Follow $NAZ:</Button>
           <BottomNavigationAction
@@ -255,43 +219,6 @@ const App = () => {
             label="Medium"
             icon={<CreateIcon style={{ color: green[500], fontSize: 40 }} />}
           />
-        </BottomNavigation>
-
-        <BottomNavigation className={classes.paddingBot}>
-          <Button disabled>Or Share $NAZ:</Button>
-          <EmailShareButton url="naz.life">
-            <EmailIcon size={48} round={true} />
-          </EmailShareButton>
-          <FacebookShareButton url="naz.life">
-            <FacebookIcon size={48} round={true} />
-          </FacebookShareButton>
-          <LinkedinShareButton url="naz.life">
-            <LinkedinIcon size={48} round={true} />
-          </LinkedinShareButton>
-          <MailruShareButton url="naz.life">
-            <MailruIcon size={48} round={true} />
-          </MailruShareButton>
-          <PinterestShareButton url="naz.life">
-            <PinterestIcon size={48} round={true} />
-          </PinterestShareButton>
-          <RedditShareButton url="naz.life">
-            <RedditIcon size={48} round={true} />
-          </RedditShareButton>
-          <TelegramShareButton url="naz.life">
-            <TelegramIcon size={48} round={true} />
-          </TelegramShareButton>
-          <TumblrShareButton url="naz.life">
-            <TumblrIcon size={48} round={true} />
-          </TumblrShareButton>
-          <ViberShareButton url="naz.life">
-            <ViberIcon size={48} round={true} />
-          </ViberShareButton>
-          <VKShareButton url="naz.life">
-            <VKIcon size={48} round={true} />
-          </VKShareButton>
-          <WhatsappShareButton url="naz.life">
-            <WhatsappIcon size={48} round={true} />
-          </WhatsappShareButton>
         </BottomNavigation>
       </Box>
     </Box>

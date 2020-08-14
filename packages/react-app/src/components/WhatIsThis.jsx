@@ -2,6 +2,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
+// import bondingCurve from "../static/images/bondingCurve.jpeg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,17 +10,19 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
     width: "75%",
+    height: "100%",
     marginTop: "auto",
     marginLeft: "auto",
     marginRight: "auto",
     maxHeight: "500px",
-    padding: "64px",
+    padding: "16px",
   },
   moveRight: {
     textAlign: "right",
+  },
+  typography: {
+    margin: "16px 0",
   },
 }));
 
@@ -27,15 +30,19 @@ export default () => {
   const classes = useStyles();
 
   return (
-    <Box>
-      <Box className={classes.moveRight}>
-        <Typography gutterBottom variant="h1">
-          WTF is this?
+    <Box className={classes.root}>
+      <Typography className={classes.moveRight} gutterBottom variant="h1">
+        WTF is this?
+      </Typography>
+      <Box>
+        <Typography variant="h4" className={classes.typography}>
+          What do I do with this website?
         </Typography>
-      </Box>
-      <Box className={classes.root}>
-        <Typography variant="h4">What do I do with this website?</Typography>
-        <Typography color="textSecondary" variant="body1">
+        <Typography
+          color="textSecondary"
+          variant="body1"
+          className={classes.typography}
+        >
           You can buy my crypto token (personal token in crypto lingo) in
           exchange for (more to come soon)
           <br />
@@ -60,8 +67,14 @@ export default () => {
           <br />
           and many many more
         </Typography>
-        <Typography variant="h4">Anything else?</Typography>
-        <Typography color="textSecondary" variant="body1">
+        <Typography variant="h4" className={classes.typography}>
+          Anything else?
+        </Typography>
+        <Typography
+          color="textSecondary"
+          variant="body1"
+          className={classes.typography}
+        >
           I belive in the future where there is no middlemen. Where there are no
           guards nor guardians. Our security, wellbeing, wealth are the concepts
           that have no meaning in that future. All is governed by protocols,
@@ -70,8 +83,14 @@ export default () => {
           company. You are the value that you have been trying to give to the
           world. Value can flow within and without.
         </Typography>
-        <Typography variant="h4">And you are?</Typography>
-        <Typography color="textSecondary" variant="body1">
+        <Typography variant="h4" className={classes.typography}>
+          And you are?
+        </Typography>
+        <Typography
+          color="textSecondary"
+          variant="body1"
+          className={classes.typography}
+        >
           My name is Nazariy. I love maths & coding, I have a small YouTube
           channel and I am trying to figure out the Twitter. I have had enough
           of corporate grinding (I am burning the bridges, so that there is no
@@ -79,19 +98,37 @@ export default () => {
           web3 mostly. Enjoying what I do immensely. Let's keep it short and
           sweet.
         </Typography>
-        <Typography variant="h4">So how does this work?</Typography>
-        <Typography color="textSecondary" variant="body1">
+        <Typography variant="h4" className={classes.typography}>
+          So how does this work?
+        </Typography>
+        <Typography
+          color="textSecondary"
+          variant="body1"
+          className={classes.typography}
+        >
           If you decide to buy $NAZ, then that will increase its price. I have
           defined this to be the case in the code (in smart contract, for the
-          technical folk). Here is how it will look like: [HAVE YOUR IPAD DOODLE
-          HERE] I will drop in an interactive chart here in the future when I
-          have a bit more time. And if you are wondering, this concept is called
+          technical folk).
+          {/* Here is how it will look like this */}
+          {/* <br />
+          <Box className={classes.bondingCurve}>
+            <img src={bondingCurve} alt="bonding curve" />
+          </Box>
+          <br /> */}
+          I will drop in an interactive chart here in the future when I have a
+          bit more time. And if you are wondering, this concept is called
           "Bonding Curve" in the blockchain lingo. Uniqueness of my personal
           token ($NAZ) is in the fact that the price of it will increase
           inevitably the more supply there is.
         </Typography>
-        <Typography variant="h4">Final words?</Typography>
-        <Typography color="textSecondary" variant="body1">
+        <Typography variant="h4" className={classes.typography}>
+          Final words?
+        </Typography>
+        <Typography
+          color="textSecondary"
+          variant="body1"
+          className={classes.typography}
+        >
           Yes, glad you asked! All $NAZ is backed by ETH, and its price is
           mathematically determined. The more people buy it, the more expensive
           it gets. So act fast. I cannot and would not mint $NAZ without buying
@@ -101,6 +138,8 @@ export default () => {
           I can get $NAZ is by you converting it for my services listed above. I
           think this is a great mechanism and ensures that our incentives are
           aligned.
+          <br />I have created this as part of an incubator I am in, to
+          incentivise people to give me the feedback on my business idea
         </Typography>
       </Box>
     </Box>

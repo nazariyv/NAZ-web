@@ -2,15 +2,18 @@ import React, { useCallback, useEffect } from "react";
 import { addresses, abis } from "@project/contracts";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
+import Fab from "@material-ui/core/Fab";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import {
   createMuiTheme,
@@ -84,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
   },
   howMuchETH: {
     margin: "32px",
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -197,7 +203,7 @@ const TransitionsModal = ({ contract, web3, onBuy }) => {
               How much ETH will you spend on $NAZ?
             </Typography>
             <Typography className={classes.moveTextRight} variant="caption">
-              Make it rain, maybe?
+              Make it rain
             </Typography>
             <Typography
               color="textSecondary"
@@ -222,15 +228,28 @@ const TransitionsModal = ({ contract, web3, onBuy }) => {
               }}
               error={!ethValid}
               helperText={
-                !ethValid
-                  ? "Value must be positive"
-                  : `You will get: ${estimatedNazTokens} $NAZ`
+                !ethValid ? (
+                  "Value must be positive"
+                ) : crunchingNazEstimates ? (
+                  <CircularProgress />
+                ) : (
+                  `You will get: ${estimatedNazTokens} $NAZ`
+                )
               }
               variant="outlined"
               className={classes.howMuchETH}
               value={eth}
               onChange={handleOnChange}
             />
+            <Fab
+              variant="extended"
+              color="primary"
+              aria-label="add"
+              className={classes.margin}
+            >
+              <AttachMoneyIcon className={classes.extendedIcon} />
+              BUY THAT $NAZ
+            </Fab>
           </Box>
         </Fade>
       </Modal>
@@ -265,11 +284,6 @@ export default ({ promptSetProvider, web3 }) => {
     if (contract === null || web3 === null) {
       return;
     }
-    // let depositAmount = web3.utils.toWei("2", "ether");
-    // let rewardAmount = await contract.methods
-    //   .getContinuousMintReward(depositAmount)
-    //   .call();
-    // console.log("you will receive", rewardAmount, "$NAZ");
   }, [web3, contract, promptSetProvider, initiateContract]);
 
   return (

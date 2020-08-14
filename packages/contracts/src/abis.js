@@ -5,7 +5,7 @@ import nazToken from "./abis/ETHContinuousToken.json";
 const abis = {
   erc20: erc20Abi,
   ownable: ownableAbi,
-  nazToken: nazToken,
+  nazToken: nazToken.abi,
 };
 
 export default abis;
