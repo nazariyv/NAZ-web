@@ -21,11 +21,13 @@ import {
   makeStyles,
 } from "@material-ui/core/styles";
 import BigNumber from "bignumber.js";
-import { green } from "@material-ui/core/colors";
+import { green, red } from "@material-ui/core/colors";
+import nazAva from "../static/images/naz.jpg";
 
 const theme = createMuiTheme({
   palette: {
     primary: green,
+    secondary: red,
   },
 });
 
@@ -34,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    // height: "100%",
     flexDirection: "column",
   },
   linearProgress: {
@@ -51,8 +52,6 @@ const useStyles = makeStyles((theme) => ({
     padding: "32px",
     flexDirection: "column",
     marginTop: "auto",
-    height: "100%",
-    flexGrow: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -91,6 +90,10 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  large: {
+    width: theme.spacing(32),
+    height: theme.spacing(32),
+  },
 }));
 
 const BorderLinearProgress = withStyles((theme) => ({
@@ -110,10 +113,9 @@ const BorderLinearProgress = withStyles((theme) => ({
 
 const bn = new BigNumber("1e18");
 
-const TransitionsModal = ({ contract, web3, onBuy }) => {
+const BuyModal = ({ contract, web3, onModal, eth, setEth }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [eth, setEth] = React.useState(21.21);
   const [ethValid, setEthValid] = React.useState(true);
   const [estimatedNazTokens, setEstimatedNazTokens] = React.useState(
     "Start typing the amount"
@@ -140,6 +142,21 @@ const TransitionsModal = ({ contract, web3, onBuy }) => {
     [contract, web3]
   );
 
+  const onBuy = useCallback(async () => {
+    if (!ethValid) {
+      return;
+    }
+    if (!web3.currentProvider.selectedAddress) {
+      return;
+    }
+    // TODO: Ethereum transaction lifecycle react component
+    await contract.methods.mint().send({
+      from: web3.currentProvider.selectedAddress,
+      value: web3.utils.toWei(String(eth), "ether"),
+    });
+    // console.log(receipt);
+  }, [contract, eth, ethValid, web3]);
+
   const handleOnChange = useCallback(
     (e) => {
       let val = 21.21;
@@ -158,17 +175,17 @@ const TransitionsModal = ({ contract, web3, onBuy }) => {
         setEthValid(true);
       }
     },
-    [setEthValid, computeEstimatedNazTokens]
+    [setEthValid, computeEstimatedNazTokens, setEth]
   );
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     setOpen(true);
-    onBuy();
-  };
+    onModal();
+  }, [setOpen, onModal]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, [setOpen]);
 
   return (
     <Box>
@@ -244,8 +261,9 @@ const TransitionsModal = ({ contract, web3, onBuy }) => {
             <Fab
               variant="extended"
               color="primary"
-              aria-label="add"
+              aria-label="buy that naz"
               className={classes.margin}
+              onClick={onBuy}
             >
               <AttachMoneyIcon className={classes.extendedIcon} />
               BUY THAT $NAZ
@@ -257,9 +275,159 @@ const TransitionsModal = ({ contract, web3, onBuy }) => {
   );
 };
 
+const SellModal = ({ contract, web3, onModal, naz, setNaz }) => {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [nazValid, setNazValid] = React.useState(true);
+  const [estimatedEthTokens, setEstimatedEthTokens] = React.useState(
+    "Start typing the amount"
+  );
+  const [crunchingEthEstimates, setCrunchingEthEstimates] = React.useState(
+    false
+  );
+
+  // TODO: rather than calling the smart contract to compute this
+  // TODO: just write the js code that does this to avoid hitting the contract
+  const computeEstimatedEthTokens = useCallback(
+    async (nazAmount) => {
+      if (nazAmount <= 0) {
+        return 0;
+      }
+      const bnaz = new BigNumber("1e18") * nazAmount;
+      // TODO: require that the refundAmount is not greater than the Total ETH supply in the contract
+      const refundAmount = await contract.methods
+        .getContinuousBurnRefund(bnaz.toString())
+        .call();
+      setEstimatedEthTokens((refundAmount / bn).toString());
+      setCrunchingEthEstimates(false);
+    },
+    [contract]
+  );
+
+  const onSell = useCallback(async () => {
+    if (!nazValid) {
+      return;
+    }
+    if (!web3.currentProvider.selectedAddress) {
+      return;
+    }
+    // TODO: Ethereum transaction lifecycle react component
+    // await contract.methods.mint().send({
+    //   from: web3.currentProvider.selectedAddress,
+    //   value: web3.utils.toWei(String(eth), "ether"),
+    // });
+    // console.log(receipt);
+  }, [contract, nazValid, web3]);
+
+  const handleOnChange = useCallback(
+    (e) => {
+      let val = 1.0;
+      try {
+        val = Number(e.target.value);
+      } catch (e) {
+        setNaz(false);
+        return;
+      }
+      setNaz(val);
+      computeEstimatedEthTokens(val);
+      if (val <= 0) {
+        setNazValid(false);
+        return;
+      } else {
+        setNazValid(true);
+      }
+    },
+    [setNazValid, computeEstimatedEthTokens, setNaz]
+  );
+
+  const handleOpen = useCallback(() => {
+    setOpen(true);
+    onModal();
+  }, [setOpen, onModal]);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  return (
+    <Box>
+      <ThemeProvider theme={theme}>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+          startIcon={<SentimentVeryDissatisfiedIcon />}
+          size="large"
+          disabled={!contract}
+          onClick={handleOpen}
+        >
+          SELL
+        </Button>
+      </ThemeProvider>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <Box className={classes.paper}>
+            <Typography variant="h4" id="transition-modal-title">
+              How much $NAZ will you sell?
+            </Typography>
+            <Typography className={classes.moveTextRight} variant="caption">
+              Don't make it rain
+            </Typography>
+            <TextField
+              id="outlined-number"
+              label="NAZ"
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              error={!nazValid}
+              helperText={
+                !nazValid ? (
+                  "Value must be positive"
+                ) : crunchingEthEstimates ? (
+                  <CircularProgress />
+                ) : (
+                  `You will get: ${estimatedEthTokens} ETH`
+                )
+              }
+              variant="outlined"
+              className={classes.howMuchETH}
+              value={naz}
+              onChange={handleOnChange}
+            />
+            <Fab
+              variant="extended"
+              color="secondary"
+              aria-label="sell naz"
+              className={classes.margin}
+              onClick={onSell}
+            >
+              <AttachMoneyIcon className={classes.extendedIcon} />
+              Sell $NAZ
+            </Fab>
+          </Box>
+        </Fade>
+      </Modal>
+    </Box>
+  );
+};
+
 export default ({ promptSetProvider, web3 }) => {
   const classes = useStyles();
   const [contract, setContract] = React.useState(null);
+  const [eth, setEth] = React.useState(21.21);
+  const [naz, setNaz] = React.useState(1.0);
 
   const initiateContract = useCallback(async () => {
     const contract = await new web3.eth.Contract(
@@ -276,7 +444,7 @@ export default ({ promptSetProvider, web3 }) => {
     initiateContract();
   }, [web3, initiateContract]);
 
-  const onBuy = useCallback(async () => {
+  const onModal = useCallback(async () => {
     if (contract === null) {
       promptSetProvider();
       initiateContract();
@@ -305,19 +473,22 @@ export default ({ promptSetProvider, web3 }) => {
         </Box>
 
         <Box className={classes.avaAndButtons}>
-          <Avatar alt="Remy Sharp" src="./ethereumLogo.png" />
+          <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
           <Box className={classes.buttonGroup}>
-            <TransitionsModal web3={web3} onBuy={onBuy} contract={contract} />
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.button}
-              startIcon={<SentimentVeryDissatisfiedIcon />}
-              size="large"
-              disabled={!contract}
-            >
-              SELL
-            </Button>
+            <BuyModal
+              web3={web3}
+              eth={eth}
+              setEth={setEth}
+              onModal={onModal}
+              contract={contract}
+            />
+            <SellModal
+              web3={web3}
+              naz={naz}
+              setNaz={setNaz}
+              onModal={onModal}
+              contract={contract}
+            />
           </Box>
         </Box>
       </>

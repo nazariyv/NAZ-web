@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
   typography: {
     margin: "16px 0",
   },
+  lastTypography: {
+    marginTop: "16px",
+    marginBottom: "128px",
+  },
 }));
 
 export default () => {
@@ -64,6 +68,8 @@ export default () => {
           - I am going to come up with
           <br />
           - Assess / test my future products before anyone else
+          <br />
+          - Code some crazy cool stuff with me
           <br />
           and many many more
         </Typography>
@@ -127,7 +133,7 @@ export default () => {
         <Typography
           color="textSecondary"
           variant="body1"
-          className={classes.typography}
+          className={classes.lastTypography}
         >
           Yes, glad you asked! All $NAZ is backed by ETH, and its price is
           mathematically determined. The more people buy it, the more expensive
