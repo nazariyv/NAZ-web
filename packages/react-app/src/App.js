@@ -1,11 +1,4 @@
-import React, { useEffect } from "react";
-// import logo from "./ethereumLogo.png";
-// import { Contract } from "@ethersproject/contracts";
-// import { getDefaultProvider } from "@ethersproject/providers";
-// import { gql } from "apollo-boost";
-// import { useQuery } from "@apollo/react-hooks";
-import { addresses, abis } from "@project/contracts";
-import "./App.css";
+import React, { useEffect, useCallback } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
 
@@ -54,7 +47,6 @@ import {
 import {
   EmailIcon,
   FacebookIcon,
-  FacebookMessengerIcon,
   LinkedinIcon,
   MailruIcon,
   PinterestIcon,
@@ -179,6 +171,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     padding: "16px",
   },
+  iAmReal: {
+    display: "block",
+  },
   paddingBot: {
     paddingBottom: "32px",
     flexWrap: "wrap",
@@ -199,13 +194,17 @@ const App = () => {
   const [value, setValue] = React.useState(0);
   const [bottomNavValue, setBottomNavValue] = React.useState(0);
 
+  const promptSetProvider = useCallback(async () => {
+    const provider = await web3Modal.connect();
+    setProvider(provider);
+
+    const web3 = new Web3(provider);
+    setWeb3(web3);
+  }, []);
+
   useEffect(() => {
     (async () => {
-      const provider = await web3Modal.connect();
-      setProvider(provider);
-
-      const web3 = new Web3(provider);
-      setWeb3(web3);
+      promptSetProvider();
     })();
   }, []);
 
@@ -215,83 +214,86 @@ const App = () => {
 
   // TODO: internationalization
   return (
-    <Box className={classes.root}>
-      <AppBar position="static" color="transparent">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="simple tabs example"
+    <Box>
+      <Box className={classes.iAmReal}>
+        <AppBar position="sticky" color="black">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="naz token bar"
+          >
+            <Tab label="Buy $NAZ" {...a11yProps(0)} />
+            <Tab label="WTF?" {...a11yProps(1)} />
+          </Tabs>
+        </AppBar>
+        <TabPanel value={value} index={0}>
+          <BuyNAZ promptSetProvider={promptSetProvider} web3={web3} />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <WhatIsThis />
+        </TabPanel>
+      </Box>
+      <Box className={classes.root}>
+        <BottomNavigation
+          value={bottomNavValue}
+          onChange={(event, newValue) => {
+            setBottomNavValue(bottomNavValue);
+          }}
+          showLabels
+          className={classes.topAutoM}
         >
-          <Tab label="Buy $NAZ" {...a11yProps(0)} />
-          <Tab label="WTF?" {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <BuyNAZ />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <WhatIsThis />
-      </TabPanel>
+          <Button disabled>Follow $NAZ:</Button>
+          <BottomNavigationAction
+            label="Twitter"
+            icon={<TwitterIcon style={{ color: green[500], fontSize: 40 }} />}
+          />
+          <BottomNavigationAction
+            label="YouTube"
+            icon={<YouTubeIcon style={{ color: red[500], fontSize: 40 }} />}
+          />
+          <BottomNavigationAction
+            label="Medium"
+            icon={<CreateIcon style={{ color: green[500], fontSize: 40 }} />}
+          />
+        </BottomNavigation>
 
-      <BottomNavigation
-        value={bottomNavValue}
-        onChange={(event, newValue) => {
-          setBottomNavValue(bottomNavValue);
-        }}
-        showLabels
-        className={classes.topAutoM}
-      >
-        <Button disabled>Follow $NAZ:</Button>
-        <BottomNavigationAction
-          label="Twitter"
-          icon={<TwitterIcon style={{ color: green[500], fontSize: 40 }} />}
-        />
-        <BottomNavigationAction
-          label="YouTube"
-          icon={<YouTubeIcon style={{ color: red[500], fontSize: 40 }} />}
-        />
-        <BottomNavigationAction
-          label="Medium"
-          icon={<CreateIcon style={{ color: green[500], fontSize: 40 }} />}
-        />
-      </BottomNavigation>
-
-      <BottomNavigation className={classes.paddingBot}>
-        <Button disabled>Or Share $NAZ:</Button>
-        <EmailShareButton url="naz.life">
-          <EmailIcon size={48} round={true} />
-        </EmailShareButton>
-        <FacebookShareButton url="naz.life">
-          <FacebookIcon size={48} round={true} />
-        </FacebookShareButton>
-        <LinkedinShareButton url="naz.life">
-          <LinkedinIcon size={48} round={true} />
-        </LinkedinShareButton>
-        <MailruShareButton url="naz.life">
-          <MailruIcon size={48} round={true} />
-        </MailruShareButton>
-        <PinterestShareButton url="naz.life">
-          <PinterestIcon size={48} round={true} />
-        </PinterestShareButton>
-        <RedditShareButton url="naz.life">
-          <RedditIcon size={48} round={true} />
-        </RedditShareButton>
-        <TelegramShareButton url="naz.life">
-          <TelegramIcon size={48} round={true} />
-        </TelegramShareButton>
-        <TumblrShareButton url="naz.life">
-          <TumblrIcon size={48} round={true} />
-        </TumblrShareButton>
-        <ViberShareButton url="naz.life">
-          <ViberIcon size={48} round={true} />
-        </ViberShareButton>
-        <VKShareButton url="naz.life">
-          <VKIcon size={48} round={true} />
-        </VKShareButton>
-        <WhatsappShareButton url="naz.life">
-          <WhatsappIcon size={48} round={true} />
-        </WhatsappShareButton>
-      </BottomNavigation>
+        <BottomNavigation className={classes.paddingBot}>
+          <Button disabled>Or Share $NAZ:</Button>
+          <EmailShareButton url="naz.life">
+            <EmailIcon size={48} round={true} />
+          </EmailShareButton>
+          <FacebookShareButton url="naz.life">
+            <FacebookIcon size={48} round={true} />
+          </FacebookShareButton>
+          <LinkedinShareButton url="naz.life">
+            <LinkedinIcon size={48} round={true} />
+          </LinkedinShareButton>
+          <MailruShareButton url="naz.life">
+            <MailruIcon size={48} round={true} />
+          </MailruShareButton>
+          <PinterestShareButton url="naz.life">
+            <PinterestIcon size={48} round={true} />
+          </PinterestShareButton>
+          <RedditShareButton url="naz.life">
+            <RedditIcon size={48} round={true} />
+          </RedditShareButton>
+          <TelegramShareButton url="naz.life">
+            <TelegramIcon size={48} round={true} />
+          </TelegramShareButton>
+          <TumblrShareButton url="naz.life">
+            <TumblrIcon size={48} round={true} />
+          </TumblrShareButton>
+          <ViberShareButton url="naz.life">
+            <ViberIcon size={48} round={true} />
+          </ViberShareButton>
+          <VKShareButton url="naz.life">
+            <VKIcon size={48} round={true} />
+          </VKShareButton>
+          <WhatsappShareButton url="naz.life">
+            <WhatsappIcon size={48} round={true} />
+          </WhatsappShareButton>
+        </BottomNavigation>
+      </Box>
     </Box>
   );
 };

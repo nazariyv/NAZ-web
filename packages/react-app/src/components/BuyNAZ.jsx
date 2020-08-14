@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
+import { addresses, abis } from "@project/contracts";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Fade from "@material-ui/core/Fade";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -12,6 +17,7 @@ import {
   ThemeProvider,
   makeStyles,
 } from "@material-ui/core/styles";
+import BigNumber from "bignumber.js";
 import { green } from "@material-ui/core/colors";
 
 const theme = createMuiTheme({
@@ -25,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: "100%",
+    // height: "100%",
     flexDirection: "column",
   },
   linearProgress: {
@@ -56,6 +62,29 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: "16px",
   },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    display: "flex",
+    textAlign: "center",
+    flexDirection: "column",
+  },
+  moveTextRight: {
+    textAlign: "right",
+  },
+  moveTextLeft: {
+    textAlign: "left",
+  },
+  howMuchETH: {
+    margin: "32px",
+  },
 }));
 
 const BorderLinearProgress = withStyles((theme) => ({
@@ -73,8 +102,175 @@ const BorderLinearProgress = withStyles((theme) => ({
   },
 }))(LinearProgress);
 
-export default () => {
+const bn = new BigNumber("1e18");
+
+const TransitionsModal = ({ contract, web3, onBuy }) => {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [eth, setEth] = React.useState(21.21);
+  const [ethValid, setEthValid] = React.useState(true);
+  const [estimatedNazTokens, setEstimatedNazTokens] = React.useState(
+    "Start typing the amount"
+  );
+  const [crunchingNazEstimates, setCrunchingNazEstimates] = React.useState(
+    false
+  );
+
+  // TODO: rather than calling the smart contract to compute this
+  // TODO: just write the js code that does this to avoid hitting the contract
+  const computeEstimatedNazTokens = useCallback(
+    async (deposit) => {
+      if (deposit === 0) {
+        return 0;
+      }
+      setCrunchingNazEstimates(true);
+      const depositAmount = web3.utils.toWei(String(deposit), "ether");
+      const rewardAmount = await contract.methods
+        .getContinuousMintReward(depositAmount)
+        .call();
+      setEstimatedNazTokens((rewardAmount / bn).toString());
+      setCrunchingNazEstimates(false);
+    },
+    [contract, web3]
+  );
+
+  const handleOnChange = useCallback(
+    (e) => {
+      let val = 21.21;
+      try {
+        val = Number(e.target.value);
+      } catch (e) {
+        setEthValid(false);
+        return;
+      }
+      setEth(val);
+      computeEstimatedNazTokens(val);
+      if (val <= 0) {
+        setEthValid(false);
+        return;
+      } else {
+        setEthValid(true);
+      }
+    },
+    [setEthValid, computeEstimatedNazTokens]
+  );
+
+  const handleOpen = () => {
+    setOpen(true);
+    onBuy();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Box>
+      <ThemeProvider theme={theme}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={<AllInclusiveIcon />}
+          size="large"
+          disabled={!contract}
+          onClick={handleOpen}
+        >
+          BUY
+        </Button>
+      </ThemeProvider>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <Box className={classes.paper}>
+            <Typography variant="h4" id="transition-modal-title">
+              How much ETH will you spend on $NAZ?
+            </Typography>
+            <Typography className={classes.moveTextRight} variant="caption">
+              Make it rain, maybe?
+            </Typography>
+            <Typography
+              color="textSecondary"
+              id="transition-modal-description"
+              variant="body2"
+              className={classes.moveTextLeft}
+            >
+              The pivot price is 1 $NAZ = 1 ETH.
+              <br />
+              As the number of $NAZ grows, so does the price per 1 $NAZ.
+              <br />
+              If the total supply is 1 $NAZ, then the next 1 $NAZ will cost 2
+              ETH.
+              <br />1 $NAZ after that will cost 3 ETH, and so on.
+            </Typography>
+            <TextField
+              id="outlined-number"
+              label="ETH"
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              error={!ethValid}
+              helperText={
+                !ethValid
+                  ? "Value must be positive"
+                  : `You will get: ${estimatedNazTokens} $NAZ`
+              }
+              variant="outlined"
+              className={classes.howMuchETH}
+              value={eth}
+              onChange={handleOnChange}
+            />
+          </Box>
+        </Fade>
+      </Modal>
+    </Box>
+  );
+};
+
+export default ({ promptSetProvider, web3 }) => {
+  const classes = useStyles();
+  const [contract, setContract] = React.useState(null);
+
+  const initiateContract = useCallback(async () => {
+    const contract = await new web3.eth.Contract(
+      abis.nazToken,
+      addresses.nazToken
+    );
+    setContract(contract);
+  }, [web3]);
+
+  useEffect(() => {
+    if (web3 === null) {
+      return;
+    }
+    initiateContract();
+  }, [web3, initiateContract]);
+
+  const onBuy = useCallback(async () => {
+    if (contract === null) {
+      promptSetProvider();
+      initiateContract();
+    }
+    if (contract === null || web3 === null) {
+      return;
+    }
+    // let depositAmount = web3.utils.toWei("2", "ether");
+    // let rewardAmount = await contract.methods
+    //   .getContinuousMintReward(depositAmount)
+    //   .call();
+    // console.log("you will receive", rewardAmount, "$NAZ");
+  }, [web3, contract, promptSetProvider, initiateContract]);
 
   return (
     <Box className={classes.root}>
@@ -87,7 +283,7 @@ export default () => {
         <Box className={classes.row}>
           <Box className={classes.linearProgress}>
             <Typography variant="h2">$0</Typography>
-            <Typography variant="h2">$100m</Typography>
+            <Typography variant="h2">$1m</Typography>
           </Box>
           <Box>
             <BorderLinearProgress variant="determinate" value={33} />
@@ -97,23 +293,14 @@ export default () => {
         <Box className={classes.avaAndButtons}>
           <Avatar alt="Remy Sharp" src="./ethereumLogo.png" />
           <Box className={classes.buttonGroup}>
-            <ThemeProvider theme={theme}>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                startIcon={<AllInclusiveIcon />}
-                size="large"
-              >
-                BUY
-              </Button>
-            </ThemeProvider>
+            <TransitionsModal web3={web3} onBuy={onBuy} contract={contract} />
             <Button
               variant="contained"
               color="secondary"
               className={classes.button}
               startIcon={<SentimentVeryDissatisfiedIcon />}
               size="large"
+              disabled={!contract}
             >
               SELL
             </Button>
