@@ -10,6 +10,7 @@ import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
 
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -168,8 +169,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     height: "100vh",
-    // flexWrap: "wrap",
+    width: "100%",
     flexDirection: "column",
+    justifyContent: "center",
   },
   topAutoM: {
     marginTop: "auto",
@@ -178,9 +180,14 @@ const useStyles = makeStyles((theme) => ({
     padding: "16px",
   },
   paddingBot: {
-    paddingBottom: "16px",
+    paddingBottom: "32px",
     flexWrap: "wrap",
     display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+      width: theme.spacing(16),
+      height: theme.spacing(8),
+    },
   },
 }));
 
@@ -209,14 +216,14 @@ const App = () => {
   // TODO: internationalization
   return (
     <Box className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" color="transparent">
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="simple tabs example"
         >
           <Tab label="Buy $NAZ" {...a11yProps(0)} />
-          <Tab label="WTF FAQ" {...a11yProps(1)} />
+          <Tab label="WTF?" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -226,8 +233,6 @@ const App = () => {
         <WhatIsThis />
       </TabPanel>
 
-      <Box></Box>
-
       <BottomNavigation
         value={bottomNavValue}
         onChange={(event, newValue) => {
@@ -236,6 +241,7 @@ const App = () => {
         showLabels
         className={classes.topAutoM}
       >
+        <Button disabled>Follow $NAZ:</Button>
         <BottomNavigationAction
           label="Twitter"
           icon={<TwitterIcon style={{ color: green[500], fontSize: 40 }} />}
@@ -244,13 +250,14 @@ const App = () => {
           label="YouTube"
           icon={<YouTubeIcon style={{ color: red[500], fontSize: 40 }} />}
         />
-        {/* <BottomNavigationAction
+        <BottomNavigationAction
           label="Medium"
           icon={<CreateIcon style={{ color: green[500], fontSize: 40 }} />}
-        /> */}
+        />
       </BottomNavigation>
 
       <BottomNavigation className={classes.paddingBot}>
+        <Button disabled>Or Share $NAZ:</Button>
         <EmailShareButton url="naz.life">
           <EmailIcon size={48} round={true} />
         </EmailShareButton>

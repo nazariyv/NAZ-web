@@ -1,6 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
@@ -12,7 +13,6 @@ import {
   makeStyles,
 } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
-import Paper from "@material-ui/core/Paper";
 
 const theme = createMuiTheme({
   palette: {
@@ -25,18 +25,36 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    flexWrap: "wrap",
-    "& > *": {
-      margin: theme.spacing(1),
-      width: theme.spacing(16),
-      height: theme.spacing(16),
-    },
+    height: "100%",
+    flexDirection: "column",
   },
   linearProgress: {
     flexGrow: 1,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  surfStyle: {
+    width: "100%",
+    textAlign: "right",
+  },
+  avaAndButtons: {
+    padding: "32px",
+    flexDirection: "column",
+    marginTop: "auto",
+    height: "100%",
+    flexGrow: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonGroup: {
+    display: "flex",
+    flexDirection: "row",
+    padding: "16px",
+  },
+  button: {
+    margin: "16px",
   },
 }));
 
@@ -59,8 +77,12 @@ export default () => {
   const classes = useStyles();
 
   return (
-    <React.Fragment className={classes.root}>
-      <Typography variant="h1">Surf my bonding curve</Typography>
+    <Box className={classes.root}>
+      <Box className={classes.surfStyle}>
+        <Typography gutterBottom variant="h1">
+          Surf my bonding curve
+        </Typography>
+      </Box>
       <>
         <Box className={classes.row}>
           <Box className={classes.linearProgress}>
@@ -72,29 +94,32 @@ export default () => {
           </Box>
         </Box>
 
-        <>
-          <ThemeProvider theme={theme}>
+        <Box className={classes.avaAndButtons}>
+          <Avatar alt="Remy Sharp" src="./ethereumLogo.png" />
+          <Box className={classes.buttonGroup}>
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<AllInclusiveIcon />}
+                size="large"
+              >
+                BUY
+              </Button>
+            </ThemeProvider>
             <Button
               variant="contained"
-              color="primary"
-              className={classes.margin}
-              startIcon={<AllInclusiveIcon />}
+              color="secondary"
+              className={classes.button}
+              startIcon={<SentimentVeryDissatisfiedIcon />}
               size="large"
             >
-              BUY
+              SELL
             </Button>
-          </ThemeProvider>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.button}
-            startIcon={<SentimentVeryDissatisfiedIcon />}
-            size="large"
-          >
-            SELL
-          </Button>
-        </>
+          </Box>
+        </Box>
       </>
-    </React.Fragment>
+    </Box>
   );
 };
