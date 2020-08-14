@@ -34,13 +34,10 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    flexGrow: 1,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
-    paddingBottom: "32px",
+    paddingBottom: "3em",
   },
   center: {
     display: "flex",
@@ -73,83 +70,87 @@ export default () => {
 
   return (
     <Box className={classes.root}>
-      <Typography variant="h1" className={classes.center}>
-        SHARE Like There Is No Tomorrow
-      </Typography>
-      <BottomNavigation className={classes.paddingBot}>
-        <Button disabled>Or Share $NAZ:</Button>
-        <TwitterShareButton
-          url={url}
-          title="This guy used bonding curve to tokenize himself"
-          via="AlgorithmicBot"
-          hashtags={[
-            "ethereum",
-            "personaltokens",
-            "blockchain",
-            "bondingcurve",
-            "erc20",
-          ]}
-        >
-          <TwitterIcon size={48} round={true} />
-        </TwitterShareButton>
-        <FacebookShareButton url={url} quote={quote} hashtag="ethereum">
-          <FacebookIcon size={48} round={true} />
-        </FacebookShareButton>
-        <LinkedinShareButton
-          url={url}
-          title="This guy tokenized himself"
-          summary="Persontal Token that deries its value from a Bonding Curve!"
-          source={url}
-        >
-          <LinkedinIcon size={48} round={true} />
-        </LinkedinShareButton>
-        <EmailShareButton url={url}>
-          <EmailIcon
-            size={48}
-            round={true}
-            subject="This guy tokenized himself"
-            body={quote}
-          />
-        </EmailShareButton>
-        <TelegramShareButton url={url} title="This guy tokenized himself">
-          <TelegramIcon size={48} round={true} />
-        </TelegramShareButton>
-        <MailruShareButton
-          url={url}
-          title="This guy tokenized himself"
-          description={quote}
-          imageUrl={media}
-        >
-          <MailruIcon size={48} round={true} />
-        </MailruShareButton>
-        <PinterestShareButton url={url} description={quote} media={media}>
-          <PinterestIcon size={48} round={true} />
-        </PinterestShareButton>
-        <RedditShareButton url={url} title="This guy tokenized himself">
-          <RedditIcon size={48} round={true} />
-        </RedditShareButton>
-        <TumblrShareButton
-          url={url}
-          title="This guy tokenized himself"
-          caption={quote}
-        >
-          <TumblrIcon size={48} round={true} />
-        </TumblrShareButton>
-        <ViberShareButton url={url} title="This guy tokenized himself">
-          <ViberIcon size={48} round={true} />
-        </ViberShareButton>
-        <VKShareButton
-          url={url}
-          title="этот парниша себя токенизировал"
-          image={media}
-          noVkLinks={true}
-        >
-          <VKIcon size={48} round={true} />
-        </VKShareButton>
-        <WhatsappShareButton url={url} title="This guy tokenized himself">
-          <WhatsappIcon size={48} round={true} />
-        </WhatsappShareButton>
-      </BottomNavigation>
+      <Box>
+        <Typography variant="h1" className={classes.center}>
+          SHARE Like There Is No Tomorrow
+        </Typography>
+      </Box>
+      <Box>
+        <BottomNavigation className={classes.paddingBot}>
+          <Button disabled>Or Share $NAZ:</Button>
+          <TwitterShareButton
+            url={url}
+            title="This guy used bonding curve to tokenize himself"
+            via="AlgorithmicBot"
+            hashtags={[
+              "ethereum",
+              "personaltokens",
+              "blockchain",
+              "bondingcurve",
+              "erc20",
+            ]}
+          >
+            <TwitterIcon size={48} round={true} />
+          </TwitterShareButton>
+          <FacebookShareButton url={url} quote={quote} hashtag="ethereum">
+            <FacebookIcon size={48} round={true} />
+          </FacebookShareButton>
+          <LinkedinShareButton
+            url={url}
+            title="This guy tokenized himself"
+            summary="Persontal Token that deries its value from a Bonding Curve!"
+            source={url}
+          >
+            <LinkedinIcon size={48} round={true} />
+          </LinkedinShareButton>
+          <EmailShareButton url={url}>
+            <EmailIcon
+              size={48}
+              round={true}
+              subject="This guy tokenized himself"
+              body={quote}
+            />
+          </EmailShareButton>
+          <TelegramShareButton url={url} title="This guy tokenized himself">
+            <TelegramIcon size={48} round={true} />
+          </TelegramShareButton>
+          <MailruShareButton
+            url={url}
+            title="This guy tokenized himself"
+            description={quote}
+            imageUrl={media}
+          >
+            <MailruIcon size={48} round={true} />
+          </MailruShareButton>
+          <PinterestShareButton url={url} description={quote} media={media}>
+            <PinterestIcon size={48} round={true} />
+          </PinterestShareButton>
+          <RedditShareButton url={url} title="This guy tokenized himself">
+            <RedditIcon size={48} round={true} />
+          </RedditShareButton>
+          <TumblrShareButton
+            url={url}
+            title="This guy tokenized himself"
+            caption={quote}
+          >
+            <TumblrIcon size={48} round={true} />
+          </TumblrShareButton>
+          <ViberShareButton url={url} title="This guy tokenized himself">
+            <ViberIcon size={48} round={true} />
+          </ViberShareButton>
+          <VKShareButton
+            url={url}
+            title="этот парниша себя токенизировал"
+            image={media}
+            noVkLinks={true}
+          >
+            <VKIcon size={48} round={true} />
+          </VKShareButton>
+          <WhatsappShareButton url={url} title="This guy tokenized himself">
+            <WhatsappIcon size={48} round={true} />
+          </WhatsappShareButton>
+        </BottomNavigation>
+      </Box>
     </Box>
   );
 };

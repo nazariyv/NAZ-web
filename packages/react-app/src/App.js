@@ -114,26 +114,17 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // backgroundColor: theme.palette.background.paper,
-    backgroundColor: "red",
-    display: "flex",
-    height: "100vh",
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+  fullWidthAppBar: {
     width: "100%",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: "32px",
   },
-  displayBlock: {
-    display: "block",
-  },
-  topAutoM: {
-    marginTop: "auto",
-    flexDirection: "row",
+  stas: {
     display: "flex",
-    padding: "16px",
-  },
-  allHeight: {
+    width: "100%",
     height: "100%",
+    backgroundColor: "purple",
   },
   paddingBot: {
     position: "fixed",
@@ -152,7 +143,7 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   // const [contract, setContract] = React.useState(null);
-  const [provider, setProvider] = React.useState(null);
+  const [_, setProvider] = React.useState(null);
   const [web3, setWeb3] = React.useState(null);
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -179,7 +170,7 @@ const App = () => {
   // TODO: internationalization
   return (
     <Box className={classes.root}>
-      <Box>
+      <Box className={classes.fullWidthAppBar}>
         <AppBar position="sticky" color="black">
           <Tabs
             value={value}
@@ -201,7 +192,7 @@ const App = () => {
           <Share />
         </TabPanel>
       </Box>
-      <Box className={classes.root}>
+      <Box>
         <BottomNavigation
           value={bottomNavValue}
           onChange={(event, newValue) => {

@@ -2,79 +2,39 @@ import React, { useCallback, useEffect } from "react";
 import { addresses, abis } from "@project/contracts";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import TextField from "@material-ui/core/TextField";
-import Fade from "@material-ui/core/Fade";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fab from "@material-ui/core/Fab";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import Button from "@material-ui/core/Button";
-import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
-import {
-  createMuiTheme,
-  ThemeProvider,
-  makeStyles,
-} from "@material-ui/core/styles";
+import axios from "axios";
 import BigNumber from "bignumber.js";
-import { green, red } from "@material-ui/core/colors";
-import nazAva from "../static/images/naz.jpg";
+import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import nazAva from "../static/images/nazz.JPG";
+import SellModal from "./modals/SellModal";
+import BuyModal from "./modals/BuyModal";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-    secondary: red,
-  },
-});
-
-BigNumber.set({ DECIMAL_PLACES: 0 });
-
-const SMALLEST_UNIT = 0.000000000000000001;
+const bn = new BigNumber("1e18");
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // flexGrow: 1,
-    // backgroundColor: theme.palette.background.paper,
+    flexGrow: 1,
     display: "flex",
     flexDirection: "column",
-    height: "100vh",
-    backgroundColor: "yellow",
+    paddingBottom: "3em",
   },
   alignSelfStart: {
     alignSelf: "flex-start",
   },
   linearProgress: {
-    // flexGrow: 1,
     display: "flex",
-    // flexDirection: "row",
     justifyContent: "space-between",
+  },
+  textCenter: {
+    textAlign: "center",
   },
   surfStyle: {
     width: "100%",
     textAlign: "right",
-  },
-  avaAndButtons: {
-    padding: "32px",
-    flexDirection: "column",
-    // marginTop: "auto",
-    // display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
-    height: "100%",
-    backgroundColor: "green",
-    display: "flex",
-    alignSelf: "center",
-    justifyContent: "center",
-    maxWidth: "50%",
-  },
-  buttonGroup: {
-    display: "flex",
-    flexDirection: "row",
-    padding: "16px",
   },
   button: {
     margin: "16px",
@@ -83,6 +43,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonGroup: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  stats: {
+    marginTop: "12px",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -93,17 +60,14 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     flexDirection: "column",
   },
-  moveTextRight: {
-    textAlign: "right",
-  },
-  moveTextLeft: {
-    textAlign: "left",
-  },
-  howMuchETH: {
-    margin: "32px",
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(1),
+  avaAndButtons: {
+    padding: "32px",
+    flexDirection: "column",
+    height: "100%",
+    display: "flex",
+    alignSelf: "center",
+    justifyContent: "center",
+    maxWidth: "50%",
   },
   large: {
     width: theme.spacing(32),
@@ -126,325 +90,97 @@ const BorderLinearProgress = withStyles((theme) => ({
   },
 }))(LinearProgress);
 
-const bn = new BigNumber("1e18");
+const Stats = ({
+  contract,
+  initiateContract,
+  promptSetProvider,
+  marketCap,
+  setMarketCap,
+}) => {
+  const [ethP, setEthP] = React.useState(0);
+  const [totalSupply, setTotalSupply] = React.useState(0);
+  const [reserveBalance, setReserveBalance] = React.useState(0);
 
-const BuyModal = ({ contract, web3, onModal, eth, setEth }) => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [ethValid, setEthValid] = React.useState(true);
-  const [estimatedNazTokens, setEstimatedNazTokens] = React.useState(
-    "Start typing the amount"
-  );
-  const [crunchingNazEstimates, setCrunchingNazEstimates] = React.useState(
-    false
-  );
-
-  // TODO: rather than calling the smart contract to compute this
-  // TODO: just write the js code that does this to avoid hitting the contract
-  const computeEstimatedNazTokens = useCallback(
-    async (deposit) => {
-      if (deposit === 0) {
-        return 0;
-      }
-      setCrunchingNazEstimates(true);
-      const depositAmount = web3.utils.toWei(String(deposit), "ether");
-      const rewardAmount = await contract.methods
-        .getContinuousMintReward(depositAmount)
-        .call();
-      setEstimatedNazTokens((rewardAmount / bn).toString());
-      setCrunchingNazEstimates(false);
-    },
-    [contract, web3]
-  );
-
-  const onBuy = useCallback(async () => {
-    if (!ethValid) {
+  const fetchEthPrice = useCallback(() => {
+    if (!contract) {
+      initiateContract();
+      promptSetProvider();
       return;
     }
-    if (!web3.currentProvider.selectedAddress) {
+    axios
+      .get(
+        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+      )
+      .then(function(response) {
+        try {
+          const data = response["data"];
+          const ethereum = data["ethereum"];
+          const usd = ethereum["usd"];
+          setEthP(usd);
+        } catch (e) {
+          return;
+        }
+      })
+      .catch(function(error) {});
+  }, [initiateContract, promptSetProvider, contract]);
+
+  const fetchTotalSupply = useCallback(async () => {
+    if (!contract) {
+      initiateContract();
+      promptSetProvider();
       return;
     }
-    // TODO: Ethereum transaction lifecycle react component
-    await contract.methods.mint().send({
-      from: web3.currentProvider.selectedAddress,
-      value: web3.utils.toWei(String(eth), "ether"),
-    });
-    // console.log(receipt);
-  }, [contract, eth, ethValid, web3]);
+    const totalSupply = await contract.methods.totalSupply().call();
+    setTotalSupply((totalSupply / bn).toString());
+  }, [setTotalSupply, contract, initiateContract, promptSetProvider]);
 
-  const handleOnChange = useCallback(
-    (e) => {
-      let val = 21.21;
-      try {
-        val = Number(e.target.value);
-      } catch (e) {
-        setEthValid(false);
-        return;
-      }
-      setEth(val);
-      computeEstimatedNazTokens(val);
-      if (val <= 0) {
-        setEthValid(false);
-        return;
-      } else {
-        setEthValid(true);
-      }
-    },
-    [setEthValid, computeEstimatedNazTokens, setEth]
-  );
-
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-    onModal();
-  }, [setOpen, onModal]);
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
-
-  return (
-    <Box>
-      <ThemeProvider theme={theme}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={<AllInclusiveIcon />}
-          size="large"
-          disabled={!contract}
-          onClick={handleOpen}
-        >
-          BUY
-        </Button>
-      </ThemeProvider>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <Box className={classes.paper}>
-            <Typography variant="h4" id="transition-modal-title">
-              How much ETH will you spend on $NAZ?
-            </Typography>
-            <Typography className={classes.moveTextRight} variant="caption">
-              Make it rain
-            </Typography>
-            <Typography
-              color="textSecondary"
-              id="transition-modal-description"
-              variant="body2"
-              className={classes.moveTextLeft}
-            >
-              The pivot price is 1 $NAZ = 1 ETH.
-              <br />
-              As the number of $NAZ grows, so does the price per 1 $NAZ.
-              <br />
-              If the total supply is 1 $NAZ, then the next 1 $NAZ will cost 2
-              ETH.
-              <br />1 $NAZ after that will cost 3 ETH, and so on.
-            </Typography>
-            <TextField
-              id="outlined-number"
-              label="ETH"
-              type="number"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              error={!ethValid}
-              helperText={
-                !ethValid ? (
-                  "Value must be positive and greater than 0.000000000000000001"
-                ) : crunchingNazEstimates ? (
-                  <CircularProgress />
-                ) : (
-                  `You will get: ${estimatedNazTokens} $NAZ`
-                )
-              }
-              variant="outlined"
-              className={classes.howMuchETH}
-              value={eth}
-              onChange={handleOnChange}
-            />
-            <Fab
-              variant="extended"
-              color="primary"
-              aria-label="buy that naz"
-              className={classes.margin}
-              onClick={onBuy}
-            >
-              <AttachMoneyIcon className={classes.extendedIcon} />
-              BUY THAT $NAZ
-            </Fab>
-          </Box>
-        </Fade>
-      </Modal>
-    </Box>
-  );
-};
-
-// TODO: give a message that they should switch to mainnet if the network is different
-const SellModal = ({ contract, web3, onModal, naz, setNaz }) => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [nazValid, setNazValid] = React.useState(true);
-  const [estimatedEthTokens, setEstimatedEthTokens] = React.useState(
-    "Start typing the amount"
-  );
-  const [crunchingEthEstimates, setCrunchingEthEstimates] = React.useState(
-    false
-  );
-
-  // TODO: rather than calling the smart contract to compute this
-  // TODO: just write the js code that does this to avoid hitting the contract
-  const computeEstimatedEthTokens = useCallback(
-    async (nazAmount) => {
-      if (nazAmount <= 0) {
-        return 0;
-      }
-      const bnaz = new BigNumber("1e18")
-        .times(nazAmount)
-        .minus(1)
-        .integerValue();
-      if (bnaz <= SMALLEST_UNIT) {
-        return 0;
-      }
-      // TODO: require that the refundAmount is not greater than the Total ETH supply in the contract
-      const refundAmount = await contract.methods
-        .getContinuousBurnRefund(bnaz.toString().toString())
-        .call();
-      setEstimatedEthTokens((refundAmount / bn).toString());
-      setCrunchingEthEstimates(false);
-    },
-    [contract, setEstimatedEthTokens, setCrunchingEthEstimates]
-  );
-  const onSell = useCallback(async () => {
-    if (!nazValid) {
+  const fetchReserveBalance = useCallback(async () => {
+    if (!contract) {
+      initiateContract();
+      promptSetProvider();
       return;
     }
-    if (!web3.currentProvider.selectedAddress) {
+    const reserves = await contract.methods.reserveBalance().call();
+    setReserveBalance((reserves / bn).toString());
+  }, [setReserveBalance, contract, initiateContract, promptSetProvider]);
+
+  const computeTotalValueOfSupply = useCallback(() => {
+    if (!totalSupply || !ethP) {
       return;
     }
-    // TODO: Ethereum transaction lifecycle react component
-    const receipt = await contract.methods
-      .burn((naz * bn).toString())
-      .send({ from: web3.currentProvider.selectedAddress });
-    // await contract.methods.mint().send({
-    //   from: web3.currentProvider.selectedAddress,
-    //   value: web3.utils.toWei(String(eth), "ether"),
-    // });
-    // console.log(receipt);
-  }, [contract, nazValid, web3, naz]);
+    setMarketCap(Number(totalSupply) * Number(ethP));
+  }, [totalSupply, ethP, setMarketCap]);
 
-  const handleOnChange = useCallback(
-    (e) => {
-      let val = null;
-      try {
-        val = Number(e.target.value);
-      } catch (e) {
-        setNazValid(false);
-        return;
-      }
-      setNaz(val);
-      computeEstimatedEthTokens(val);
-      if (val <= SMALLEST_UNIT) {
-        setNazValid(false);
-        return;
-      } else {
-        setNazValid(true);
-      }
-    },
-    [setNazValid, computeEstimatedEthTokens, setNaz]
-  );
+  useEffect(() => {
+    fetchEthPrice();
+    fetchTotalSupply();
+    fetchReserveBalance();
+    computeTotalValueOfSupply();
+    const timer = setTimeout(() => {
+      fetchEthPrice();
+      fetchTotalSupply();
+      fetchReserveBalance();
+      computeTotalValueOfSupply();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [
+    computeTotalValueOfSupply,
+    fetchEthPrice,
+    fetchReserveBalance,
+    fetchTotalSupply,
+  ]);
 
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-    onModal();
-  }, [setOpen, onModal]);
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
-
-  return (
-    <Box>
-      <ThemeProvider theme={theme}>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          startIcon={<SentimentVeryDissatisfiedIcon />}
-          size="large"
-          disabled={!contract}
-          onClick={handleOpen}
-        >
-          SELL
-        </Button>
-      </ThemeProvider>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <Box className={classes.paper}>
-            <Typography variant="h4" id="transition-modal-title">
-              How much $NAZ will you sell?
-            </Typography>
-            <Typography className={classes.moveTextRight} variant="caption">
-              Don't make it rain
-            </Typography>
-            <TextField
-              id="outlined-number"
-              label="NAZ"
-              type="number"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              error={!nazValid}
-              helperText={
-                !nazValid ? (
-                  "Value must be positive and greater than 0.000000000000000001"
-                ) : crunchingEthEstimates ? (
-                  <CircularProgress />
-                ) : (
-                  `You will get: ${estimatedEthTokens} ETH`
-                )
-              }
-              variant="outlined"
-              className={classes.howMuchETH}
-              value={naz}
-              onChange={handleOnChange}
-            />
-            <Fab
-              variant="extended"
-              color="secondary"
-              aria-label="sell naz"
-              className={classes.margin}
-              onClick={onSell}
-              disabled={!nazValid}
-            >
-              <AttachMoneyIcon className={classes.extendedIcon} />
-              Sell $NAZ
-            </Fab>
-          </Box>
-        </Fade>
-      </Modal>
-    </Box>
+  return contract !== null ? (
+    <>
+      <Typography variant="h5">Ethereum price: ${ethP}</Typography>
+      <Typography variant="h5">ETH Reserve: {reserveBalance}</Typography>
+      <Typography variant="h5">$NAZ Total Supply: {totalSupply}</Typography>
+      <Typography variant="h5">
+        Total $NAZ Capitalisation: ${marketCap}
+      </Typography>
+    </>
+  ) : (
+    <CircularProgress />
   );
 };
 
@@ -453,8 +189,12 @@ export default ({ promptSetProvider, web3 }) => {
   const [contract, setContract] = React.useState(null);
   const [eth, setEth] = React.useState(21.21);
   const [naz, setNaz] = React.useState(1.0);
+  const [marketCap, setMarketCap] = React.useState(0);
 
   const initiateContract = useCallback(async () => {
+    if (!web3) {
+      return;
+    }
     const contract = await new web3.eth.Contract(
       abis.nazToken,
       addresses.nazToken
@@ -483,19 +223,41 @@ export default ({ promptSetProvider, web3 }) => {
     <Box className={classes.root}>
       <Box>
         <Box className={classes.surfStyle}>
-          <Typography gutterBottom variant="h1">
-            Surf my bonding curve
+          <Typography variant="h1">Surf $NAZ bonding curve</Typography>
+          <Typography variant="overline">
+            This is first of its kind Personal Token built with a Bonding Curve
           </Typography>
         </Box>
-        <Box className={classes.row}>
+        <Box className={classes.textCenter}>
+          <Typography variant="h2">
+            $NAZ market capitalisation (total value)
+          </Typography>
+        </Box>
+        <Box>
           <Box className={classes.linearProgress}>
             <Typography variant="h2">$0</Typography>
             <Typography variant="h2">$1m</Typography>
           </Box>
           <Box>
-            <BorderLinearProgress variant="determinate" value={33} />
+            <BorderLinearProgress
+              variant="determinate"
+              value={
+                marketCap > 1000000
+                  ? 100
+                  : parseInt(Number(marketCap / 1000000))
+              }
+            />
           </Box>
         </Box>
+      </Box>
+      <Box className={classes.stats}>
+        <Stats
+          contract={contract}
+          initiateContract={initiateContract}
+          promptSetProvider={promptSetProvider}
+          marketCap={marketCap}
+          setMarketCap={setMarketCap}
+        />
       </Box>
       <Box className={classes.avaAndButtons}>
         <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
