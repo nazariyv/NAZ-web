@@ -31,6 +31,10 @@ const theme = createMuiTheme({
   },
 });
 
+BigNumber.set({ DECIMAL_PLACES: 0 });
+
+const SMALLEST_UNIT = 0.000000000000000001;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -246,7 +250,7 @@ const BuyModal = ({ contract, web3, onModal, eth, setEth }) => {
               error={!ethValid}
               helperText={
                 !ethValid ? (
-                  "Value must be positive"
+                  "Value must be positive and greater than 0.000000000000000001"
                 ) : crunchingNazEstimates ? (
                   <CircularProgress />
                 ) : (
@@ -275,6 +279,7 @@ const BuyModal = ({ contract, web3, onModal, eth, setEth }) => {
   );
 };
 
+// TODO: give a message that they should switch to mainnet if the network is different
 const SellModal = ({ contract, web3, onModal, naz, setNaz }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -293,17 +298,22 @@ const SellModal = ({ contract, web3, onModal, naz, setNaz }) => {
       if (nazAmount <= 0) {
         return 0;
       }
-      const bnaz = new BigNumber("1e18") * nazAmount;
+      const bnaz = new BigNumber("1e18")
+        .times(nazAmount)
+        .minus(1)
+        .integerValue();
+      if (bnaz <= SMALLEST_UNIT) {
+        return 0;
+      }
       // TODO: require that the refundAmount is not greater than the Total ETH supply in the contract
       const refundAmount = await contract.methods
-        .getContinuousBurnRefund(bnaz.toString())
+        .getContinuousBurnRefund(bnaz.toString().toString())
         .call();
       setEstimatedEthTokens((refundAmount / bn).toString());
       setCrunchingEthEstimates(false);
     },
-    [contract]
+    [contract, setEstimatedEthTokens, setCrunchingEthEstimates]
   );
-
   const onSell = useCallback(async () => {
     if (!nazValid) {
       return;
@@ -312,25 +322,28 @@ const SellModal = ({ contract, web3, onModal, naz, setNaz }) => {
       return;
     }
     // TODO: Ethereum transaction lifecycle react component
+    const receipt = await contract.methods
+      .burn((naz * bn).toString())
+      .send({ from: web3.currentProvider.selectedAddress });
     // await contract.methods.mint().send({
     //   from: web3.currentProvider.selectedAddress,
     //   value: web3.utils.toWei(String(eth), "ether"),
     // });
     // console.log(receipt);
-  }, [contract, nazValid, web3]);
+  }, [contract, nazValid, web3, naz]);
 
   const handleOnChange = useCallback(
     (e) => {
-      let val = 1.0;
+      let val = null;
       try {
         val = Number(e.target.value);
       } catch (e) {
-        setNaz(false);
+        setNazValid(false);
         return;
       }
       setNaz(val);
       computeEstimatedEthTokens(val);
-      if (val <= 0) {
+      if (val <= SMALLEST_UNIT) {
         setNazValid(false);
         return;
       } else {
@@ -394,7 +407,7 @@ const SellModal = ({ contract, web3, onModal, naz, setNaz }) => {
               error={!nazValid}
               helperText={
                 !nazValid ? (
-                  "Value must be positive"
+                  "Value must be positive and greater than 0.000000000000000001"
                 ) : crunchingEthEstimates ? (
                   <CircularProgress />
                 ) : (
@@ -412,6 +425,7 @@ const SellModal = ({ contract, web3, onModal, naz, setNaz }) => {
               aria-label="sell naz"
               className={classes.margin}
               onClick={onSell}
+              disabled={!nazValid}
             >
               <AttachMoneyIcon className={classes.extendedIcon} />
               Sell $NAZ

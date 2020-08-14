@@ -210,14 +210,20 @@ const App = () => {
           <BottomNavigationAction
             label="Twitter"
             icon={<TwitterIcon style={{ color: green[500], fontSize: 40 }} />}
+            href="https://twitter.com/AlgorithmicBot"
+            target="_blank"
           />
           <BottomNavigationAction
             label="YouTube"
             icon={<YouTubeIcon style={{ color: red[500], fontSize: 40 }} />}
+            href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
+            target="_blank"
           />
           <BottomNavigationAction
             label="Medium"
             icon={<CreateIcon style={{ color: green[500], fontSize: 40 }} />}
+            href="https://medium.com/@parzival.is.sweet"
+            target="_blank"
           />
         </BottomNavigation>
       </Box>
