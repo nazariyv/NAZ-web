@@ -54,7 +54,7 @@ export default () => {
           <br />
           - my time (14/08/2020 @ $200ph)
           <br />
-          - get to hangout with me (subject to KYC)
+          - get to hang out with me (subject to KYC)
           <br />
           - get to play DOTA 2 with me
           <br />
@@ -65,13 +65,11 @@ export default () => {
           - access to a closed Telegram / Slack / Discord group, where we talk
           protocols and GPT-3
           <br />
-          - I am going to come up with
-          <br />
-          - Assess / test my future products before anyone else
+          - Assess/test my future products before anyone else
           <br />
           - Code some crazy cool stuff with me
           <br />
-          and many many more
+          ...
         </Typography>
         <Typography variant="h4" className={classes.typography}>
           Anything else?
@@ -81,13 +79,13 @@ export default () => {
           variant="body1"
           className={classes.typography}
         >
-          I belive in the future where there is no middlemen. Where there are no
-          guards nor guardians. Our security, wellbeing, wealth are the concepts
-          that have no meaning in that future. All is governed by protocols,
-          there is enough for everyone, jobs are the thing of the past. Personal
-          tokens will play an important role in such a future. You are your own
-          company. You are the value that you have been trying to give to the
-          world. Value can flow within and without.
+          I believe in the future where there are no middlemen, no guards and no
+          guardians. Our security, wellbeing, wealth are the concepts that have
+          no meaning in that future. Protocols govern all, there is enough for
+          everyone; jobs are the thing of the past. Personal tokens will play an
+          essential role in such a future. You are your own company. You are the
+          value that you have been trying to give to the world. It flows within
+          and without.
         </Typography>
         <Typography variant="h4" className={classes.typography}>
           And you are?
@@ -98,10 +96,11 @@ export default () => {
           className={classes.typography}
         >
           My name is Nazariy. I love maths & coding, I have a small YouTube
-          channel and I am trying to figure out the Twitter. I have had enough
-          of corporate grinding (I am burning the bridges, so that there is no
-          going back) and resigned 2 months ago. Now I freelance and code in
-          web3 mostly. Enjoying what I do immensely. Let's keep it short and
+          channel, and I am trying to figure out Twitter. I have had enough of
+          corporate grinding (I am burning the bridges so that there is no going
+          back) and resigned two months ago. Now I freelance and code in web3
+          mostly. I am enjoying what I do immensely, although I am running on
+          three days of no sleep due to this website. Let's keep it short and
           sweet.
         </Typography>
         <Typography variant="h4" className={classes.typography}>
@@ -113,19 +112,12 @@ export default () => {
           className={classes.typography}
         >
           If you decide to buy $NAZ, then that will increase its price. I have
-          defined this to be the case in the code (in smart contract, for the
-          technical folk).
-          {/* Here is how it will look like this */}
-          {/* <br />
-          <Box className={classes.bondingCurve}>
-            <img src={bondingCurve} alt="bonding curve" />
-          </Box>
-          <br /> */}
-          I will drop in an interactive chart here in the future when I have a
-          bit more time. And if you are wondering, this concept is called
-          "Bonding Curve" in the blockchain lingo. Uniqueness of my personal
-          token ($NAZ) is in the fact that the price of it will increase
-          inevitably the more supply there is.
+          defined this to be the case in the code (in the smart contract, for
+          the technical folk). I will drop in an interactive chart here in the
+          future when I have a bit more time. And if you are wondering, this
+          concept is called "Bonding Curve" in the blockchain lingo. The
+          uniqueness of my personal token ($NAZ) is in the fact that the price
+          of it will increase inevitably, the more supply there is.
         </Typography>
         <Typography variant="h4" className={classes.typography}>
           Final words?
@@ -135,17 +127,18 @@ export default () => {
           variant="body1"
           className={classes.lastTypography}
         >
-          Yes, glad you asked! All $NAZ is backed by ETH, and its price is
+          Yes, glad you asked! ETH backs all $NAZ, and its price is
           mathematically determined. The more people buy it, the more expensive
           it gets. So act fast. I cannot and would not mint $NAZ without buying
-          it for my own skin-in-the-game ETH. This avoids ridiculous "air-drops"
-          or what not that depress the price. Rest assured: $NAZ - is quality,
+          it for my own skin-in-the-game ETH. This avoids ridiculous
+          "air-drops." that depress the price. Rest assured: $NAZ - is quality,
           it is not "meme" potential, although, it may be. So, the only real way
           I can get $NAZ is by you converting it for my services listed above. I
           think this is a great mechanism and ensures that our incentives are
           aligned.
           <br />I have created this as part of an incubator I am in, to
-          incentivise people to give me the feedback on my business idea
+          incentivise people to give me the feedback on my business idea (retail
+          adoption of Ethereum)
         </Typography>
       </Box>
     </Box>

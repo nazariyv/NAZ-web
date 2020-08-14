@@ -225,7 +225,8 @@ export default ({ promptSetProvider, web3 }) => {
         <Box className={classes.surfStyle}>
           <Typography variant="h1">Surf $NAZ bonding curve</Typography>
           <Typography variant="overline">
-            This is first of its kind Personal Token built with a Bonding Curve
+            This is the first of its kind Personal Token built with a Bonding
+            Curve
           </Typography>
         </Box>
         <Box className={classes.textCenter}>
