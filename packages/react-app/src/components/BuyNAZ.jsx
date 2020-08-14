@@ -37,15 +37,20 @@ const SMALLEST_UNIT = 0.000000000000000001;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    // flexGrow: 1,
+    // backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
+    height: "100vh",
+    backgroundColor: "yellow",
+  },
+  alignSelfStart: {
+    alignSelf: "flex-start",
   },
   linearProgress: {
-    flexGrow: 1,
+    // flexGrow: 1,
     display: "flex",
-    flexDirection: "row",
+    // flexDirection: "row",
     justifyContent: "space-between",
   },
   surfStyle: {
@@ -55,10 +60,16 @@ const useStyles = makeStyles((theme) => ({
   avaAndButtons: {
     padding: "32px",
     flexDirection: "column",
-    marginTop: "auto",
+    // marginTop: "auto",
+    // display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    height: "100%",
+    backgroundColor: "green",
     display: "flex",
+    alignSelf: "center",
     justifyContent: "center",
-    alignItems: "center",
+    maxWidth: "50%",
   },
   buttonGroup: {
     display: "flex",
@@ -470,12 +481,12 @@ export default ({ promptSetProvider, web3 }) => {
 
   return (
     <Box className={classes.root}>
-      <Box className={classes.surfStyle}>
-        <Typography gutterBottom variant="h1">
-          Surf my bonding curve
-        </Typography>
-      </Box>
-      <>
+      <Box>
+        <Box className={classes.surfStyle}>
+          <Typography gutterBottom variant="h1">
+            Surf my bonding curve
+          </Typography>
+        </Box>
         <Box className={classes.row}>
           <Box className={classes.linearProgress}>
             <Typography variant="h2">$0</Typography>
@@ -485,27 +496,26 @@ export default ({ promptSetProvider, web3 }) => {
             <BorderLinearProgress variant="determinate" value={33} />
           </Box>
         </Box>
-
-        <Box className={classes.avaAndButtons}>
-          <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
-          <Box className={classes.buttonGroup}>
-            <BuyModal
-              web3={web3}
-              eth={eth}
-              setEth={setEth}
-              onModal={onModal}
-              contract={contract}
-            />
-            <SellModal
-              web3={web3}
-              naz={naz}
-              setNaz={setNaz}
-              onModal={onModal}
-              contract={contract}
-            />
-          </Box>
+      </Box>
+      <Box className={classes.avaAndButtons}>
+        <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
+        <Box className={classes.buttonGroup}>
+          <BuyModal
+            web3={web3}
+            eth={eth}
+            setEth={setEth}
+            onModal={onModal}
+            contract={contract}
+          />
+          <SellModal
+            web3={web3}
+            naz={naz}
+            setNaz={setNaz}
+            onModal={onModal}
+            contract={contract}
+          />
         </Box>
-      </>
+      </Box>
     </Box>
   );
 };

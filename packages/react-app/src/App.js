@@ -114,13 +114,17 @@ function a11yProps(index) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
+    backgroundColor: "red",
     display: "flex",
-    height: "100%",
+    height: "100vh",
     width: "100%",
     flexDirection: "column",
     justifyContent: "center",
     padding: "32px",
+  },
+  displayBlock: {
+    display: "block",
   },
   topAutoM: {
     marginTop: "auto",
@@ -128,8 +132,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     padding: "16px",
   },
-  iAmReal: {
-    display: "block",
+  allHeight: {
+    height: "100%",
   },
   paddingBot: {
     position: "fixed",
@@ -147,7 +151,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const App = () => {
-  const [contract, setContract] = React.useState(null);
+  // const [contract, setContract] = React.useState(null);
   const [provider, setProvider] = React.useState(null);
   const [web3, setWeb3] = React.useState(null);
   const classes = useStyles();
@@ -174,8 +178,8 @@ const App = () => {
 
   // TODO: internationalization
   return (
-    <Box>
-      <Box className={classes.iAmReal}>
+    <Box className={classes.root}>
+      <Box>
         <AppBar position="sticky" color="black">
           <Tabs
             value={value}
