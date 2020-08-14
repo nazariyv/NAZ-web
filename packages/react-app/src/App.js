@@ -17,7 +17,6 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import { green, red } from "@material-ui/core/colors";
@@ -31,19 +30,40 @@ import Torus from "@toruslabs/torus-embed";
 import Authereum from "authereum";
 import UniLogin from "@unilogin/provider";
 import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
-import Portis from "@portis/web3";
+// import Portis from "@portis/web3";
 import MewConnect from "@myetherwallet/mewconnect-web-client";
 import Web3Modal from "web3modal";
+import YouTubeIcon from "@material-ui/icons/YouTube";
+import CreateIcon from "@material-ui/icons/Create";
 // import DcentProvider from "dcent-provider";
-import Button from "@material-ui/core/Button";
-import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  LinkedinShareButton,
+  MailruShareButton,
+  PinterestShareButton,
+  RedditShareButton,
+  TelegramShareButton,
+  TumblrShareButton,
+  ViberShareButton,
+  VKShareButton,
+  WhatsappShareButton,
+} from "react-share";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-  },
-});
+import {
+  EmailIcon,
+  FacebookIcon,
+  FacebookMessengerIcon,
+  LinkedinIcon,
+  MailruIcon,
+  PinterestIcon,
+  RedditIcon,
+  TelegramIcon,
+  TumblrIcon,
+  ViberIcon,
+  VKIcon,
+  WhatsappIcon,
+} from "react-share";
 
 const providerOptions = {
   walletconnect: {
@@ -83,12 +103,12 @@ const providerOptions = {
       defaultNetwork: "100", // TODO: ? what is this
     },
   },
-  portis: {
-    package: Portis, // required
-    options: {
-      id: "f88f7a22-440b-49b1-a945-4202d595d517", // required. TODO: this is mainnet
-    },
-  },
+  // portis: {
+  //   package: Portis, // required
+  //   options: {
+  //     id: "f88f7a22-440b-49b1-a945-4202d595d517", // required. TODO: this is mainnet
+  //   },
+  // },
   mewconnect: {
     package: MewConnect, // required
     options: {
@@ -146,6 +166,21 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    display: "flex",
+    height: "100vh",
+    // flexWrap: "wrap",
+    flexDirection: "column",
+  },
+  topAutoM: {
+    marginTop: "auto",
+    flexDirection: "row",
+    display: "flex",
+    padding: "16px",
+  },
+  paddingBot: {
+    paddingBottom: "16px",
+    flexWrap: "wrap",
+    display: "flex",
   },
 }));
 
@@ -173,7 +208,7 @@ const App = () => {
 
   // TODO: internationalization
   return (
-    <React.Fragment className={classes.root}>
+    <Box className={classes.root}>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -191,45 +226,66 @@ const App = () => {
         <WhatIsThis />
       </TabPanel>
 
-      <>
-        <ThemeProvider theme={theme}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.margin}
-            startIcon={<AllInclusiveIcon />}
-            size="large"
-          >
-            BUY
-          </Button>
-        </ThemeProvider>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          startIcon={<SentimentVeryDissatisfiedIcon />}
-          size="large"
-        >
-          SELL
-        </Button>
-      </>
+      <Box></Box>
 
-      <React.Fragment>
-        <BottomNavigation
-          value={bottomNavValue}
-          onChange={(event, newValue) => {
-            setBottomNavValue(bottomNavValue);
-          }}
-          showLabels
-          className={classes.root}
-        >
-          <BottomNavigationAction
-            label="Twitter"
-            icon={<TwitterIcon style={{ color: green[500], fontSize: 40 }} />}
-          />
-        </BottomNavigation>
-      </React.Fragment>
-    </React.Fragment>
+      <BottomNavigation
+        value={bottomNavValue}
+        onChange={(event, newValue) => {
+          setBottomNavValue(bottomNavValue);
+        }}
+        showLabels
+        className={classes.topAutoM}
+      >
+        <BottomNavigationAction
+          label="Twitter"
+          icon={<TwitterIcon style={{ color: green[500], fontSize: 40 }} />}
+        />
+        <BottomNavigationAction
+          label="YouTube"
+          icon={<YouTubeIcon style={{ color: red[500], fontSize: 40 }} />}
+        />
+        {/* <BottomNavigationAction
+          label="Medium"
+          icon={<CreateIcon style={{ color: green[500], fontSize: 40 }} />}
+        /> */}
+      </BottomNavigation>
+
+      <BottomNavigation className={classes.paddingBot}>
+        <EmailShareButton url="naz.life">
+          <EmailIcon size={48} round={true} />
+        </EmailShareButton>
+        <FacebookShareButton url="naz.life">
+          <FacebookIcon size={48} round={true} />
+        </FacebookShareButton>
+        <LinkedinShareButton url="naz.life">
+          <LinkedinIcon size={48} round={true} />
+        </LinkedinShareButton>
+        <MailruShareButton url="naz.life">
+          <MailruIcon size={48} round={true} />
+        </MailruShareButton>
+        <PinterestShareButton url="naz.life">
+          <PinterestIcon size={48} round={true} />
+        </PinterestShareButton>
+        <RedditShareButton url="naz.life">
+          <RedditIcon size={48} round={true} />
+        </RedditShareButton>
+        <TelegramShareButton url="naz.life">
+          <TelegramIcon size={48} round={true} />
+        </TelegramShareButton>
+        <TumblrShareButton url="naz.life">
+          <TumblrIcon size={48} round={true} />
+        </TumblrShareButton>
+        <ViberShareButton url="naz.life">
+          <ViberIcon size={48} round={true} />
+        </ViberShareButton>
+        <VKShareButton url="naz.life">
+          <VKIcon size={48} round={true} />
+        </VKShareButton>
+        <WhatsappShareButton url="naz.life">
+          <WhatsappIcon size={48} round={true} />
+        </WhatsappShareButton>
+      </BottomNavigation>
+    </Box>
   );
 };
 
