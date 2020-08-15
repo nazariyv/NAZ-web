@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
@@ -14,9 +14,12 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import BigNumber from "bignumber.js";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import { green, red } from "@material-ui/core/colors";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const SMALLEST_UNIT = 0.000000000000000001;
-const BIGGEST_UNIT = 125000;
+// * ACTUAL: 1.1579209e+77
+const MAXUINT = new BigNumber(1.15e77);
+const BIGGEST_UNIT = 1000;
 const bn = new BigNumber("1e18");
 
 const theme = createMuiTheme({
@@ -27,9 +30,6 @@ const theme = createMuiTheme({
 });
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   button: {
     margin: "16px",
   },
@@ -61,78 +61,78 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// TODO: give a message that they should switch to mainnet if the network is different
 export default ({ contract, web3, onModal, naz, setNaz }) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [nazValid, setNazValid] = React.useState(true);
-  const [estimatedEthTokens, setEstimatedEthTokens] = React.useState(
-    "Start typing the amount"
+  const [open, setOpen] = useState(false);
+  const [nazValid, setNazValid] = useState(true);
+  const [estimatedEthTokens, setEstimatedEthTokens] = useState(
+    "start typing the amount to get the estimate..."
   );
-  const [crunchingEthEstimates, setCrunchingEthEstimates] = React.useState(
-    false
-  );
+  const [crunchingEthEstimates, setCrunchingEthEstimates] = useState(false);
 
-  // TODO: rather than calling the smart contract to compute this
-  // TODO: just write the js code that does this to avoid hitting the contract
   const computeEstimatedEthTokens = useCallback(
     async (nazAmount) => {
+      nazAmount = Number(nazAmount);
       if (nazAmount <= 0 || nazAmount >= BIGGEST_UNIT) {
+        setNazValid(false);
         return 0;
       }
-      const bnaz = new BigNumber("1e18")
-        .times(nazAmount)
+
+      const bnaz = bn
+        .multipliedBy(nazAmount)
         .minus(1)
         .integerValue();
-      if (bnaz <= SMALLEST_UNIT) {
+      if (bnaz <= 0 || bnaz >= MAXUINT) {
+        setNazValid(false);
         return 0;
       }
-      // TODO: require that the refundAmount is not greater than the Total ETH supply in the contract
+
+      setCrunchingEthEstimates(true);
+      // * if the refundAmount is greater than the Total ETH supply in the contract
+      // * it will throw the overflow error in the contract
       const refundAmount = await contract.methods
-        .getContinuousBurnRefund(bnaz.toString().toString())
+        .getContinuousBurnRefund(bnaz.toFixed(18).toString())
         .call();
-      setEstimatedEthTokens((refundAmount / bn).toString());
+
+      setEstimatedEthTokens((refundAmount / bn).toFixed(18).toString());
       setCrunchingEthEstimates(false);
     },
-    [contract, setEstimatedEthTokens, setCrunchingEthEstimates]
+    [contract]
   );
+
   const onSell = useCallback(async () => {
-    if (!nazValid) {
+    if (!nazValid || !web3.currentProvider.selectedAddress) {
       return;
     }
-    if (!web3.currentProvider.selectedAddress) {
-      return;
-    }
+
     // TODO: Ethereum transaction lifecycle react component
-    const receipt = await contract.methods
-      .burn((naz * bn).toString())
+    // to obtain the tx receipt, assign the below to a variable
+    await contract.methods
+      .burn(naz)
       .send({ from: web3.currentProvider.selectedAddress });
   }, [contract, nazValid, web3, naz]);
 
   const handleOnChange = useCallback(
     (e) => {
-      let val = null;
+      let val = e.target.value;
+      setNaz(val);
+
       try {
-        val = Number(e.target.value);
+        val = Number(val);
+        if (val <= SMALLEST_UNIT || val >= BIGGEST_UNIT) {
+          setNazValid(false);
+          return;
+        } else {
+          setNazValid(true);
+        }
       } catch (e) {
         setNazValid(false);
         return;
       }
-      if (val >= BIGGEST_UNIT) {
-        setNaz(100000);
-        setNazValid(true);
-        return;
-      }
-      setNaz(val);
+
       computeEstimatedEthTokens(val);
-      if (val <= SMALLEST_UNIT) {
-        setNazValid(false);
-        return;
-      } else {
-        setNazValid(true);
-      }
     },
-    [setNazValid, computeEstimatedEthTokens, setNaz, naz]
+    [setNazValid, computeEstimatedEthTokens, setNaz]
   );
 
   const handleOpen = useCallback(() => {
@@ -185,6 +185,11 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
               type="number"
               InputLabelProps={{
                 shrink: true,
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$NAZ</InputAdornment>
+                ),
               }}
               error={!nazValid}
               helperText={

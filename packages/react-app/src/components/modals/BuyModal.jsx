@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
@@ -14,8 +14,13 @@ import BigNumber from "bignumber.js";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import { green, red } from "@material-ui/core/colors";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const bn = new BigNumber("1e18");
+
+const MAXUINT = new BigNumber(1.15e77);
+const SMALLEST_UNIT = 0.000000000000000001;
+const BIGGEST_UNIT = 1000;
 
 const theme = createMuiTheme({
   palette: {
@@ -61,40 +66,50 @@ const useStyles = makeStyles((theme) => ({
 
 export default ({ contract, web3, onModal, eth, setEth }) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [ethValid, setEthValid] = React.useState(true);
-  const [estimatedNazTokens, setEstimatedNazTokens] = React.useState(
+  const [open, setOpen] = useState(false);
+  const [ethValid, setEthValid] = useState(true);
+  const [estimatedNazTokens, setEstimatedNazTokens] = useState(
     "Start typing the amount"
   );
-  const [crunchingNazEstimates, setCrunchingNazEstimates] = React.useState(
-    false
-  );
+  const [crunchingNazEstimates, setCrunchingNazEstimates] = useState(false);
 
-  // TODO: rather than calling the smart contract to compute this
-  // TODO: just write the js code that does this to avoid hitting the contract
   const computeEstimatedNazTokens = useCallback(
     async (deposit) => {
-      if (deposit === 0) {
+      deposit = Number(deposit);
+      if (deposit <= 0 || deposit >= BIGGEST_UNIT) {
+        setEthValid(false);
         return 0;
       }
+
+      const beth = bn
+        .multipliedBy(deposit)
+        .minus(1)
+        .integerValue();
+      if (beth.isLessThanOrEqualTo(0) || beth.isGreaterThan(MAXUINT)) {
+        setEthValid(false);
+        return 0;
+      }
+
+      console.log("deposit", deposit);
+      console.log("beth", beth.toFixed(18).toString());
+
       setCrunchingNazEstimates(true);
-      const depositAmount = web3.utils.toWei(String(deposit), "ether");
+      const depositAmount = beth.toString();
       const rewardAmount = await contract.methods
         .getContinuousMintReward(depositAmount)
         .call();
+      // do: batch state update
       setEstimatedNazTokens((rewardAmount / bn).toString());
       setCrunchingNazEstimates(false);
     },
-    [contract, web3]
+    [contract]
   );
 
   const onBuy = useCallback(async () => {
-    if (!ethValid) {
+    if (!ethValid || !web3.currentProvider.selectedAddress) {
       return;
     }
-    if (!web3.currentProvider.selectedAddress) {
-      return;
-    }
+
     // TODO: Ethereum transaction lifecycle react component
     await contract.methods.mint().send({
       from: web3.currentProvider.selectedAddress,
@@ -104,21 +119,22 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
 
   const handleOnChange = useCallback(
     (e) => {
-      let val = 21.21;
+      let howMuchEth = e.target.value;
+      setEth(howMuchEth);
+
       try {
-        val = Number(e.target.value);
+        howMuchEth = Number(howMuchEth);
+        if (howMuchEth <= SMALLEST_UNIT || howMuchEth >= BIGGEST_UNIT) {
+          setEthValid(false);
+          return;
+        }
+        setEthValid(true);
       } catch (e) {
         setEthValid(false);
         return;
       }
-      setEth(val);
-      computeEstimatedNazTokens(val);
-      if (val <= 0) {
-        setEthValid(false);
-        return;
-      } else {
-        setEthValid(true);
-      }
+
+      computeEstimatedNazTokens(Number(howMuchEth));
     },
     [setEthValid, computeEstimatedNazTokens, setEth]
   );
@@ -188,10 +204,15 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
               InputLabelProps={{
                 shrink: true,
               }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">ETH</InputAdornment>
+                ),
+              }}
               error={!ethValid}
               helperText={
                 !ethValid ? (
-                  "Value must be positive and greater than 0.000000000000000001"
+                  "Value must be greater than 0.000000000000000001 and less than 1000"
                 ) : crunchingNazEstimates ? (
                   <CircularProgress />
                 ) : (

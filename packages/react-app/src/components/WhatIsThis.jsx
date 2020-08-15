@@ -47,10 +47,11 @@ export default () => {
           variant="body1"
           className={classes.typography}
         >
-          You can buy my crypto token (personal token in crypto lingo) in
-          exchange for (more to come soon)
+          DOUBLE YOUR MONEY. Just kidding. You can buy my personal token here.
+          Tokens are neat. $NAZ can be exchanged for (more to come soon)
           <br />
-          - share of the future profits of my businesses
+          <br />
+          - future profits share of my businesses
           <br />
           - my time (14/08/2020 @ $200ph)
           <br />
@@ -136,6 +137,7 @@ export default () => {
           I can get $NAZ is by you converting it for my services listed above. I
           think this is a great mechanism and ensures that our incentives are
           aligned.
+          <br />
           <br />I have created this as part of an incubator I am in, to
           incentivise people to give me the feedback on my business idea (retail
           adoption of Ethereum)

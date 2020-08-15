@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { addresses, abis } from "@project/contracts";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -13,14 +13,22 @@ import nazAva from "../static/images/nazz.JPG";
 import SellModal from "./modals/SellModal";
 import BuyModal from "./modals/BuyModal";
 
+// TODO: give a message that they should switch to mainnet if the network is different
 const bn = new BigNumber("1e18");
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
-    paddingBottom: "3em",
+    width: "95%",
+    height: "100%",
+    marginTop: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: "0em 3em 0em 0em",
+    marginBottom: "3em",
   },
   alignSelfStart: {
     alignSelf: "flex-start",
@@ -31,10 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
   textCenter: {
     textAlign: "center",
+    marginBottom: "2em",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "3em",
+    },
   },
   surfStyle: {
     width: "100%",
     textAlign: "right",
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: "3em",
   },
   button: {
     margin: "16px",
@@ -50,6 +65,11 @@ const useStyles = makeStyles((theme) => ({
   },
   stats: {
     marginTop: "12px",
+  },
+  makeSmaller: {
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "3em",
+    },
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -94,12 +114,11 @@ const Stats = ({
   contract,
   initiateContract,
   promptSetProvider,
-  marketCap,
   setMarketCap,
 }) => {
-  const [ethP, setEthP] = React.useState(0);
-  const [totalSupply, setTotalSupply] = React.useState(0);
-  const [reserveBalance, setReserveBalance] = React.useState(0);
+  const [ethP, setEthP] = useState(0.0);
+  const [totalSupply, setTotalSupply] = useState(0.0);
+  const [reserveBalance, setReserveBalance] = useState(0.0);
 
   const fetchEthPrice = useCallback(() => {
     if (!contract) {
@@ -156,13 +175,14 @@ const Stats = ({
     fetchTotalSupply();
     fetchReserveBalance();
     computeTotalValueOfSupply();
-    const timer = setTimeout(() => {
+    // const timer = setTimeout(() => {
+    setTimeout(() => {
       fetchEthPrice();
       fetchTotalSupply();
       fetchReserveBalance();
       computeTotalValueOfSupply();
     }, 5000);
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, [
     computeTotalValueOfSupply,
     fetchEthPrice,
@@ -172,12 +192,18 @@ const Stats = ({
 
   return contract !== null ? (
     <>
-      <Typography variant="h5">Ethereum price: ${ethP}</Typography>
-      <Typography variant="h5">ETH Reserve: {reserveBalance}</Typography>
-      <Typography variant="h5">$NAZ Total Supply: {totalSupply}</Typography>
       <Typography variant="h5">
-        Total $NAZ Capitalisation: ${marketCap}
+        Ethereum price: ${Number(ethP).toFixed(2)}
       </Typography>
+      <Typography variant="h5">
+        ETH Reserve: {Number(reserveBalance).toFixed(2)}
+      </Typography>
+      <Typography variant="h5">
+        $NAZ Total Supply: {Number(totalSupply).toFixed(2)}
+      </Typography>
+      {/* <Typography variant="h5">
+        Total $NAZ Capitalisation: ${Number(marketCap).toFixed(2)}
+      </Typography> */}
     </>
   ) : (
     <CircularProgress />
@@ -186,10 +212,10 @@ const Stats = ({
 
 export default ({ promptSetProvider, web3 }) => {
   const classes = useStyles();
-  const [contract, setContract] = React.useState(null);
-  const [eth, setEth] = React.useState(21.21);
-  const [naz, setNaz] = React.useState(1.0);
-  const [marketCap, setMarketCap] = React.useState(0);
+  const [contract, setContract] = useState(null);
+  const [eth, setEth] = useState("");
+  const [naz, setNaz] = useState(1.0);
+  const [marketCap, setMarketCap] = useState(0);
 
   const initiateContract = useCallback(async () => {
     if (!web3) {
@@ -219,25 +245,33 @@ export default ({ promptSetProvider, web3 }) => {
     }
   }, [web3, contract, promptSetProvider, initiateContract]);
 
+  // TODO: add the button to connect to the wallet
+
   return (
     <Box className={classes.root}>
       <Box>
         <Box className={classes.surfStyle}>
-          <Typography variant="h1">Surf $NAZ bonding curve</Typography>
+          <Typography variant="h1" className={classes.makeSmaller}>
+            Surf $NAZ bonding curve
+          </Typography>
           <Typography variant="overline">
             This is the first of its kind Personal Token built with a Bonding
             Curve
           </Typography>
+          <Typography variant="caption">Front running resistant</Typography>
         </Box>
         <Box className={classes.textCenter}>
-          <Typography variant="h2">
+          <Typography variant="h3">
             $NAZ market capitalisation (total value)
           </Typography>
         </Box>
         <Box>
           <Box className={classes.linearProgress}>
-            <Typography variant="h2">$0</Typography>
-            <Typography variant="h2">$1m</Typography>
+            <Typography variant="h3">$0</Typography>
+            <Typography variant="h2">
+              ${Number(marketCap).toFixed(0)}
+            </Typography>
+            <Typography variant="h3">$1m</Typography>
           </Box>
           <Box>
             <BorderLinearProgress
@@ -245,7 +279,7 @@ export default ({ promptSetProvider, web3 }) => {
               value={
                 marketCap > 1000000
                   ? 100
-                  : parseInt(Number(marketCap / 1000000))
+                  : parseInt(Number(marketCap) / 1000000.0)
               }
             />
           </Box>

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
 import Share from "./components/Share";
@@ -16,30 +16,31 @@ import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import { green, red } from "@material-ui/core/colors";
 import Web3 from "web3";
-import Fortmatic from "fortmatic";
-import WalletConnectProvider from "@walletconnect/web3-provider";
+// import nazpoly from "./static/images/nazpoly.svg";
+// import Fortmatic from "fortmatic";
+// import WalletConnectProvider from "@walletconnect/web3-provider";
 import Torus from "@toruslabs/torus-embed";
-import Authereum from "authereum";
-import UniLogin from "@unilogin/provider";
-import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
-import MewConnect from "@myetherwallet/mewconnect-web-client";
+// import Authereum from "authereum";
+// import UniLogin from "@unilogin/provider";
+// import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
+// import MewConnect from "@myetherwallet/mewconnect-web-client";
 import Web3Modal from "web3modal";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
 
 const providerOptions = {
-  walletconnect: {
-    package: WalletConnectProvider, // required
-    options: {
-      infuraId: "4a5295521e87487ea515d984c82d3a80", // required
-    },
-  },
-  fortmatic: {
-    package: Fortmatic, // required
-    options: {
-      key: "pk_test_7FA3FE337CB778C2", // required. TODO: change for live
-    },
-  },
+  // walletconnect: {
+  //   package: WalletConnectProvider, // required
+  //   options: {
+  //     infuraId: "4a5295521e87487ea515d984c82d3a80", // required
+  //   },
+  // },
+  // fortmatic: {
+  //   package: Fortmatic, // required
+  //   options: {
+  //     key: "pk_test_7FA3FE337CB778C2", // required. TODO: change for live
+  //   },
+  // },
   torus: {
     package: Torus, // required
     options: {
@@ -53,24 +54,24 @@ const providerOptions = {
       // },
     },
   },
-  authereum: {
-    package: Authereum, // required
-  },
-  unilogin: {
-    package: UniLogin, // required
-  },
-  burnerconnect: {
-    package: BurnerConnectProvider, // required
-    options: {
-      defaultNetwork: "100", // TODO: ? what is this
-    },
-  },
-  mewconnect: {
-    package: MewConnect, // required
-    options: {
-      infuraId: "4a5295521e87487ea515d984c82d3a80", // required
-    },
-  },
+  // authereum: {
+  //   package: Authereum, // required
+  // },
+  // unilogin: {
+  //   package: UniLogin, // required
+  // },
+  // burnerconnect: {
+  //   package: BurnerConnectProvider, // required
+  //   options: {
+  //     defaultNetwork: "100", // TODO: ? what is this
+  //   },
+  // },
+  // mewconnect: {
+  //   package: MewConnect, // required
+  //   options: {
+  //     infuraId: "4a5295521e87487ea515d984c82d3a80", // required
+  //   },
+  // },
 };
 
 const web3Modal = new Web3Modal({
@@ -130,24 +131,28 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     left: 0,
     bottom: 0,
-    paddingBottom: "32px",
     textAlign: "center",
     width: "100%",
-    "& > *": {
-      margin: theme.spacing(1),
-      width: theme.spacing(16),
-      height: theme.spacing(8),
-    },
+    // "& > *": {
+    //   margin: theme.spacing(1),
+    //   // width: theme.spacing(16),
+    //   height: theme.spacing(8),
+    // },
+  },
+  arrangeIcons: {
+    display: "flex",
+    flexDirection: "row",
+    padding: "1em",
   },
 }));
 
 const App = () => {
-  // const [contract, setContract] = React.useState(null);
-  const [_, setProvider] = React.useState(null);
-  const [web3, setWeb3] = React.useState(null);
+  // const [contract, setContract] = useState(null);
+  const [_, setProvider] = useState(null);
+  const [web3, setWeb3] = useState(null);
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-  const [bottomNavValue, setBottomNavValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [bottomNavValue, setBottomNavValue] = useState(0);
 
   const promptSetProvider = useCallback(async () => {
     const provider = await web3Modal.connect();
@@ -192,14 +197,14 @@ const App = () => {
           <Share />
         </TabPanel>
       </Box>
-      <Box>
+      <Box className={classes.paddingBot}>
+        {/* <Box className={classes.arrangeIcons}> */}
         <BottomNavigation
           value={bottomNavValue}
           onChange={(event, newValue) => {
             setBottomNavValue(bottomNavValue);
           }}
           showLabels
-          className={classes.paddingBot}
         >
           <Button disabled>Follow $NAZ:</Button>
           <BottomNavigationAction
@@ -221,6 +226,7 @@ const App = () => {
             target="_blank"
           />
         </BottomNavigation>
+        {/* </Box> */}
       </Box>
     </Box>
   );

@@ -4,6 +4,8 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
+import surfNaz from "../static/images/surfnaz.jpg";
+import Container from "@material-ui/core/Container";
 
 import {
   EmailShareButton,
@@ -35,16 +37,25 @@ import {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
-    paddingBottom: "3em",
+    width: "75%",
+    height: "100%",
+    marginTop: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: "0em 3em 0em 0em",
+    marginBottom: "96px",
   },
   center: {
     display: "flex",
     justifyContent: "center",
     textAlign: "center",
     alignItems: "center",
-    width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "3em",
+    },
   },
   paddingBot: {
     textAlign: "center",
@@ -57,6 +68,17 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(16),
       height: theme.spacing(8),
     },
+    imgBox: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    centerImg: {
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "50%",
+    },
   },
 }));
 
@@ -67,12 +89,14 @@ export default () => {
   const url = "naz.life";
   const media =
     "https://gateway.pinata.cloud/ipfs/QmbbBfxmgky8xhtKEHYuMmQnNVi4uKZqmngKxWBTqiUg2A";
-
   return (
     <Box className={classes.root}>
       <Box>
         <Typography variant="h1" className={classes.center}>
-          SHARE Like There Is No Tomorrow
+          SHARE Like
+        </Typography>
+        <Typography variant="h1" className={classes.center}>
+          There is No Tomorrow
         </Typography>
       </Box>
       <Box>
@@ -151,6 +175,20 @@ export default () => {
           </WhatsappShareButton>
         </BottomNavigation>
       </Box>
+
+      <Container>
+        <img
+          style={{
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
+            width: "40%",
+            borderRadius: "6em",
+          }}
+          src={surfNaz}
+          alt="doodle human 'surfing' the NAZ bonding curve"
+        />
+      </Container>
     </Box>
   );
 };
