@@ -14,7 +14,6 @@ import Box from "@material-ui/core/Box";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import { green, red } from "@material-ui/core/colors";
 import Web3 from "web3";
 // import nazpoly from "./static/images/nazpoly.svg";
 // import Fortmatic from "fortmatic";
@@ -133,22 +132,20 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     textAlign: "center",
     width: "100%",
-    // "& > *": {
-    //   margin: theme.spacing(1),
-    //   // width: theme.spacing(16),
-    //   height: theme.spacing(8),
-    // },
   },
   arrangeIcons: {
     display: "flex",
     flexDirection: "row",
     padding: "1em",
   },
+  paddingB: {
+    paddingBottom: "2em",
+  },
 }));
 
 const App = () => {
   // const [contract, setContract] = useState(null);
-  const [_, setProvider] = useState(null);
+  const [provider, setProvider] = useState(null);
   const [web3, setWeb3] = useState(null);
   const classes = useStyles();
   const [value, setValue] = useState(0);
@@ -158,21 +155,23 @@ const App = () => {
     const provider = await web3Modal.connect();
     setProvider(provider);
 
-    const web3 = new Web3(provider);
-    setWeb3(web3);
+    const w3 = new Web3(provider);
+    console.log("new web3 saved");
+    setWeb3(w3);
   }, []);
 
   useEffect(() => {
     (async () => {
-      promptSetProvider();
+      if (!web3) {
+        promptSetProvider();
+      }
     })();
-  }, []);
+  }, [promptSetProvider, web3]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  // TODO: internationalization
   return (
     <Box className={classes.root}>
       <Box className={classes.fullWidthAppBar}>
@@ -188,7 +187,11 @@ const App = () => {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-          <BuyNAZ promptSetProvider={promptSetProvider} web3={web3} />
+          <BuyNAZ
+            promptSetProvider={promptSetProvider}
+            web3={web3}
+            provider={provider}
+          />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <WhatIsThis />
@@ -198,35 +201,34 @@ const App = () => {
         </TabPanel>
       </Box>
       <Box className={classes.paddingBot}>
-        {/* <Box className={classes.arrangeIcons}> */}
         <BottomNavigation
           value={bottomNavValue}
           onChange={(event, newValue) => {
             setBottomNavValue(bottomNavValue);
           }}
           showLabels
+          className={classes.paddingB}
         >
           <Button disabled>Follow $NAZ:</Button>
           <BottomNavigationAction
             label="Twitter"
-            icon={<TwitterIcon style={{ color: green[500], fontSize: 40 }} />}
+            icon={<TwitterIcon style={{ fontSize: 40 }} />}
             href="https://twitter.com/AlgorithmicBot"
             target="_blank"
           />
           <BottomNavigationAction
             label="YouTube"
-            icon={<YouTubeIcon style={{ color: red[500], fontSize: 40 }} />}
+            icon={<YouTubeIcon style={{ fontSize: 40 }} />}
             href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
             target="_blank"
           />
           <BottomNavigationAction
             label="Medium"
-            icon={<CreateIcon style={{ color: green[500], fontSize: 40 }} />}
+            icon={<CreateIcon style={{ fontSize: 40 }} />}
             href="https://medium.com/@parzival.is.sweet"
             target="_blank"
           />
         </BottomNavigation>
-        {/* </Box> */}
       </Box>
     </Box>
   );

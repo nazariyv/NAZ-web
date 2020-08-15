@@ -9,6 +9,8 @@ import axios from "axios";
 import BigNumber from "bignumber.js";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Fab from "@material-ui/core/Fab";
+import ErrorIcon from "@material-ui/icons/Error";
 import nazAva from "../static/images/nazz.JPG";
 import SellModal from "./modals/SellModal";
 import BuyModal from "./modals/BuyModal";
@@ -33,9 +35,25 @@ const useStyles = makeStyles((theme) => ({
   alignSelfStart: {
     alignSelf: "flex-start",
   },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+  },
   linearProgress: {
     display: "flex",
     justifyContent: "space-between",
+  },
+  typoraphyCenter: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  centerBox: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "1em",
   },
   textCenter: {
     textAlign: "center",
@@ -81,7 +99,16 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   avaAndButtons: {
-    padding: "32px",
+    flexDirection: "column",
+    height: "100%",
+    display: "flex",
+    alignSelf: "center",
+    justifyContent: "center",
+    maxWidth: "50%",
+    paddingBottom: "2em",
+  },
+  warningButton: {
+    padding: "3em",
     flexDirection: "column",
     height: "100%",
     display: "flex",
@@ -92,6 +119,17 @@ const useStyles = makeStyles((theme) => ({
   large: {
     width: theme.spacing(32),
     height: theme.spacing(32),
+  },
+  center: {
+    display: "block",
+    maxWidth: "50%",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  warning: {
+    // width: theme.spacing(16),
+    // height: theme.spacing(16),
+    backgroundColor: "red",
   },
 }));
 
@@ -113,9 +151,10 @@ const BorderLinearProgress = withStyles((theme) => ({
 const Stats = ({
   contract,
   initiateContract,
-  promptSetProvider,
   setMarketCap,
+  addressPresent,
 }) => {
+  const classes = useStyles();
   const [ethP, setEthP] = useState(0.0);
   const [totalSupply, setTotalSupply] = useState(0.0);
   const [reserveBalance, setReserveBalance] = useState(0.0);
@@ -123,7 +162,6 @@ const Stats = ({
   const fetchEthPrice = useCallback(() => {
     if (!contract) {
       initiateContract();
-      promptSetProvider();
       return;
     }
     axios
@@ -141,27 +179,25 @@ const Stats = ({
         }
       })
       .catch(function(error) {});
-  }, [initiateContract, promptSetProvider, contract]);
+  }, [initiateContract, contract]);
 
   const fetchTotalSupply = useCallback(async () => {
     if (!contract) {
       initiateContract();
-      promptSetProvider();
       return;
     }
     const totalSupply = await contract.methods.totalSupply().call();
     setTotalSupply((totalSupply / bn).toString());
-  }, [setTotalSupply, contract, initiateContract, promptSetProvider]);
+  }, [setTotalSupply, contract, initiateContract]);
 
   const fetchReserveBalance = useCallback(async () => {
     if (!contract) {
       initiateContract();
-      promptSetProvider();
       return;
     }
     const reserves = await contract.methods.reserveBalance().call();
     setReserveBalance((reserves / bn).toString());
-  }, [setReserveBalance, contract, initiateContract, promptSetProvider]);
+  }, [setReserveBalance, contract, initiateContract]);
 
   const computeTotalValueOfSupply = useCallback(() => {
     if (!totalSupply || !ethP) {
@@ -191,31 +227,54 @@ const Stats = ({
   ]);
 
   return contract !== null ? (
-    <>
-      <Typography variant="h5">
-        Ethereum price: ${Number(ethP).toFixed(2)}
-      </Typography>
-      <Typography variant="h5">
-        ETH Reserve: {Number(reserveBalance).toFixed(2)}
-      </Typography>
-      <Typography variant="h5">
-        $NAZ Total Supply: {Number(totalSupply).toFixed(2)}
-      </Typography>
-      {/* <Typography variant="h5">
+    addressPresent ? (
+      <>
+        <Typography variant="h5">
+          Ethereum price: ${Number(ethP).toFixed(2)}
+        </Typography>
+        <Typography variant="h5">
+          ETH Reserve: {Number(reserveBalance).toFixed(2)}
+        </Typography>
+        <Typography variant="h5">
+          $NAZ Total Supply: {Number(totalSupply).toFixed(2)}
+        </Typography>
+        {/* <Typography variant="h5">
         Total $NAZ Capitalisation: ${Number(marketCap).toFixed(2)}
       </Typography> */}
-    </>
+      </>
+    ) : (
+      <Box className={classes.centerBox}>
+        <CircularProgress />
+        <Typography className={classes.typographyCenter} variant="caption">
+          Connecting you to the blockchain...
+        </Typography>
+      </Box>
+    )
   ) : (
-    <CircularProgress />
+    <CircularProgress className={classes.center} />
   );
 };
 
-export default ({ promptSetProvider, web3 }) => {
+export default ({ web3, provider }) => {
   const classes = useStyles();
   const [contract, setContract] = useState(null);
   const [eth, setEth] = useState("");
   const [naz, setNaz] = useState(1.0);
   const [marketCap, setMarketCap] = useState(0);
+  const [addressPresent, setAddressPresent] = useState(false);
+
+  const checkIfAddressPresent = useCallback(() => {
+    if (!web3) {
+      return false;
+    }
+    if (!web3.currentProvider) {
+      return false;
+    }
+    if (!web3.currentProvider.selectedAddress) {
+      return false;
+    }
+    return true;
+  }, [web3]);
 
   const initiateContract = useCallback(async () => {
     if (!web3) {
@@ -232,18 +291,20 @@ export default ({ promptSetProvider, web3 }) => {
     if (web3 === null) {
       return;
     }
+    const addr = checkIfAddressPresent();
+    console.log("addr is", addr);
+    setAddressPresent(addr);
     initiateContract();
-  }, [web3, initiateContract]);
+  }, [web3, initiateContract, checkIfAddressPresent]);
 
   const onModal = useCallback(async () => {
     if (contract === null) {
-      promptSetProvider();
       initiateContract();
     }
     if (contract === null || web3 === null) {
       return;
     }
-  }, [web3, contract, promptSetProvider, initiateContract]);
+  }, [web3, contract, initiateContract]);
 
   // TODO: add the button to connect to the wallet
 
@@ -289,11 +350,24 @@ export default ({ promptSetProvider, web3 }) => {
         <Stats
           contract={contract}
           initiateContract={initiateContract}
-          promptSetProvider={promptSetProvider}
           marketCap={marketCap}
           setMarketCap={setMarketCap}
+          addressPresent={addressPresent}
         />
       </Box>
+      {(!provider || !web3) && (
+        <Box className={classes.warningButton}>
+          <Fab
+            variant="extended"
+            aria-label="connect your wallet"
+            className={classes.warning}
+            onClick={onModal}
+          >
+            <ErrorIcon className={classes.extendedIcon} />
+            You need to connect your wallet
+          </Fab>
+        </Box>
+      )}
       <Box className={classes.avaAndButtons}>
         <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
         <Box className={classes.buttonGroup}>
