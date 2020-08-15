@@ -63,6 +63,8 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     flexWrap: "wrap",
+    padding: "1em",
+    justifyContent: "space-between",
     "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(16),
@@ -79,6 +81,22 @@ const useStyles = makeStyles((theme) => ({
       marginRight: "auto",
       width: "50%",
     },
+    // shares: {
+    //   width: "100%",
+    //   display: "flex",
+    //   flexDirection: "row",
+    //   justifyContent: "space-between",
+    //   flexWrap: "wrap",
+    //   alignItems: "center",
+    //   textAlign: "center",
+    //   height: "100%",
+    //   flexGrow: 1,
+    //   "& > *": {
+    //     margin: theme.spacing(1),
+    //     width: theme.spacing(16),
+    //     height: theme.spacing(8),
+    //   },
+    // },
   },
 }));
 
@@ -99,8 +117,8 @@ export default () => {
           There is No Tomorrow
         </Typography>
       </Box>
-      <Box>
-        <BottomNavigation className={classes.paddingBot}>
+      <Container>
+        <Box className={classes.paddingBot}>
           <TwitterShareButton
             url={url}
             title="This guy used bonding curve to tokenize himself"
@@ -126,25 +144,25 @@ export default () => {
           >
             <LinkedinIcon size={48} round={true} />
           </LinkedinShareButton>
-          <EmailShareButton url={url}>
+          {/* <EmailShareButton url={url}>
             <EmailIcon
               size={48}
               round={true}
               subject="This guy tokenized himself"
               body={quote}
             />
-          </EmailShareButton>
+          </EmailShareButton> */}
           <TelegramShareButton url={url} title="This guy tokenized himself">
             <TelegramIcon size={48} round={true} />
           </TelegramShareButton>
-          <MailruShareButton
+          {/* <MailruShareButton
             url={url}
             title="This guy tokenized himself"
             description={quote}
             imageUrl={media}
           >
             <MailruIcon size={48} round={true} />
-          </MailruShareButton>
+          </MailruShareButton> */}
           <PinterestShareButton url={url} description={quote} media={media}>
             <PinterestIcon size={48} round={true} />
           </PinterestShareButton>
@@ -172,9 +190,8 @@ export default () => {
           <WhatsappShareButton url={url} title="This guy tokenized himself">
             <WhatsappIcon size={48} round={true} />
           </WhatsappShareButton>
-        </BottomNavigation>
-      </Box>
-
+        </Box>
+      </Container>
       <Container>
         <img
           style={{
@@ -182,7 +199,7 @@ export default () => {
             marginLeft: "auto",
             marginRight: "auto",
             width: "40%",
-            borderRadius: "6em",
+            borderRadius: "3em",
           }}
           src={surfNaz}
           alt="doodle human 'surfing' the NAZ bonding curve"

@@ -118,11 +118,17 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     backgroundColor: "purple",
   },
+  alignItems: {
+    alignItems: "center",
+  },
   paddingBot: {
     position: "fixed",
     left: 0,
     bottom: 0,
     textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     width: "100%",
     height: "70px",
     backgroundColor: theme.palette.background.paper,
@@ -140,22 +146,23 @@ const useStyles = makeStyles((theme) => ({
 const App = () => {
   // const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [web3, setWeb3] = useState(null);
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [bottomNavValue, setBottomNavValue] = useState(0);
-  const [darkState, setDarkState] = useState(true);
+  const [bottomNavValue] = useState(0);
+  // const [darkState, setDarkState] = useState(true);
 
   const promptSetProvider = useCallback(async () => {
     const provider = await web3Modal.connect();
     setProvider(provider);
-
     const w3 = new Web3(provider);
-    console.log("new web3 saved");
     setWeb3(w3);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       if (!web3) {
         promptSetProvider();
@@ -163,25 +170,15 @@ const App = () => {
     })();
   }, [promptSetProvider, web3]);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (_, newValue) => {
     setValue(newValue);
   };
-
-  // const handleThemeChange = () => {
-  //   setDarkState(!darkState);
-  // };
-
-  // const darkTheme = createMuiTheme({
-  //   palette: {
-  //     type: darkState ? "dark" : "light",
-  //   },
-  // });
 
   return (
     // <ThemeProvider theme={darkTheme}>
     <Box className={classes.root}>
       <Box className={classes.fullWidthAppBar}>
-        <AppBar position="sticky" color="black">
+        <AppBar position="sticky" color="black" className={classes.alignItems}>
           <Tabs
             value={value}
             onChange={handleChange}
@@ -197,6 +194,7 @@ const App = () => {
             promptSetProvider={promptSetProvider}
             web3={web3}
             provider={provider}
+            isLoading={isLoading}
           />
         </TabPanel>
         <TabPanel value={value} index={1}>
@@ -207,30 +205,27 @@ const App = () => {
         </TabPanel>
       </Box>
       <Box className={classes.paddingBot}>
-        <BottomNavigation
-          value={bottomNavValue}
-          onChange={(event, newValue) => {
-            setBottomNavValue(bottomNavValue);
-          }}
-          showLabels
-        >
+        <BottomNavigation value={bottomNavValue}>
           <BottomNavigationAction
-            label="Twitter"
-            icon={<TwitterIcon style={{ fontSize: 40 }} />}
+            // label="Twitter"
+            icon={<TwitterIcon style={{ fontSize: 40, color: "grey" }} />}
             href="https://twitter.com/AlgorithmicBot"
             target="_blank"
+            rel="noopener noreferrer"
           />
           <BottomNavigationAction
-            label="YouTube"
+            // label="YouTube"
             icon={<YouTubeIcon style={{ fontSize: 40 }} />}
             href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
             target="_blank"
+            rel="noopener noreferrer"
           />
           <BottomNavigationAction
-            label="Medium"
+            // label="Medium"
             icon={<CreateIcon style={{ fontSize: 40 }} />}
             href="https://medium.com/@parzival.is.sweet"
             target="_blank"
+            rel="noopener noreferrer"
           />
         </BottomNavigation>
       </Box>

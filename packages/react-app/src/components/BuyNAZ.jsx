@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textCenter: {
     textAlign: "center",
-    marginBottom: "2em",
+    marginBottom: "1em",
     [theme.breakpoints.down("sm")]: {
       fontSize: "3em",
     },
@@ -129,6 +129,16 @@ const useStyles = makeStyles((theme) => ({
     // width: theme.spacing(16),
     // height: theme.spacing(16),
     backgroundColor: "red",
+  },
+  flexEnd: {
+    alignSelf: "flex-end",
+  },
+  error: {
+    display: "flex",
+    flexDirection: "row",
+    alignSelf: "center",
+    justifyContent: "space-between",
+    width: "100px",
   },
 }));
 
@@ -254,7 +264,7 @@ const Stats = ({
   );
 };
 
-export default ({ web3, provider }) => {
+export default ({ web3, provider, isLoading }) => {
   const classes = useStyles();
   const [contract, setContract] = useState(null);
   const [eth, setEth] = useState("");
@@ -291,7 +301,6 @@ export default ({ web3, provider }) => {
       return;
     }
     const addr = checkIfAddressPresent();
-    console.log("addr is", addr);
     setAddressPresent(addr);
     initiateContract();
   }, [web3, initiateContract, checkIfAddressPresent]);
@@ -327,11 +336,15 @@ export default ({ web3, provider }) => {
         </Box>
         <Box>
           <Box className={classes.linearProgress}>
-            <Typography variant="h3">$0</Typography>
+            <Typography variant="h6" className={classes.flexEnd}>
+              $0
+            </Typography>
             <Typography variant="h2">
               ${Number(marketCap).toFixed(0)}
             </Typography>
-            <Typography variant="h3">$1m</Typography>
+            <Typography variant="h6" className={classes.flexEnd}>
+              $1m
+            </Typography>
           </Box>
           <Box>
             <BorderLinearProgress
@@ -354,7 +367,7 @@ export default ({ web3, provider }) => {
           addressPresent={addressPresent}
         />
       </Box>
-      {(!provider || !web3) && (
+      {(!provider || !web3) && !isLoading && (
         <Box className={classes.warningButton}>
           <Fab
             variant="extended"
@@ -362,8 +375,10 @@ export default ({ web3, provider }) => {
             className={classes.warning}
             onClick={onModal}
           >
-            <ErrorIcon className={classes.extendedIcon} />
-            connect
+            <Box className={classes.error}>
+              <ErrorIcon className={classes.extendedIcon} />
+              Connect
+            </Box>
           </Fab>
         </Box>
       )}

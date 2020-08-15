@@ -9,13 +9,16 @@ import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import { ThemeProvider } from "@material-ui/core/styles";
 import BigNumber from "bignumber.js";
 import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import { green, red } from "@material-ui/core/colors";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import MuiAlert from "@material-ui/lab/Alert";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
 
 const bn = new BigNumber("1e18");
 
@@ -57,23 +60,43 @@ const useStyles = makeStyles((theme) => ({
   moveTextLeft: {
     textAlign: "left",
   },
+  loadingTx: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  alignSelf: {
+    alignSelf: "center",
+    marginLeft: "1em",
+  },
   howMuchETH: {
     margin: "32px",
+  },
+  somePadding: {
+    padding: "1em",
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
 }));
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
 export default ({ contract, web3, onModal, eth, setEth }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [ethValid, setEthValid] = useState(true);
   const [estimatedNazTokens, setEstimatedNazTokens] = useState(
-    "Start typing the amount"
+    "(start typing to get the estimate)"
   );
   const [crunchingNazEstimates, setCrunchingNazEstimates] = useState(false);
   const [isBuying, setIsBuying] = useState(false);
+  const [txSucess, setTxSuccess] = useState(null);
+  const [txHash, setTxHash] = useState("");
+  const [txSuccessOpen, setTxSuccessOpen] = useState(false);
+  const [txFailureOpen, setTxFailureOpen] = useState(false);
 
   const computeEstimatedNazTokens = useCallback(
     async (deposit) => {
@@ -119,10 +142,36 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
         from: web3.currentProvider.selectedAddress,
         value: web3.utils.toWei(String(eth), "ether"),
       });
+      if (receipt) {
+        if ("blockHash" in receipt) {
+          if ((receipt.blockHash !== "") | (receipt.blockHash != null)) {
+            setTxSuccessOpen(true);
+            setTxSuccess(true);
+            setTxHash(`https://etherscan.io/tx/${receipt.transactionHash}`);
+            setIsBuying(false);
+            return;
+          } else {
+            setTxFailureOpen(true);
+            setTxSuccess(false);
+            setIsBuying(false);
+          }
+        } else {
+          setTxFailureOpen(true);
+          setTxSuccess(false);
+          setIsBuying(false);
+        }
+      } else {
+        setTxFailureOpen(true);
+        setTxSuccess(false);
+        setIsBuying(false);
+      }
     } catch (e) {
+      setTxFailureOpen(true);
+      setTxSuccess(false);
       setIsBuying(false);
     }
-    console.log("receipt", receipt);
+    setTxFailureOpen(true);
+    setTxSuccess(false);
     setIsBuying(false);
   }, [contract, eth, ethValid, web3]);
 
@@ -198,13 +247,13 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
               variant="body2"
               className={classes.moveTextLeft}
             >
-              The pivot price is 1 $NAZ = 1 ETH.
+              The pivot price is 1 $NAZ = 1 ETH
               <br />
-              As the number of $NAZ grows, so does the price per 1 $NAZ.
+              As the number of $NAZ grows, so does the price per 1 $NAZ
               <br />
               If the total supply is 1 $NAZ, then the next 1 $NAZ will cost 2
-              ETH.
-              <br />1 $NAZ after that will cost 3 ETH, and so on.
+              ETH
+              <br />1 $NAZ after that will cost 3 ETH, and so on
             </Typography>
             <TextField
               id="outlined-number"
@@ -242,14 +291,76 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
                 aria-label="buy that naz"
                 className={classes.margin}
                 onClick={onBuy}
+                disabled={!ethValid}
               >
-                <AttachMoneyIcon className={classes.extendedIcon} />
+                {/* <AttachMoneyIcon className={classes.extendedIcon} /> */}
                 BUY THAT $NAZ
               </Fab>
             ) : (
               <Container>
-                <CircularProgress />
+                <Box className={classes.loadingTx}>
+                  <CircularProgress />
+                  <Box className={classes.alignSelf}>
+                    <Typography variant="caption">
+                      waiting for the tx to complete. sit tight{" "}
+                      <span role="img" aria-label="winking emoji">
+                        😉
+                      </span>
+                    </Typography>
+                  </Box>
+                </Box>
               </Container>
+            )}
+            {txSucess ? (
+              <Collapse in={txSuccessOpen} className={classes.somePadding}>
+                <Alert
+                  severity="success"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setTxSuccess(null);
+                        setTxSuccessOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                >
+                  Here is the{" "}
+                  <span>
+                    <a href={txHash} rel="noopener noreferrer" target="_blank">
+                      transaction
+                    </a>
+                  </span>
+                </Alert>
+              </Collapse>
+            ) : (
+              txSucess === false && (
+                <Collapse in={txFailureOpen} className={classes.somePadding}>
+                  <Alert
+                    severity="error"
+                    action={
+                      <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                          setTxSuccess(null);
+                          setTxFailureOpen(false);
+                        }}
+                      >
+                        <CloseIcon fontSize="inherit" />
+                      </IconButton>
+                    }
+                  >
+                    Something went wrong. Perhaps someone tried to front run
+                    you. Try with higer slippage
+                  </Alert>
+                </Collapse>
+              )
             )}
           </Box>
         </Fade>
