@@ -101,7 +101,6 @@ export default () => {
       </Box>
       <Box>
         <BottomNavigation className={classes.paddingBot}>
-          <Button disabled>Or Share $NAZ:</Button>
           <TwitterShareButton
             url={url}
             title="This guy used bonding curve to tokenize himself"

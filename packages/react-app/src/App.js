@@ -4,7 +4,6 @@ import WhatIsThis from "./components/WhatIsThis";
 import Share from "./components/Share";
 
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -15,14 +14,7 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import Web3 from "web3";
-// import nazpoly from "./static/images/nazpoly.svg";
-// import Fortmatic from "fortmatic";
-// import WalletConnectProvider from "@walletconnect/web3-provider";
 import Torus from "@toruslabs/torus-embed";
-// import Authereum from "authereum";
-// import UniLogin from "@unilogin/provider";
-// import BurnerConnectProvider from "@burner-wallet/burner-connect-provider";
-// import MewConnect from "@myetherwallet/mewconnect-web-client";
 import Web3Modal from "web3modal";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
@@ -132,14 +124,16 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     textAlign: "center",
     width: "100%",
+    height: "70px",
+    backgroundColor: theme.palette.background.paper,
   },
   arrangeIcons: {
     display: "flex",
     flexDirection: "row",
     padding: "1em",
   },
-  paddingB: {
-    paddingBottom: "2em",
+  noPad: {
+    padding: "0px",
   },
 }));
 
@@ -150,6 +144,7 @@ const App = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [bottomNavValue, setBottomNavValue] = useState(0);
+  const [darkState, setDarkState] = useState(true);
 
   const promptSetProvider = useCallback(async () => {
     const provider = await web3Modal.connect();
@@ -172,7 +167,18 @@ const App = () => {
     setValue(newValue);
   };
 
+  // const handleThemeChange = () => {
+  //   setDarkState(!darkState);
+  // };
+
+  // const darkTheme = createMuiTheme({
+  //   palette: {
+  //     type: darkState ? "dark" : "light",
+  //   },
+  // });
+
   return (
+    // <ThemeProvider theme={darkTheme}>
     <Box className={classes.root}>
       <Box className={classes.fullWidthAppBar}>
         <AppBar position="sticky" color="black">
@@ -207,9 +213,7 @@ const App = () => {
             setBottomNavValue(bottomNavValue);
           }}
           showLabels
-          className={classes.paddingB}
         >
-          <Button disabled>Follow $NAZ:</Button>
           <BottomNavigationAction
             label="Twitter"
             icon={<TwitterIcon style={{ fontSize: 40 }} />}
@@ -231,6 +235,7 @@ const App = () => {
         </BottomNavigation>
       </Box>
     </Box>
+    // </ThemeProvider>
   );
 };
 

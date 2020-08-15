@@ -104,8 +104,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignSelf: "center",
     justifyContent: "center",
-    maxWidth: "50%",
-    paddingBottom: "2em",
+    padding: "1em",
   },
   warningButton: {
     padding: "3em",
@@ -259,7 +258,7 @@ export default ({ web3, provider }) => {
   const classes = useStyles();
   const [contract, setContract] = useState(null);
   const [eth, setEth] = useState("");
-  const [naz, setNaz] = useState(1.0);
+  const [naz, setNaz] = useState("");
   const [marketCap, setMarketCap] = useState(0);
   const [addressPresent, setAddressPresent] = useState(false);
 
@@ -364,7 +363,7 @@ export default ({ web3, provider }) => {
             onClick={onModal}
           >
             <ErrorIcon className={classes.extendedIcon} />
-            You need to connect your wallet
+            connect
           </Fab>
         </Box>
       )}

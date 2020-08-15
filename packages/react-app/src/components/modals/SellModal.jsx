@@ -5,6 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
+import Container from "@material-ui/core/Container";
 import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -69,6 +70,7 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
     "start typing the amount to get the estimate..."
   );
   const [crunchingEthEstimates, setCrunchingEthEstimates] = useState(false);
+  const [isSelling, setIsSelling] = useState(false);
 
   const computeEstimatedEthTokens = useCallback(
     async (nazAmount) => {
@@ -82,7 +84,7 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
         .multipliedBy(nazAmount)
         .minus(1)
         .integerValue();
-      if (bnaz <= 0 || bnaz >= MAXUINT) {
+      if (bnaz.isLessThanOrEqualTo(0) || bnaz.isGreaterThanOrEqualTo(MAXUINT)) {
         setNazValid(false);
         return 0;
       }
@@ -91,25 +93,37 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
       // * if the refundAmount is greater than the Total ETH supply in the contract
       // * it will throw the overflow error in the contract
       const refundAmount = await contract.methods
-        .getContinuousBurnRefund(bnaz.toFixed(18).toString())
+        .getContinuousBurnRefund(bnaz.toString())
         .call();
 
-      setEstimatedEthTokens((refundAmount / bn).toFixed(18).toString());
+      setEstimatedEthTokens((refundAmount / bn).toString());
       setCrunchingEthEstimates(false);
     },
     [contract]
   );
 
   const onSell = useCallback(async () => {
+    if (!web3) {
+      return;
+    }
     if (!nazValid || !web3.currentProvider.selectedAddress) {
       return;
     }
 
-    // TODO: Ethereum transaction lifecycle react component
+    let correctNaz = new BigNumber(naz * bn).integerValue();
+
+    setIsSelling(true);
     // to obtain the tx receipt, assign the below to a variable
-    await contract.methods
-      .burn(naz)
-      .send({ from: web3.currentProvider.selectedAddress });
+    let receipt = "";
+    try {
+      receipt = await contract.methods
+        .burn(correctNaz.toString())
+        .send({ from: web3.currentProvider.selectedAddress });
+    } catch (e) {
+      setIsSelling(false);
+    }
+    console.log("receipt", receipt);
+    setIsSelling(false);
   }, [contract, nazValid, web3, naz]);
 
   const handleOnChange = useCallback(
@@ -194,9 +208,11 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
               error={!nazValid}
               helperText={
                 !nazValid ? (
-                  "Value must be positive and greater than 0.000000000000000001"
+                  "Value must be positive and greater than 0.000000000000000001 and less than 1000"
                 ) : crunchingEthEstimates ? (
-                  <CircularProgress />
+                  <Container>
+                    <CircularProgress />
+                  </Container>
                 ) : (
                   `You will get: ${estimatedEthTokens} ETH`
                 )
@@ -206,17 +222,23 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
               value={naz}
               onChange={handleOnChange}
             />
-            <Fab
-              variant="extended"
-              color="secondary"
-              aria-label="sell naz"
-              className={classes.margin}
-              onClick={onSell}
-              disabled={!nazValid}
-            >
-              <AttachMoneyIcon className={classes.extendedIcon} />
-              Sell $NAZ
-            </Fab>
+            {!isSelling ? (
+              <Fab
+                variant="extended"
+                color="secondary"
+                aria-label="sell naz"
+                className={classes.margin}
+                onClick={onSell}
+                disabled={!nazValid}
+              >
+                <AttachMoneyIcon className={classes.extendedIcon} />
+                Sell $NAZ
+              </Fab>
+            ) : (
+              <Container>
+                <CircularProgress />
+              </Container>
+            )}
           </Box>
         </Fade>
       </Modal>

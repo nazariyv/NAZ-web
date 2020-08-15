@@ -7,6 +7,7 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -72,6 +73,7 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
     "Start typing the amount"
   );
   const [crunchingNazEstimates, setCrunchingNazEstimates] = useState(false);
+  const [isBuying, setIsBuying] = useState(false);
 
   const computeEstimatedNazTokens = useCallback(
     async (deposit) => {
@@ -90,9 +92,6 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
         return 0;
       }
 
-      console.log("deposit", deposit);
-      console.log("beth", beth.toFixed(18).toString());
-
       setCrunchingNazEstimates(true);
       const depositAmount = beth.toString();
       const rewardAmount = await contract.methods
@@ -106,15 +105,25 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
   );
 
   const onBuy = useCallback(async () => {
+    if (!web3) {
+      return;
+    }
     if (!ethValid || !web3.currentProvider.selectedAddress) {
       return;
     }
 
-    // TODO: Ethereum transaction lifecycle react component
-    await contract.methods.mint().send({
-      from: web3.currentProvider.selectedAddress,
-      value: web3.utils.toWei(String(eth), "ether"),
-    });
+    setIsBuying(true);
+    let receipt = "";
+    try {
+      receipt = await contract.methods.mint().send({
+        from: web3.currentProvider.selectedAddress,
+        value: web3.utils.toWei(String(eth), "ether"),
+      });
+    } catch (e) {
+      setIsBuying(false);
+    }
+    console.log("receipt", receipt);
+    setIsBuying(false);
   }, [contract, eth, ethValid, web3]);
 
   const handleOnChange = useCallback(
@@ -214,7 +223,9 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
                 !ethValid ? (
                   "Value must be greater than 0.000000000000000001 and less than 1000"
                 ) : crunchingNazEstimates ? (
-                  <CircularProgress />
+                  <Container>
+                    <CircularProgress />
+                  </Container>
                 ) : (
                   `You will get: ${estimatedNazTokens} $NAZ`
                 )
@@ -224,16 +235,22 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
               value={eth}
               onChange={handleOnChange}
             />
-            <Fab
-              variant="extended"
-              color="primary"
-              aria-label="buy that naz"
-              className={classes.margin}
-              onClick={onBuy}
-            >
-              <AttachMoneyIcon className={classes.extendedIcon} />
-              BUY THAT $NAZ
-            </Fab>
+            {!isBuying ? (
+              <Fab
+                variant="extended"
+                color="primary"
+                aria-label="buy that naz"
+                className={classes.margin}
+                onClick={onBuy}
+              >
+                <AttachMoneyIcon className={classes.extendedIcon} />
+                BUY THAT $NAZ
+              </Fab>
+            ) : (
+              <Container>
+                <CircularProgress />
+              </Container>
+            )}
           </Box>
         </Fade>
       </Modal>
