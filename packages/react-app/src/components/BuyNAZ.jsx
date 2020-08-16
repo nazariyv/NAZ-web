@@ -14,6 +14,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import nazAva from "../static/images/nazz.JPG";
 import SellModal from "./modals/SellModal";
 import BuyModal from "./modals/BuyModal";
+import MuiAlert from "@material-ui/lab/Alert";
 
 // TODO: give a message that they should switch to mainnet if the network is different
 const bn = new BigNumber("1e18");
@@ -140,6 +141,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     width: "100px",
   },
+  notOnMainnet: {
+    padding: "1em",
+  },
 }));
 
 const BorderLinearProgress = withStyles((theme) => ({
@@ -215,25 +219,25 @@ const Stats = ({
     setMarketCap(Number(totalSupply) * Number(ethP));
   }, [totalSupply, ethP, setMarketCap]);
 
-  useEffect(() => {
+  const fetchAll = useCallback(async () => {
     fetchEthPrice();
     fetchTotalSupply();
     fetchReserveBalance();
     computeTotalValueOfSupply();
-    // const timer = setTimeout(() => {
-    setTimeout(() => {
-      fetchEthPrice();
-      fetchTotalSupply();
-      fetchReserveBalance();
-      computeTotalValueOfSupply();
-    }, 5000);
-    // return () => clearTimeout(timer);
   }, [
-    computeTotalValueOfSupply,
     fetchEthPrice,
-    fetchReserveBalance,
     fetchTotalSupply,
+    fetchReserveBalance,
+    computeTotalValueOfSupply,
   ]);
+
+  useEffect(() => {
+    fetchAll();
+    let timer = setTimeout(() => {
+      fetchAll();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [fetchAll]);
 
   return contract !== null ? (
     addressPresent ? (
@@ -247,9 +251,6 @@ const Stats = ({
         <Typography variant="h5">
           $NAZ Total Supply: {Number(totalSupply).toFixed(2)}
         </Typography>
-        {/* <Typography variant="h5">
-        Total $NAZ Capitalisation: ${Number(marketCap).toFixed(2)}
-      </Typography> */}
       </>
     ) : (
       <Box className={classes.centerBox}>
@@ -264,6 +265,10 @@ const Stats = ({
   );
 };
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
 export default ({ web3, provider, isLoading }) => {
   const classes = useStyles();
   const [contract, setContract] = useState(null);
@@ -271,6 +276,7 @@ export default ({ web3, provider, isLoading }) => {
   const [naz, setNaz] = useState("");
   const [marketCap, setMarketCap] = useState(0);
   const [addressPresent, setAddressPresent] = useState(false);
+  const [incorrectNetwork, setIncorrectNetwork] = useState(false);
 
   const checkIfAddressPresent = useCallback(() => {
     if (!web3) {
@@ -300,6 +306,12 @@ export default ({ web3, provider, isLoading }) => {
     if (web3 === null) {
       return;
     }
+    // TODO: switch to 0x1 for prod
+    if (web3.currentProvider.chainId !== "0x3") {
+      setIncorrectNetwork(true);
+      return;
+    }
+    setIncorrectNetwork(false);
     const addr = checkIfAddressPresent();
     setAddressPresent(addr);
     initiateContract();
@@ -314,13 +326,15 @@ export default ({ web3, provider, isLoading }) => {
     }
   }, [web3, contract, initiateContract]);
 
-  // TODO: add the button to connect to the wallet
-
   return (
     <Box className={classes.root}>
       <Box>
         <Box className={classes.surfStyle}>
-          <Typography variant="h1" className={classes.makeSmaller}>
+          <Typography
+            variant="h1"
+            component="h1"
+            className={classes.makeSmaller}
+          >
             Surf $NAZ bonding curve
           </Typography>
           <Typography variant="overline">
@@ -367,6 +381,13 @@ export default ({ web3, provider, isLoading }) => {
           addressPresent={addressPresent}
         />
       </Box>
+      {incorrectNetwork && (
+        <Box className={classes.notOnMainnet}>
+          <Alert severity="error">
+            You are not on the mainnet. Switch your network.
+          </Alert>
+        </Box>
+      )}
       {(!provider || !web3) && !isLoading && (
         <Box className={classes.warningButton}>
           <Fab
@@ -382,25 +403,27 @@ export default ({ web3, provider, isLoading }) => {
           </Fab>
         </Box>
       )}
-      <Box className={classes.avaAndButtons}>
-        <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
-        <Box className={classes.buttonGroup}>
-          <BuyModal
-            web3={web3}
-            eth={eth}
-            setEth={setEth}
-            onModal={onModal}
-            contract={contract}
-          />
-          <SellModal
-            web3={web3}
-            naz={naz}
-            setNaz={setNaz}
-            onModal={onModal}
-            contract={contract}
-          />
+      {!incorrectNetwork && (
+        <Box className={classes.avaAndButtons}>
+          <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
+          <Box className={classes.buttonGroup}>
+            <BuyModal
+              web3={web3}
+              eth={eth}
+              setEth={setEth}
+              onModal={onModal}
+              contract={contract}
+            />
+            <SellModal
+              web3={web3}
+              naz={naz}
+              setNaz={setNaz}
+              onModal={onModal}
+              contract={contract}
+            />
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

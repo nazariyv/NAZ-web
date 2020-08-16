@@ -2,8 +2,6 @@ import React, { useEffect, useCallback, useState } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
 import Share from "./components/Share";
-
-import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -82,11 +80,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
@@ -178,8 +172,13 @@ const App = () => {
     // <ThemeProvider theme={darkTheme}>
     <Box className={classes.root}>
       <Box className={classes.fullWidthAppBar}>
-        <AppBar position="sticky" color="black" className={classes.alignItems}>
+        <AppBar
+          position="sticky"
+          color="default"
+          className={classes.alignItems}
+        >
           <Tabs
+            variant="fullWidth"
             value={value}
             onChange={handleChange}
             aria-label="naz token bar"

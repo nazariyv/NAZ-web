@@ -121,7 +121,7 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
         .getContinuousMintReward(depositAmount)
         .call();
       // do: batch state update
-      setEstimatedNazTokens((rewardAmount / bn).toString());
+      setEstimatedNazTokens(`${(rewardAmount / bn).toString()} $NAZ`);
       setCrunchingNazEstimates(false);
     },
     [contract]
@@ -276,7 +276,7 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
                     <CircularProgress />
                   </Container>
                 ) : (
-                  `You will get: ${estimatedNazTokens} $NAZ`
+                  <>{estimatedNazTokens}</>
                 )
               }
               variant="outlined"

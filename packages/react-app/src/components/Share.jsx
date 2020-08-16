@@ -1,17 +1,13 @@
 import React from "react";
-import BottomNavigation from "@material-ui/core/BottomNavigation";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import surfNaz from "../static/images/surfnaz.jpg";
 import Container from "@material-ui/core/Container";
 
 import {
-  EmailShareButton,
   FacebookShareButton,
   LinkedinShareButton,
-  MailruShareButton,
   PinterestShareButton,
   RedditShareButton,
   TelegramShareButton,
@@ -19,10 +15,8 @@ import {
   ViberShareButton,
   VKShareButton,
   WhatsappShareButton,
-  EmailIcon,
   FacebookIcon,
   LinkedinIcon,
-  MailruIcon,
   PinterestIcon,
   RedditIcon,
   TelegramIcon,
