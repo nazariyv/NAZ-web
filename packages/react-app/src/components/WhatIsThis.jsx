@@ -118,7 +118,9 @@ export default () => {
           future when I have a bit more time. And if you are wondering, this
           concept is called "Bonding Curve" in the blockchain lingo. The
           uniqueness of my personal token ($NAZ) is in the fact that the price
-          of it will increase inevitably, the more supply there is.
+          of it will increase inevitably, the more supply there is. On top of
+          that, it is fully collateralized. There is more ETH backing it up than
+          the total supply of NAZ. It means I am more expensive than ETH.
         </Typography>
         <Typography variant="h4" className={classes.typography}>
           Final words?

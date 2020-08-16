@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ({ contract, web3, onModal, naz, setNaz }) => {
+export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [nazValid, setNazValid] = useState(true);
@@ -174,6 +174,7 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
           setTxSuccess(true);
           setTxHash(`https://etherscan.io/tx/${receipt.transactionHash}`);
           setIsSelling(false);
+          fetchAll();
           return;
         } else {
           setTxFailureOpen(true);
@@ -312,10 +313,7 @@ export default ({ contract, web3, onModal, naz, setNaz }) => {
                 <CircularProgress />
                 <Box className={classes.alignSelf}>
                   <Typography variant="caption">
-                    waiting for the tx to complete. sit tight{" "}
-                    <span role="img" aria-label="winking emoji">
-                      😔
-                    </span>
+                    waiting for the tx to complete. sit tight
                   </Typography>
                 </Box>
               </Box>

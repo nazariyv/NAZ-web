@@ -7,23 +7,17 @@ import Container from "@material-ui/core/Container";
 
 import {
   FacebookShareButton,
-  LinkedinShareButton,
   PinterestShareButton,
   RedditShareButton,
   TelegramShareButton,
-  TumblrShareButton,
   ViberShareButton,
-  VKShareButton,
   WhatsappShareButton,
   FacebookIcon,
-  LinkedinIcon,
   PinterestIcon,
   RedditIcon,
   TelegramIcon,
-  TumblrIcon,
   ViberIcon,
   TwitterIcon,
-  VKIcon,
   WhatsappIcon,
   TwitterShareButton,
 } from "react-share";
@@ -96,9 +90,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const quote =
-    "You can buy portions of profits of $NAZ's business by buying tokenized version of himself. You can read more about it here: naz.life";
+    "You can buy portions of profits of $NAZ's business by buying tokenized version of himself. You can read more about it here: https://naz.life";
   const classes = useStyles();
-  const url = "naz.life";
+  const url = "https://naz.life";
   const media =
     "https://gateway.pinata.cloud/ipfs/QmbbBfxmgky8xhtKEHYuMmQnNVi4uKZqmngKxWBTqiUg2A";
   return (
@@ -115,7 +109,7 @@ export default () => {
         <Box className={classes.paddingBot}>
           <TwitterShareButton
             url={url}
-            title="This guy used bonding curve to tokenize himself"
+            title="This guy used bonding curve to tokenize himself. Fully collateralized $NAZ"
             via="AlgorithmicBot"
             hashtags={[
               "ethereum",
@@ -130,58 +124,31 @@ export default () => {
           <FacebookShareButton url={url} quote={quote} hashtag="ethereum">
             <FacebookIcon size={48} round={true} />
           </FacebookShareButton>
-          <LinkedinShareButton
+          <TelegramShareButton
             url={url}
-            title="This guy tokenized himself"
-            summary="Persontal Token that deries its value from a Bonding Curve!"
-            source={url}
+            title="This is first of its kind personal token"
           >
-            <LinkedinIcon size={48} round={true} />
-          </LinkedinShareButton>
-          {/* <EmailShareButton url={url}>
-            <EmailIcon
-              size={48}
-              round={true}
-              subject="This guy tokenized himself"
-              body={quote}
-            />
-          </EmailShareButton> */}
-          <TelegramShareButton url={url} title="This guy tokenized himself">
             <TelegramIcon size={48} round={true} />
           </TelegramShareButton>
-          {/* <MailruShareButton
-            url={url}
-            title="This guy tokenized himself"
-            description={quote}
-            imageUrl={media}
-          >
-            <MailruIcon size={48} round={true} />
-          </MailruShareButton> */}
           <PinterestShareButton url={url} description={quote} media={media}>
             <PinterestIcon size={48} round={true} />
           </PinterestShareButton>
-          <RedditShareButton url={url} title="This guy tokenized himself">
+          <RedditShareButton
+            url={url}
+            title="This is first of its kind personal token"
+          >
             <RedditIcon size={48} round={true} />
           </RedditShareButton>
-          <TumblrShareButton
+          <ViberShareButton
             url={url}
-            title="This guy tokenized himself"
-            caption={quote}
+            title="This is first of its kind personal token"
           >
-            <TumblrIcon size={48} round={true} />
-          </TumblrShareButton>
-          <ViberShareButton url={url} title="This guy tokenized himself">
             <ViberIcon size={48} round={true} />
           </ViberShareButton>
-          <VKShareButton
+          <WhatsappShareButton
             url={url}
-            title="этот парниша себя токенизировал"
-            image={media}
-            noVkLinks={true}
+            title="This is first of its kind personal token"
           >
-            <VKIcon size={48} round={true} />
-          </VKShareButton>
-          <WhatsappShareButton url={url} title="This guy tokenized himself">
             <WhatsappIcon size={48} round={true} />
           </WhatsappShareButton>
         </Box>

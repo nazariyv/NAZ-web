@@ -166,11 +166,111 @@ const Stats = ({
   initiateContract,
   setMarketCap,
   addressPresent,
+  fetchAll,
+  ethP,
+  reserveBalance,
+  totalSupply,
 }) => {
   const classes = useStyles();
+
+  useEffect(() => {
+    fetchAll();
+    let timer = setTimeout(() => {
+      fetchAll();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [fetchAll]);
+
+  return contract !== null ? (
+    addressPresent ? (
+      <>
+        <Typography variant="h5">
+          Ethereum price: ${Number(ethP).toFixed(2)}
+        </Typography>
+        <Typography variant="h5">
+          ETH Reserve: {Number(reserveBalance).toFixed(2)}
+        </Typography>
+        <Typography variant="h5">
+          $NAZ Total Supply: {Number(totalSupply).toFixed(2)}
+        </Typography>
+      </>
+    ) : (
+      <Box className={classes.centerBox}>
+        <CircularProgress />
+        <Typography className={classes.typographyCenter} variant="caption">
+          Connecting you to the blockchain...
+        </Typography>
+      </Box>
+    )
+  ) : (
+    <CircularProgress className={classes.center} />
+  );
+};
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
+export default ({ web3, provider, isLoading }) => {
+  const classes = useStyles();
+  const [contract, setContract] = useState(null);
+  const [eth, setEth] = useState("");
+  const [naz, setNaz] = useState("");
+  const [marketCap, setMarketCap] = useState(0);
+  const [addressPresent, setAddressPresent] = useState(false);
+  const [incorrectNetwork, setIncorrectNetwork] = useState(false);
+
   const [ethP, setEthP] = useState(0.0);
   const [totalSupply, setTotalSupply] = useState(0.0);
   const [reserveBalance, setReserveBalance] = useState(0.0);
+
+  const checkIfAddressPresent = useCallback(() => {
+    if (!web3) {
+      return false;
+    }
+    if (!web3.currentProvider) {
+      return false;
+    }
+    if (!web3.currentProvider.selectedAddress) {
+      return false;
+    }
+    return true;
+  }, [web3]);
+
+  const initiateContract = useCallback(async () => {
+    if (!web3) {
+      return;
+    }
+    const contract = await new web3.eth.Contract(
+      abis.nazToken,
+      addresses.nazToken
+    );
+    setContract(contract);
+  }, [web3]);
+
+  useEffect(() => {
+    if (web3 === null) {
+      return;
+    }
+    // TODO: switch to 0x1 for prod
+    if (web3.currentProvider.chainId !== "0x3") {
+      setIncorrectNetwork(true);
+      return;
+    }
+    setIncorrectNetwork(false);
+    const addr = checkIfAddressPresent();
+    setAddressPresent(addr);
+    initiateContract();
+  }, [web3, initiateContract, checkIfAddressPresent]);
+
+  const onModal = useCallback(async () => {
+    if (contract === null) {
+      initiateContract();
+    }
+    if (contract === null || web3 === null) {
+      return;
+    }
+  }, [web3, contract, initiateContract]);
 
   const fetchEthPrice = useCallback(() => {
     if (!contract) {
@@ -231,101 +331,6 @@ const Stats = ({
     computeTotalValueOfSupply,
   ]);
 
-  useEffect(() => {
-    fetchAll();
-    let timer = setTimeout(() => {
-      fetchAll();
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [fetchAll]);
-
-  return contract !== null ? (
-    addressPresent ? (
-      <>
-        <Typography variant="h5">
-          Ethereum price: ${Number(ethP).toFixed(2)}
-        </Typography>
-        <Typography variant="h5">
-          ETH Reserve: {Number(reserveBalance).toFixed(2)}
-        </Typography>
-        <Typography variant="h5">
-          $NAZ Total Supply: {Number(totalSupply).toFixed(2)}
-        </Typography>
-      </>
-    ) : (
-      <Box className={classes.centerBox}>
-        <CircularProgress />
-        <Typography className={classes.typographyCenter} variant="caption">
-          Connecting you to the blockchain...
-        </Typography>
-      </Box>
-    )
-  ) : (
-    <CircularProgress className={classes.center} />
-  );
-};
-
-const Alert = (props) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
-
-export default ({ web3, provider, isLoading }) => {
-  const classes = useStyles();
-  const [contract, setContract] = useState(null);
-  const [eth, setEth] = useState("");
-  const [naz, setNaz] = useState("");
-  const [marketCap, setMarketCap] = useState(0);
-  const [addressPresent, setAddressPresent] = useState(false);
-  const [incorrectNetwork, setIncorrectNetwork] = useState(false);
-
-  const checkIfAddressPresent = useCallback(() => {
-    if (!web3) {
-      return false;
-    }
-    if (!web3.currentProvider) {
-      return false;
-    }
-    if (!web3.currentProvider.selectedAddress) {
-      return false;
-    }
-    return true;
-  }, [web3]);
-
-  const initiateContract = useCallback(async () => {
-    if (!web3) {
-      return;
-    }
-    const contract = await new web3.eth.Contract(
-      abis.nazToken,
-      addresses.nazToken
-    );
-    setContract(contract);
-  }, [web3]);
-
-  useEffect(() => {
-    if (web3 === null) {
-      return;
-    }
-    // TODO: switch to 0x1 for prod
-    if (web3.currentProvider.chainId !== "0x3") {
-      setIncorrectNetwork(true);
-      return;
-    }
-    setIncorrectNetwork(false);
-    const addr = checkIfAddressPresent();
-    setAddressPresent(addr);
-    initiateContract();
-  }, [web3, initiateContract, checkIfAddressPresent]);
-
-  const onModal = useCallback(async () => {
-    if (contract === null) {
-      initiateContract();
-    }
-    if (contract === null || web3 === null) {
-      return;
-    }
-  }, [web3, contract, initiateContract]);
-
   return (
     <Box className={classes.root}>
       <Box>
@@ -379,6 +384,10 @@ export default ({ web3, provider, isLoading }) => {
           marketCap={marketCap}
           setMarketCap={setMarketCap}
           addressPresent={addressPresent}
+          fetchAll={fetchAll}
+          ethP={ethP}
+          reserveBalance={reserveBalance}
+          totalSupply={totalSupply}
         />
       </Box>
       {incorrectNetwork && (
@@ -413,6 +422,7 @@ export default ({ web3, provider, isLoading }) => {
               setEth={setEth}
               onModal={onModal}
               contract={contract}
+              fetchAll={fetchAll}
             />
             <SellModal
               web3={web3}
@@ -420,6 +430,7 @@ export default ({ web3, provider, isLoading }) => {
               setNaz={setNaz}
               onModal={onModal}
               contract={contract}
+              fetchAll={fetchAll}
             />
           </Box>
         </Box>

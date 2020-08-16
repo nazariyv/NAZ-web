@@ -84,7 +84,7 @@ const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
-export default ({ contract, web3, onModal, eth, setEth }) => {
+export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [ethValid, setEthValid] = useState(true);
@@ -149,6 +149,7 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
             setTxSuccess(true);
             setTxHash(`https://etherscan.io/tx/${receipt.transactionHash}`);
             setIsBuying(false);
+            fetchAll();
             return;
           } else {
             setTxFailureOpen(true);
@@ -302,10 +303,7 @@ export default ({ contract, web3, onModal, eth, setEth }) => {
                   <CircularProgress />
                   <Box className={classes.alignSelf}>
                     <Typography variant="caption">
-                      waiting for the tx to complete. sit tight{" "}
-                      <span role="img" aria-label="winking emoji">
-                        😉
-                      </span>
+                      waiting for the tx to complete. sit tight
                     </Typography>
                   </Box>
                 </Box>
