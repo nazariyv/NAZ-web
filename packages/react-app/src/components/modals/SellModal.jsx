@@ -194,7 +194,7 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
     setTxFailureOpen(true);
     setTxSuccess(false);
     setIsSelling(false);
-  }, [contract, nazValid, web3, naz]);
+  }, [contract, nazValid, web3, naz, fetchAll]);
 
   const handleOnChange = useCallback(
     (e) => {

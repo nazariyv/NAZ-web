@@ -174,7 +174,7 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
     setTxFailureOpen(true);
     setTxSuccess(false);
     setIsBuying(false);
-  }, [contract, eth, ethValid, web3]);
+  }, [contract, eth, ethValid, web3, fetchAll]);
 
   const handleOnChange = useCallback(
     (e) => {
