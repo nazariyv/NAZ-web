@@ -59,8 +59,8 @@ export default () => {
           variant="body1"
           className={classes.typography}
         >
-          DOUBLE YOUR MONEY. Just kidding. You can buy my personal token here.
-          Tokens are neat. $NAZ can be exchanged for (more to come soon)
+          You can buy my personal token here. Tokens are neat. $NAZ can be
+          exchanged for (more to come soon)
           <br />
           - my time (14/08/2020 @ $200ph)
           <br />
