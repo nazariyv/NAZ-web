@@ -256,7 +256,10 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
     if (web3 === null) {
       return;
     }
-    if (web3.currentProvider.chainId !== "0x1") {
+    if (
+      web3.currentProvider.chainId !== "0x1" &&
+      web3.currentProvider.chainId !== "1"
+    ) {
       setIncorrectNetwork(true);
       return;
     }
