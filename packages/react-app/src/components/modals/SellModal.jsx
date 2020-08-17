@@ -190,24 +190,29 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
           // computeEstimatedEthTokens();
           return;
         } else {
+          computeEstimatedEthTokens(naz);
           setTxFailureOpen(true);
           setTxSuccess(false);
           setIsSelling(false);
         }
       } else {
+        computeEstimatedEthTokens(naz);
         setTxFailureOpen(true);
         setTxSuccess(false);
         setIsSelling(false);
       }
     } else {
+      computeEstimatedEthTokens(naz);
       setTxFailureOpen(true);
       setTxSuccess(false);
       setIsSelling(false);
     }
+    computeEstimatedEthTokens(naz);
     setTxFailureOpen(true);
     setTxSuccess(false);
     setIsSelling(false);
   }, [
+    computeEstimatedEthTokens,
     contract,
     nazValid,
     web3,
@@ -394,8 +399,7 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
                       </IconButton>
                     }
                   >
-                    Something went wrong. Perhaps someone tried to front run
-                    you. Try with higer slippage
+                    Something went wrong. Try higher slippage
                   </Alert>
                 </Collapse>
               )

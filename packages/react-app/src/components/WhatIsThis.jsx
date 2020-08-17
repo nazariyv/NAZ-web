@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
-    width: "75%",
+    width: "85%",
     height: "100%",
     marginTop: "auto",
     marginLeft: "auto",

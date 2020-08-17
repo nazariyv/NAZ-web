@@ -17,7 +17,6 @@ import BuyModal from "./modals/BuyModal";
 import MuiAlert from "@material-ui/lab/Alert";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 
-// TODO: give a message that they should switch to mainnet if the network is different
 const bn = new BigNumber("1e18");
 
 const useStyles = makeStyles((theme) => ({
@@ -138,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
   verified: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
     justifyContent: "flex-end",
   },
   error: {
@@ -170,8 +169,6 @@ const BorderLinearProgress = withStyles((theme) => ({
 
 const Stats = ({
   contract,
-  initiateContract,
-  setMarketCap,
   addressPresent,
   fetchAll,
   ethP,
@@ -218,7 +215,7 @@ const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
-export default ({ web3, provider, isLoading }) => {
+export default ({ web3, provider, isLoading, promptSetProvider }) => {
   const classes = useStyles();
   const [contract, setContract] = useState(null);
   const [eth, setEth] = useState("");
@@ -259,7 +256,6 @@ export default ({ web3, provider, isLoading }) => {
     if (web3 === null) {
       return;
     }
-    // TODO: switch to 0x1 for prod
     if (web3.currentProvider.chainId !== "0x3") {
       setIncorrectNetwork(true);
       return;
@@ -349,17 +345,17 @@ export default ({ web3, provider, isLoading }) => {
           >
             Surf $NAZ bonding curve
           </Typography>
-          <Typography variant="overline">
-            This is the first of its kind Personal Token built with a Bonding
-            Curve
+          <Typography variant="caption">
+            This is the first of its kind personal token built with a linear
+            bonding curve
           </Typography>
           <Typography variant="caption">
             Front running, overflow / underflow, reentrancy resistant
           </Typography>
-          <Typography variation="caption" className={classes.verified}>
+          <Box className={classes.verified}>
             <VerifiedUserIcon />
-            MythX verified
-          </Typography>
+            <Typography variant="caption">MythX, SmartDec verified</Typography>
+          </Box>
         </Box>
         <Box className={classes.textCenter}>
           <Typography variant="h3">
@@ -416,7 +412,8 @@ export default ({ web3, provider, isLoading }) => {
             variant="extended"
             aria-label="connect your wallet"
             className={classes.warning}
-            onClick={onModal}
+            onClick={promptSetProvider}
+            // onClick={onModal}
           >
             <Box className={classes.error}>
               <ErrorIcon className={classes.extendedIcon} />

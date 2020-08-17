@@ -27,7 +27,7 @@ const providerOptions = {
   // fortmatic: {
   //   package: Fortmatic, // required
   //   options: {
-  //     key: "pk_test_7FA3FE337CB778C2", // required. TODO: change for live
+  //     key: "pk_test_7FA3FE337CB778C2", // required.
   //   },
   // },
   torus: {
@@ -52,7 +52,7 @@ const providerOptions = {
   // burnerconnect: {
   //   package: BurnerConnectProvider, // required
   //   options: {
-  //     defaultNetwork: "100", // TODO: ? what is this
+  //     defaultNetwork: "100",
   //   },
   // },
   // mewconnect: {
@@ -63,9 +63,8 @@ const providerOptions = {
   // },
 };
 
-// TODO: change to mainnet
 const web3Modal = new Web3Modal({
-  network: "ropsten", // optional. TODO: change to mainnet
+  network: "ropsten",
   cacheProvider: true, // optional
   providerOptions, // required
 });
@@ -157,10 +156,15 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
     (async () => {
       if (!web3) {
-        promptSetProvider();
+        setIsLoading(true);
+        try {
+          promptSetProvider();
+        } catch (e) {
+          setIsLoading(false);
+        }
+        setIsLoading(false);
       }
     })();
   }, [promptSetProvider, web3]);

@@ -165,29 +165,35 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
             // computeEstimatedNazTokens();
             return;
           } else {
+            computeEstimatedNazTokens(eth);
             setTxFailureOpen(true);
             setTxSuccess(false);
             setIsBuying(false);
           }
         } else {
+          computeEstimatedNazTokens(eth);
           setTxFailureOpen(true);
           setTxSuccess(false);
           setIsBuying(false);
         }
       } else {
+        computeEstimatedNazTokens(eth);
         setTxFailureOpen(true);
         setTxSuccess(false);
         setIsBuying(false);
       }
     } catch (e) {
+      computeEstimatedNazTokens(eth);
       setTxFailureOpen(true);
       setTxSuccess(false);
       setIsBuying(false);
     }
+    computeEstimatedNazTokens(eth);
     setTxFailureOpen(true);
     setTxSuccess(false);
     setIsBuying(false);
   }, [
+    computeEstimatedNazTokens,
     contract,
     eth,
     ethValid,
