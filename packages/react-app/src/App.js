@@ -33,11 +33,13 @@ const providerOptions = {
   torus: {
     package: Torus, // required
     options: {
-      // networkParams: {
-      //   host: "https://localhost:8545", // optional
-      //   chainId: 1337, // optional
-      //   networkId: 1337, // optional
-      // },
+      networkParams: {
+        // host: "https://localhost:8545", // optional
+        chainId: 1,
+        networkId: 1,
+        // chainId: 1337, // optional
+        // networkId: 1337, // optional
+      },
       // config: {
       //   buildEnv: "development", // optional
       // },
