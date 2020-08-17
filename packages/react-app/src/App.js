@@ -64,7 +64,7 @@ const providerOptions = {
 };
 
 const web3Modal = new Web3Modal({
-  network: "ropsten",
+  network: "mainnet",
   cacheProvider: true, // optional
   providerOptions, // required
 });
