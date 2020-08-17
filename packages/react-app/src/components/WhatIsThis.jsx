@@ -62,9 +62,6 @@ export default () => {
           DOUBLE YOUR MONEY. Just kidding. You can buy my personal token here.
           Tokens are neat. $NAZ can be exchanged for (more to come soon)
           <br />
-          <br />
-          - future profits share of my businesses
-          <br />
           - my time (14/08/2020 @ $200ph)
           <br />
           - get to hang out with me (subject to KYC)
