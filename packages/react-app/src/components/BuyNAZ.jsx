@@ -315,23 +315,23 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
     setReserveBalance((reserves / bn).toString());
   }, [setReserveBalance, contract, initiateContract]);
 
-  const computeTotalValueOfSupply = useCallback(() => {
-    if (!totalSupply || !ethP) {
+  const computeTotalValueOfETH = useCallback(() => {
+    if (!reserveBalance || !ethP) {
       return;
     }
-    setMarketCap(Number(totalSupply) * Number(ethP));
-  }, [totalSupply, ethP, setMarketCap]);
+    setMarketCap(Number(reserveBalance) * Number(ethP));
+  }, [reserveBalance, ethP, setMarketCap]);
 
   const fetchAll = useCallback(async () => {
     fetchEthPrice();
     fetchTotalSupply();
     fetchReserveBalance();
-    computeTotalValueOfSupply();
+    computeTotalValueOfETH();
   }, [
     fetchEthPrice,
     fetchTotalSupply,
     fetchReserveBalance,
-    computeTotalValueOfSupply,
+    computeTotalValueOfETH,
   ]);
 
   return (
