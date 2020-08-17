@@ -39,6 +39,18 @@ export default () => {
         WTF is this?
       </Typography>
       <Box>
+        <Typography variant="h2">WARNING</Typography>
+        <Typography variant="overline">
+          THIS IS RISKY. IF YOU ARE A UNITED STATES BASED INVESTOR, STOP. IF YOU
+          BUY THIS TOKEN, YOU CONSENT TO BE LIABLE FOR ALL OF THE LEGAL
+          RAMIFICATIONS OF THE PURCHASE AND BEYOND. THIS IS ALPHA PRODUCT, BE
+          WARNED.
+        </Typography>
+        <Typography>
+          Also this is a fun project I have built over the span of a couple of
+          days. This token on its own is worthless, although, it is
+          overcollateralized by ETH. Read on to learn what I mean.
+        </Typography>
         <Typography variant="h4" className={classes.typography}>
           What do I do with this website?
         </Typography>
