@@ -19,6 +19,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
 import MuiAlert from "@material-ui/lab/Alert";
 import IconButton from "@material-ui/core/IconButton";
+import Slippage from "../Slippage";
 
 const SMALLEST_UNIT = 0.000000000000000001;
 // * ACTUAL: 1.1579209e+77
@@ -79,6 +80,12 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  slipAndSell: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
@@ -94,6 +101,8 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
   const [txHash, setTxHash] = useState("");
   const [txSuccessOpen, setTxSuccessOpen] = useState(false);
   const [txFailureOpen, setTxFailureOpen] = useState(false);
+  const [slippage, setSlippage] = useState("100");
+  const [estimate, setEstimate] = useState("0");
 
   const computeEstimatedEthTokens = useCallback(
     async (nazAmount) => {
@@ -141,6 +150,7 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
         .getContinuousBurnRefund(bnaz.toString())
         .call();
 
+      setEstimate(refundAmount - 100);
       setEstimatedEthTokens(`${(refundAmount / bn).toString()} ETH`);
       setCrunchingEthEstimates(false);
     },
@@ -162,7 +172,7 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
     let receipt = "";
     try {
       receipt = await contract.methods
-        .burn(correctNaz.toString())
+        .burn(correctNaz.toString(), slippage.toString(), estimate.toString())
         .send({ from: web3.currentProvider.selectedAddress });
     } catch (e) {
       setIsSelling(false);
@@ -175,6 +185,9 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
           setTxHash(`https://etherscan.io/tx/${receipt.transactionHash}`);
           setIsSelling(false);
           fetchAll();
+          setEstimate(0);
+          setEstimatedEthTokens("(start typing to get an estimate)");
+          // computeEstimatedEthTokens();
           return;
         } else {
           setTxFailureOpen(true);
@@ -194,7 +207,16 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
     setTxFailureOpen(true);
     setTxSuccess(false);
     setIsSelling(false);
-  }, [contract, nazValid, web3, naz, fetchAll]);
+  }, [
+    contract,
+    nazValid,
+    web3,
+    naz,
+    fetchAll,
+    estimate,
+    slippage,
+    setEstimate,
+  ]);
 
   const handleOnChange = useCallback(
     (e) => {
@@ -218,6 +240,10 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
     },
     [setNazValid, computeEstimatedEthTokens, setNaz]
   );
+
+  const handleSlippageChange = (e) => {
+    setSlippage(e.target.value);
+  };
 
   const handleOpen = useCallback(() => {
     setOpen(true);
@@ -297,17 +323,22 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
               onChange={handleOnChange}
             />
             {!isSelling ? (
-              <Fab
-                variant="extended"
-                color="secondary"
-                aria-label="sell naz"
-                className={classes.margin}
-                onClick={onSell}
-                disabled={!nazValid}
-              >
-                {/* <AttachMoneyIcon className={classes.extendedIcon} /> */}
-                Sell $NAZ
-              </Fab>
+              <Box className={classes.slipAndSell}>
+                <Slippage
+                  slippage={slippage}
+                  handleSlippageChange={handleSlippageChange}
+                />
+                <Fab
+                  variant="extended"
+                  color="secondary"
+                  aria-label="sell naz"
+                  className={classes.margin}
+                  onClick={onSell}
+                  disabled={!nazValid}
+                >
+                  Sell $NAZ
+                </Fab>
+              </Box>
             ) : (
               <Box className={classes.loadingTx}>
                 <CircularProgress />

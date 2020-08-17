@@ -63,6 +63,7 @@ const providerOptions = {
   // },
 };
 
+// TODO: change to mainnet
 const web3Modal = new Web3Modal({
   network: "ropsten", // optional. TODO: change to mainnet
   cacheProvider: true, // optional

@@ -19,6 +19,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
+import Slippage from "../Slippage";
 
 const bn = new BigNumber("1e18");
 
@@ -70,13 +71,19 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "1em",
   },
   howMuchETH: {
-    margin: "32px",
+    margin: "16px",
   },
   somePadding: {
     padding: "1em",
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
+  },
+  slipAndBuy: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
 }));
 
@@ -97,6 +104,8 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
   const [txHash, setTxHash] = useState("");
   const [txSuccessOpen, setTxSuccessOpen] = useState(false);
   const [txFailureOpen, setTxFailureOpen] = useState(false);
+  const [slippage, setSlippage] = useState("100");
+  const [estimate, setEstimate] = useState("0");
 
   const computeEstimatedNazTokens = useCallback(
     async (deposit) => {
@@ -121,6 +130,7 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
         .getContinuousMintReward(depositAmount)
         .call();
       // do: batch state update
+      setEstimate((rewardAmount - 100).toString());
       setEstimatedNazTokens(`${(rewardAmount / bn).toString()} $NAZ`);
       setCrunchingNazEstimates(false);
     },
@@ -138,7 +148,7 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
     setIsBuying(true);
     let receipt = "";
     try {
-      receipt = await contract.methods.mint().send({
+      receipt = await contract.methods.mint(slippage, estimate).send({
         from: web3.currentProvider.selectedAddress,
         value: web3.utils.toWei(String(eth), "ether"),
       });
@@ -150,6 +160,9 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
             setTxHash(`https://etherscan.io/tx/${receipt.transactionHash}`);
             setIsBuying(false);
             fetchAll();
+            setEstimate(0);
+            setEstimatedNazTokens("(start typing to get an estimate)");
+            // computeEstimatedNazTokens();
             return;
           } else {
             setTxFailureOpen(true);
@@ -174,7 +187,16 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
     setTxFailureOpen(true);
     setTxSuccess(false);
     setIsBuying(false);
-  }, [contract, eth, ethValid, web3, fetchAll]);
+  }, [
+    contract,
+    eth,
+    ethValid,
+    web3,
+    fetchAll,
+    estimate,
+    slippage,
+    setEstimate,
+  ]);
 
   const handleOnChange = useCallback(
     (e) => {
@@ -197,6 +219,10 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
     },
     [setEthValid, computeEstimatedNazTokens, setEth]
   );
+
+  const handleSlippageChange = (e) => {
+    setSlippage(e.target.value);
+  };
 
   const handleOpen = useCallback(() => {
     setOpen(true);
@@ -286,17 +312,22 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
               onChange={handleOnChange}
             />
             {!isBuying ? (
-              <Fab
-                variant="extended"
-                color="primary"
-                aria-label="buy that naz"
-                className={classes.margin}
-                onClick={onBuy}
-                disabled={!ethValid}
-              >
-                {/* <AttachMoneyIcon className={classes.extendedIcon} /> */}
-                BUY THAT $NAZ
-              </Fab>
+              <Box className={classes.slipAndBuy}>
+                <Slippage
+                  slippage={slippage}
+                  handleSlippageChange={handleSlippageChange}
+                />
+                <Fab
+                  variant="extended"
+                  color="primary"
+                  aria-label="buy the naz personal token"
+                  className={classes.margin}
+                  onClick={onBuy}
+                  disabled={!ethValid}
+                >
+                  BUY THAT $NAZ
+                </Fab>
+              </Box>
             ) : (
               <Container>
                 <Box className={classes.loadingTx}>

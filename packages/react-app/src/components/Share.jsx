@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
   const quote =
-    "You can buy portions of profits of $NAZ's business by buying tokenized version of himself. You can read more about it here: https://naz.life";
+    "A very unique personal token $NAZ built on top of a linear bonding curve. You can read more about it here: https://naz.life";
   const classes = useStyles();
   const url = "https://naz.life";
   const media =
@@ -109,7 +109,7 @@ export default () => {
         <Box className={classes.paddingBot}>
           <TwitterShareButton
             url={url}
-            title="This guy used bonding curve to tokenize himself. Fully collateralized $NAZ"
+            title="This guy used linear bonding curve to tokenize himself. Fully collateralized $NAZ"
             via="AlgorithmicBot"
             hashtags={[
               "ethereum",
@@ -126,7 +126,7 @@ export default () => {
           </FacebookShareButton>
           <TelegramShareButton
             url={url}
-            title="This is first of its kind personal token"
+            title="This is the first of its kind personal token"
           >
             <TelegramIcon size={48} round={true} />
           </TelegramShareButton>
@@ -135,19 +135,19 @@ export default () => {
           </PinterestShareButton>
           <RedditShareButton
             url={url}
-            title="This is first of its kind personal token"
+            title="This is the first of its kind personal token"
           >
             <RedditIcon size={48} round={true} />
           </RedditShareButton>
           <ViberShareButton
             url={url}
-            title="This is first of its kind personal token"
+            title="This is the first of its kind personal token"
           >
             <ViberIcon size={48} round={true} />
           </ViberShareButton>
           <WhatsappShareButton
             url={url}
-            title="This is first of its kind personal token"
+            title="This is the first of its kind personal token"
           >
             <WhatsappIcon size={48} round={true} />
           </WhatsappShareButton>

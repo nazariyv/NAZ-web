@@ -15,6 +15,7 @@ import nazAva from "../static/images/nazz.JPG";
 import SellModal from "./modals/SellModal";
 import BuyModal from "./modals/BuyModal";
 import MuiAlert from "@material-ui/lab/Alert";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 
 // TODO: give a message that they should switch to mainnet if the network is different
 const bn = new BigNumber("1e18");
@@ -133,6 +134,12 @@ const useStyles = makeStyles((theme) => ({
   },
   flexEnd: {
     alignSelf: "flex-end",
+  },
+  verified: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
   },
   error: {
     display: "flex",
@@ -346,7 +353,13 @@ export default ({ web3, provider, isLoading }) => {
             This is the first of its kind Personal Token built with a Bonding
             Curve
           </Typography>
-          <Typography variant="caption">Front running resistant</Typography>
+          <Typography variant="caption">
+            Front running, overflow / underflow, reentrancy resistant
+          </Typography>
+          <Typography variation="caption" className={classes.verified}>
+            <VerifiedUserIcon />
+            MythX verified
+          </Typography>
         </Box>
         <Box className={classes.textCenter}>
           <Typography variant="h3">
