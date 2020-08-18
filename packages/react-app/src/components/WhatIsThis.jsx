@@ -41,15 +41,15 @@ export default () => {
       <Box>
         <Typography variant="h2">WARNING</Typography>
         <Typography variant="overline">
-          THIS IS RISKY. IF YOU ARE A UNITED STATES BASED INVESTOR, STOP. IF YOU
-          BUY THIS TOKEN, YOU CONSENT TO BE LIABLE FOR ALL OF THE LEGAL
-          RAMIFICATIONS OF THE PURCHASE AND BEYOND. THIS IS ALPHA PRODUCT, BE
-          WARNED.
-        </Typography>
-        <Typography>
-          Also this is a fun project I have built over the span of a couple of
-          days. This token on its own is worthless, although, it is
-          overcollateralized by ETH. Read on to learn what I mean.
+          THIS IS RISKY. IF YOU ARE A UNITED STATES OF AMERICA BASED BUYER,
+          STOP. IF YOU BUY THIS TOKEN, YOU CONSENT TO BE LIABLE FOR ALL OF THE
+          LEGAL RAMIFICATIONS OF THE PURCHASE AND BEYOND. DO NOT BUY! THIS
+          TOKEN'S USE IS FOR YOU TO REDEEM IT IN THE FUTURE FOR MY SERVICES. DO
+          NOT USE IT AS A VALUE STORE, DO NOT USE IT AS AN INVESTMENT, DO NOT
+          USE IT AS A SPECULATION. I WILL REITERATE, IF YOU ARE UNITED STATES OF
+          AMERICA BASED, DO NOT BUY! THIS IS ALPHA PRODUCT, BE WARNED. I AM NOT
+          LIABLE FOR ANY LOSS OF YOUR ETH / $NAZ. BY BUYING, YOU CONSENT TO
+          THIS.
         </Typography>
         <Typography variant="h4" className={classes.typography}>
           What do I do with this website?
@@ -130,6 +130,16 @@ export default () => {
           of it will increase inevitably, the more supply there is. On top of
           that, it is fully collateralized. There is more ETH backing it up than
           the total supply of NAZ. It means I am more expensive than ETH.
+        </Typography>
+        <Typography variant="h4" className={classes.typography}>
+          What is the total supply?
+        </Typography>
+        <Typography color="textSecondary" variant="body1">
+          On the main page, just under the market capitalisation text, you can
+          see the total number of issued $NAZ and the ETH that backs it up. My
+          token is over-collateralised. I cannot mint it as I please, and its
+          value is at the very least derived from the collateral backing it up.
+          If I want my token, I have to buy it just like everyone else.
         </Typography>
         <Typography variant="h4" className={classes.typography}>
           Final words?
