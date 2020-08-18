@@ -16,6 +16,7 @@ import Torus from "@toruslabs/torus-embed";
 import Web3Modal from "web3modal";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
+import ComingSoon from "./components/ComingSoon";
 
 const providerOptions = {
   // walletconnect: {
@@ -192,7 +193,8 @@ const App = () => {
           >
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
             <Tab label="WTF?" {...a11yProps(1)} />
-            <Tab label="SHARE" {...a11yProps(2)} />
+            <Tab label="Coming Soon..." {...a11yProps(2)} />
+            <Tab label="SHARE" {...a11yProps(3)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
@@ -207,6 +209,9 @@ const App = () => {
           <WhatIsThis />
         </TabPanel>
         <TabPanel value={value} index={2}>
+          <ComingSoon />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
           <Share />
         </TabPanel>
       </Box>
