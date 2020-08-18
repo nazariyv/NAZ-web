@@ -161,7 +161,8 @@ export default () => {
           <br />
           <br />I have created this as part of an incubator I am in, to
           incentivise people to give me the feedback on my business idea (retail
-          adoption of Ethereum)
+          adoption of Ethereum). Here is the address of the contract:
+          0x4BBBD966ea913545aD556045b7aF18f52A0aE91c
         </Typography>
       </Box>
     </Box>
