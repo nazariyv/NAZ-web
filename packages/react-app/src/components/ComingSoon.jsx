@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     marginBottom: "3em",
   },
+  mb1: {
+    marginBottom: "1rem",
+  },
 }));
 
 export default () => {
@@ -35,7 +38,9 @@ export default () => {
   return (
     <Box className={classes.root}>
       <Box>
-        <Typography variant="h1">Coming Soon</Typography>
+        <Typography variant="h1" className={classes.mb1}>
+          Coming Soon
+        </Typography>
         <Typography variant="body1">
           - Integration with calendar API (e.g. Callendly) for you to be able to
           redeem your $NAZ for my time at going ETH price rate
@@ -44,6 +49,10 @@ export default () => {
           <br />- Integration with Twitter for retweet payout incentives if you
           have $NAZ
           <br /> - Internationalisation for bigger community
+          <br /> - A DAO for KERNEL members. KERNEL has given me so much, I feel
+          obliged to pay back to the community however I can. And so I pledged
+          to give back 20% of all of the $NAZ redeem amounts to my lovely
+          community of geniuses and kind and awesome people
           <br /> - Dark theme? (let me know on Twitter if you care about this at
           all)
         </Typography>

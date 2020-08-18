@@ -36,7 +36,7 @@ export default () => {
   return (
     <Box className={classes.root}>
       <Typography className={classes.moveRight} gutterBottom variant="h1">
-        WTF is this?
+        Who is $NAZ?
       </Typography>
       <Box>
         <Typography variant="h2">WARNING</Typography>
@@ -161,8 +161,15 @@ export default () => {
           <br />
           <br />I have created this as part of an incubator I am in, to
           incentivise people to give me the feedback on my business idea (retail
-          adoption of Ethereum). Here is the address of the contract:
-          0x4BBBD966ea913545aD556045b7aF18f52A0aE91c
+          adoption of Ethereum). You can inspect the contract{" "}
+          <a
+            href="https://etherscan.io/address/0x4BBBD966ea913545aD556045b7aF18f52A0aE91c"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            here
+          </a>
+          .
         </Typography>
       </Box>
     </Box>

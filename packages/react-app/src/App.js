@@ -17,6 +17,7 @@ import Web3Modal from "web3modal";
 import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
 import ComingSoon from "./components/ComingSoon";
+import TelegramIcon from "@material-ui/icons/Telegram";
 
 const providerOptions = {
   // walletconnect: {
@@ -192,7 +193,7 @@ const App = () => {
             aria-label="naz token bar"
           >
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
-            <Tab label="WTF?" {...a11yProps(1)} />
+            <Tab label="Who is $NAZ?" {...a11yProps(1)} />
             <Tab label="Coming Soon..." {...a11yProps(2)} />
             <Tab label="SHARE" {...a11yProps(3)} />
           </Tabs>
@@ -217,6 +218,12 @@ const App = () => {
       </Box>
       <Box className={classes.paddingBot}>
         <BottomNavigation value={bottomNavValue}>
+          <BottomNavigationAction
+            icon={<TelegramIcon style={{ fontSize: 40, color: "grey" }} />}
+            href="https://t.me/nazbondsurf"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
           <BottomNavigationAction
             // label="Twitter"
             icon={<TwitterIcon style={{ fontSize: 40, color: "grey" }} />}
