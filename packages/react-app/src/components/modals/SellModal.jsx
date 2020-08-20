@@ -40,7 +40,7 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
   button: {
-    margin: "16px",
+    margin: "1rem",
   },
   modal: {
     display: "flex",
@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -63,10 +62,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
   },
   howMuchETH: {
-    margin: "32px",
+    margin: "2rem",
   },
   somePadding: {
-    padding: "1em",
+    padding: "1rem",
   },
   loadingTx: {
     display: "flex",
@@ -75,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   },
   alignSelf: {
     alignSelf: "center",
-    marginLeft: "1em",
+    marginLeft: "1rem",
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
@@ -271,7 +270,7 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
           disabled={!contract}
           onClick={handleOpen}
         >
-          SELL
+          BURN
         </Button>
       </ThemeProvider>
       <Modal

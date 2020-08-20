@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: "0.5em",
+    padding: "0.5rem",
   },
   rowRadio: {
     display: "flex",

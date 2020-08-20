@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -68,13 +67,13 @@ const useStyles = makeStyles((theme) => ({
   },
   alignSelf: {
     alignSelf: "center",
-    marginLeft: "1em",
+    marginLeft: "1rem",
   },
   howMuchETH: {
     margin: "16px",
   },
   somePadding: {
-    padding: "1em",
+    padding: "1rem",
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
@@ -251,7 +250,7 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
           disabled={!contract}
           onClick={handleOpen}
         >
-          BUY
+          MINT
         </Button>
       </ThemeProvider>
       <Modal

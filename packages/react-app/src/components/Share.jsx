@@ -25,7 +25,6 @@ import {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
     width: "75%",
@@ -33,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "auto",
     marginLeft: "auto",
     marginRight: "auto",
-    padding: "0em 3em 0em 0em",
+    padding: "0rem 3rem 0rem 0rem",
     marginBottom: "96px",
   },
   center: {
@@ -42,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     alignItems: "center",
     [theme.breakpoints.down("sm")]: {
-      fontSize: "3em",
+      fontSize: "3rem",
     },
   },
   paddingBot: {
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     flexWrap: "wrap",
-    padding: "1em",
+    padding: "1rem",
     justifyContent: "space-between",
     "& > *": {
       margin: theme.spacing(1),
@@ -160,7 +159,7 @@ export default () => {
             marginLeft: "auto",
             marginRight: "auto",
             width: "40%",
-            borderRadius: "3em",
+            borderRadius: "3rem",
           }}
           src={surfNaz}
           alt="doodle human 'surfing' the NAZ bonding curve"

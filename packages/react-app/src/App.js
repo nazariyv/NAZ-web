@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
 import Share from "./components/Share";
@@ -18,59 +18,69 @@ import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
 import ComingSoon from "./components/ComingSoon";
 import TelegramIcon from "@material-ui/icons/Telegram";
+import BgColor from "./static/images/cool-background4.svg";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    // backgroundColor: theme.palette.background.paper,
+    backgroundImage: `url(${BgColor})`,
+    height: "100vh",
+    /* Center and scale the image nicely */
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  },
+  fullWidthAppBar: {
+    width: "100%",
+  },
+  alignItems: {
+    alignItems: "center",
+  },
+  paddingBot: {
+    position: "fixed",
+    left: 0,
+    bottom: 0,
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "70px",
+    backgroundColor: theme.palette.background.paper,
+  },
+  arrangeIcons: {
+    display: "flex",
+    flexDirection: "row",
+    padding: "1rem",
+  },
+  noPad: {
+    padding: "0px",
+  },
+  displayBlock: {
+    display: "block",
+  },
+}));
 
 const providerOptions = {
-  // walletconnect: {
-  //   package: WalletConnectProvider, // required
-  //   options: {
-  //     infuraId: "4a5295521e87487ea515d984c82d3a80", // required
-  //   },
-  // },
-  // fortmatic: {
-  //   package: Fortmatic, // required
-  //   options: {
-  //     key: "pk_test_7FA3FE337CB778C2", // required.
-  //   },
-  // },
   torus: {
-    package: Torus, // required
+    package: Torus,
     options: {
       networkParams: {
-        // host: "https://localhost:8545", // optional
         chainId: 1,
         networkId: 1,
-        // chainId: 1337, // optional
-        // networkId: 1337, // optional
       },
       // config: {
       //   buildEnv: "development", // optional
       // },
     },
   },
-  // authereum: {
-  //   package: Authereum, // required
-  // },
-  // unilogin: {
-  //   package: UniLogin, // required
-  // },
-  // burnerconnect: {
-  //   package: BurnerConnectProvider, // required
-  //   options: {
-  //     defaultNetwork: "100",
-  //   },
-  // },
-  // mewconnect: {
-  //   package: MewConnect, // required
-  //   options: {
-  //     infuraId: "4a5295521e87487ea515d984c82d3a80", // required
-  //   },
-  // },
 };
 
 const web3Modal = new Web3Modal({
   network: "mainnet",
-  cacheProvider: true, // optional
-  providerOptions, // required
+  cacheProvider: true,
+  providerOptions,
 });
 
 function TabPanel(props) {
@@ -102,56 +112,16 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-  fullWidthAppBar: {
-    width: "100%",
-  },
-  stas: {
-    display: "flex",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "purple",
-  },
-  alignItems: {
-    alignItems: "center",
-  },
-  paddingBot: {
-    position: "fixed",
-    left: 0,
-    bottom: 0,
-    textAlign: "center",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    height: "70px",
-    backgroundColor: theme.palette.background.paper,
-  },
-  arrangeIcons: {
-    display: "flex",
-    flexDirection: "row",
-    padding: "1em",
-  },
-  noPad: {
-    padding: "0px",
-  },
-}));
-
 const App = () => {
-  // const [contract, setContract] = useState(null);
   const [provider, setProvider] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [web3, setWeb3] = useState(null);
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [bottomNavValue] = useState(0);
-  // const [darkState, setDarkState] = useState(true);
 
   const promptSetProvider = useCallback(async () => {
+    setIsLoading(true);
     const provider = await web3Modal.connect();
     setProvider(provider);
     const w3 = new Web3(provider);
@@ -159,26 +129,11 @@ const App = () => {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      if (!web3) {
-        setIsLoading(true);
-        try {
-          promptSetProvider();
-        } catch (e) {
-          setIsLoading(false);
-        }
-        setIsLoading(false);
-      }
-    })();
-  }, [promptSetProvider, web3]);
-
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
   return (
-    // <ThemeProvider theme={darkTheme}>
     <Box className={classes.root}>
       <Box className={classes.fullWidthAppBar}>
         <AppBar
@@ -193,7 +148,7 @@ const App = () => {
             aria-label="naz token bar"
           >
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
-            <Tab label="Who is $NAZ?" {...a11yProps(1)} />
+            <Tab label="What is $NAZ?" {...a11yProps(1)} />
             <Tab label="Coming Soon..." {...a11yProps(2)} />
             <Tab label="SHARE" {...a11yProps(3)} />
           </Tabs>
@@ -217,38 +172,38 @@ const App = () => {
         </TabPanel>
       </Box>
       <Box className={classes.paddingBot}>
-        <BottomNavigation value={bottomNavValue}>
-          <BottomNavigationAction
-            icon={<TelegramIcon style={{ fontSize: 40, color: "grey" }} />}
-            href="https://t.me/nazbondsurf"
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-          <BottomNavigationAction
-            // label="Twitter"
-            icon={<TwitterIcon style={{ fontSize: 40, color: "grey" }} />}
-            href="https://twitter.com/AlgorithmicBot"
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-          <BottomNavigationAction
-            // label="YouTube"
-            icon={<YouTubeIcon style={{ fontSize: 40 }} />}
-            href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-          <BottomNavigationAction
-            // label="Medium"
-            icon={<CreateIcon style={{ fontSize: 40 }} />}
-            href="https://medium.com/@parzival.is.sweet"
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-        </BottomNavigation>
+        <Box className={classes.displayBlock}>
+          <BottomNavigation value={bottomNavValue}>
+            <BottomNavigationAction
+              icon={
+                <TelegramIcon style={{ fontSize: "3rem", color: "grey" }} />
+              }
+              href="https://t.me/nazbondsurf"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <BottomNavigationAction
+              icon={<TwitterIcon style={{ fontSize: "3rem", color: "grey" }} />}
+              href="https://twitter.com/AlgorithmicBot"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <BottomNavigationAction
+              icon={<YouTubeIcon style={{ fontSize: "3rem", color: "grey" }} />}
+              href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+            <BottomNavigationAction
+              icon={<CreateIcon style={{ fontSize: "3rem", color: "grey" }} />}
+              href="https://medium.com/@parzival.is.sweet"
+              target="_blank"
+              rel="noopener noreferrer"
+            />
+          </BottomNavigation>
+        </Box>
       </Box>
     </Box>
-    // </ThemeProvider>
   );
 };
 

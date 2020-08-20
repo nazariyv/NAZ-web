@@ -7,7 +7,6 @@ import loading from "../static/images/loading.png";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
     display: "flex",
     flexDirection: "column",
     width: "75%",
@@ -15,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "auto",
     marginLeft: "auto",
     marginRight: "auto",
-    padding: "0em 3em 0em 0em",
+    padding: "0rem 3rem 0rem 0rem",
     marginBottom: "96px",
   },
   center: {
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     flexGrow: 2,
     alignItems: "center",
-    marginBottom: "3em",
+    marginBottom: "3rem",
   },
   mb1: {
     marginBottom: "1rem",
@@ -39,11 +38,22 @@ export default () => {
     <Box className={classes.root}>
       <Box>
         <Typography variant="h1" className={classes.mb1}>
-          Coming Soon
+          Coming To You
         </Typography>
         <Typography variant="body1">
-          - Integration with calendar API (e.g. Callendly) for you to be able to
-          redeem your $NAZ for my time at going ETH price rate
+          {" "}
+          - yNAZ{" "}
+          <span role="img" aria-label="watermelon">
+            🍉
+          </span>{" "}
+          for some juicy crop circles{" "}
+          <span role="img" aria-label="farmer">
+            🧑‍🌾
+          </span>{" "}
+        </Typography>
+        <Typography variant="body2">
+          <br />- Integration with calendar API (e.g. Callendly) for you to be
+          able to redeem your $NAZ for my time at going ETH price rate
           <br />
           - Listing my token on Uniswap
           <br />- Integration with Twitter for retweet payout incentives if you
