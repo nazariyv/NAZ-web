@@ -2,30 +2,20 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
-// import bondingCurve from "../static/images/bondingCurve.jpeg";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
     display: "flex",
     flexDirection: "column",
-    width: "85%",
-    height: "100%",
-    marginTop: "auto",
-    marginLeft: "auto",
-    marginRight: "auto",
-    maxHeight: "500px",
-    padding: "16px",
+    marginBottom: "64px",
+    paddingLeft: "16px",
+    paddingRight: "16px",
   },
   moveRight: {
     textAlign: "right",
   },
-  typography: {
-    margin: "16px 0",
-  },
-  lastTypography: {
-    marginTop: "16px",
-    marginBottom: "128px",
+  mb1: {
+    marginBottom: "1rem",
   },
 }));
 
@@ -34,11 +24,13 @@ export default () => {
 
   return (
     <Box className={classes.root}>
-      <Typography className={classes.moveRight} gutterBottom variant="h1">
-        What is $NAZ?
-      </Typography>
       <Box>
-        <Typography variant="body1">
+        <Typography gutterBottom variant="h1" color="textPrimary">
+          What is $NAZ?
+        </Typography>
+      </Box>
+      <Box fontWeight="fontWeightBold">
+        <Typography variant="body1" className={classes.mb1} color="textPrimary">
           naz, the creator of the $NAZ crew was a quant in London for 4 years.
           He got fed up with the 9-5 and quit. He self-taught himself maths and
           coding. $NAZ is a brand. It is the community. When you buy $NAZ, you
@@ -49,14 +41,10 @@ export default () => {
           hangs out together! Think about it as a family that you join and are
           unlikely leave ;)
         </Typography>
-        <Typography variant="h4" className={classes.typography}>
+        <Typography variant="h4" color="textPrimary">
           What else can I do with $NAZ?
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-          className={classes.typography}
-        >
+        <Typography color="textPrimary" variant="body1" className={classes.mb1}>
           $NAZ can be exchanged for (more to come soon)
           <br />
           - my time (14/08/2020 @ $200ph)
@@ -78,14 +66,10 @@ export default () => {
           - code crazy cool projects with me
           <br />
         </Typography>
-        <Typography variant="h4" className={classes.typography}>
+        <Typography variant="h4" color="textPrimary">
           Anything else?
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-          className={classes.typography}
-        >
+        <Typography color="textPrimary" variant="body1" className={classes.mb1}>
           I believe in the future where there are no middlemen, no guards and no
           guardians. Our security, wellbeing, wealth are the concepts that have
           no meaning in that future. Protocols govern all, there is enough for
@@ -97,7 +81,7 @@ export default () => {
           And you are?
         </Typography>
         <Typography
-          color="textSecondary"
+          color="textPrimary"
           variant="body1"
           className={classes.typography}
         >
@@ -109,14 +93,10 @@ export default () => {
           three days of no sleep due to this website. Let's keep it short and
           sweet.
         </Typography> */}
-        <Typography variant="h4" className={classes.typography}>
-          How does this work?
+        <Typography variant="h4" color="textPrimary">
+          How does $NAZ work?
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-          className={classes.typography}
-        >
+        <Typography color="textPrimary" variant="body1" className={classes.mb1}>
           If you decide to buy $NAZ, then that will increase its price. I have
           defined this to be the case in the code (in the smart contract, for
           the technical folk). I will drop in an interactive chart here in the
@@ -147,17 +127,17 @@ export default () => {
           solo. naz will ensure that $NAZ can only be joined by the qualifying
           people that share in these core principles and values
         </Typography>
-        <Typography variant="h4" className={classes.typography}>
+        <Typography variant="h4" color="textPrimary">
           What is the price of 1 $NAZ right now?
         </Typography>
-        <Typography color="textSecondary" variant="body1">
+        <Typography color="textPrimary" variant="body1" className={classes.mb1}>
           Price = total number of $NAZ in the wild. Check the "BUY $NAZ" tab to
           see what this is
         </Typography>
-        <Typography variant="h4" className={classes.typography}>
+        <Typography variant="h4" color="textPrimary">
           Final words?
         </Typography>
-        <Typography color="textSecondary" variant="body1">
+        <Typography color="textPrimary" variant="body1" className={classes.mb1}>
           Yes, glad you asked! ETH backs all $NAZ, and its price is
           mathematically determined. The more people buy it, the more expensive
           it gets. So act fast. I cannot and would not mint $NAZ without buying
@@ -180,20 +160,22 @@ export default () => {
           </a>
           .
         </Typography>
-        <Typography variant="h2" color="error">
-          WARNING
-        </Typography>
-        <Typography variant="overline" color="error">
-          THIS IS RISKY. IF YOU ARE A UNITED STATES OF AMERICA BASED BUYER,
-          STOP. IF YOU BUY THIS TOKEN, YOU CONSENT TO BE LIABLE FOR ALL OF THE
-          LEGAL RAMIFICATIONS OF THE PURCHASE AND BEYOND. DO NOT BUY! THIS
-          TOKEN'S USE IS FOR YOU TO REDEEM IT IN THE FUTURE FOR MY SERVICES. DO
-          NOT USE IT AS A VALUE STORE, DO NOT USE IT AS AN INVESTMENT, DO NOT
-          USE IT AS A SPECULATION. I WILL REITERATE, IF YOU ARE UNITED STATES OF
-          AMERICA BASED, DO NOT BUY! THIS IS ALPHA PRODUCT, BE WARNED. I AM NOT
-          LIABLE FOR ANY LOSS OF YOUR ETH / $NAZ. BY BUYING, YOU CONSENT TO
-          THIS.
-        </Typography>
+        <Box>
+          <Typography variant="h2" color="error">
+            WARNING
+          </Typography>
+          <Typography variant="overline" color="error">
+            THIS IS RISKY. IF YOU ARE A UNITED STATES OF AMERICA BASED BUYER,
+            STOP. IF YOU BUY THIS TOKEN, YOU CONSENT TO BE LIABLE FOR ALL OF THE
+            LEGAL RAMIFICATIONS OF THE PURCHASE AND BEYOND. DO NOT BUY! THIS
+            TOKEN'S USE IS FOR YOU TO REDEEM IT IN THE FUTURE FOR MY SERVICES.
+            DO NOT USE IT AS A VALUE STORE, DO NOT USE IT AS AN INVESTMENT, DO
+            NOT USE IT AS A SPECULATION. I WILL REITERATE, IF YOU ARE UNITED
+            STATES OF AMERICA BASED, DO NOT BUY! THIS IS ALPHA PRODUCT, BE
+            WARNED. I AM NOT LIABLE FOR ANY LOSS OF YOUR ETH / $NAZ. BY BUYING,
+            YOU CONSENT TO THIS.
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

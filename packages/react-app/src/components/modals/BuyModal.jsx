@@ -9,10 +9,8 @@ import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
-import { ThemeProvider } from "@material-ui/core/styles";
 import BigNumber from "bignumber.js";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
-import { green, red } from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/core/styles";
 import AllInclusiveIcon from "@material-ui/icons/AllInclusive";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import MuiAlert from "@material-ui/lab/Alert";
@@ -27,13 +25,6 @@ const MAXUINT = new BigNumber(1.15e77);
 const SMALLEST_UNIT = 0.000000000000000001;
 const BIGGEST_UNIT = 1000;
 
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-    secondary: red,
-  },
-});
-
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -47,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
+    backgroundColor: "black",
+    // backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -240,19 +233,17 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
 
   return (
     <Box>
-      <ThemeProvider theme={theme}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={<AllInclusiveIcon />}
-          size="large"
-          disabled={!contract}
-          onClick={handleOpen}
-        >
-          MINT
-        </Button>
-      </ThemeProvider>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={<AllInclusiveIcon />}
+        size="large"
+        disabled={!contract}
+        onClick={handleOpen}
+      >
+        MINT
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -267,13 +258,21 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
       >
         <Fade in={open}>
           <Box className={classes.paper}>
-            <Typography variant="h4" id="transition-modal-title">
-              How much ETH will you spend on $NAZ?
-            </Typography>
-            <Typography className={classes.moveTextRight} variant="caption">
-              Make it rain
+            <Typography
+              variant="h4"
+              id="transition-modal-title"
+              color="textPrimary"
+            >
+              How much $NAZ to buy?
             </Typography>
             <Typography
+              className={classes.moveTextRight}
+              variant="caption"
+              color="textPrimary"
+            >
+              Make it rain
+            </Typography>
+            {/* <Typography
               color="textSecondary"
               id="transition-modal-description"
               variant="body2"
@@ -286,7 +285,7 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
               If the total supply is 1 $NAZ, then the next 1 $NAZ will cost 2
               ETH
               <br />1 $NAZ after that will cost 3 ETH, and so on
-            </Typography>
+            </Typography> */}
             <TextField
               id="outlined-number"
               label="ETH"
@@ -330,7 +329,7 @@ export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
                   onClick={onBuy}
                   disabled={!ethValid}
                 >
-                  BUY THAT $NAZ
+                  BUY $NAZ
                 </Fab>
               </Box>
             ) : (

@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     width: "75%",
-    height: "75vh",
     marginTop: "auto",
     marginLeft: "auto",
     marginRight: "auto",
@@ -36,11 +35,14 @@ export default () => {
 
   return (
     <Box className={classes.root}>
-      <Box>
-        <Typography variant="h1" className={classes.mb1}>
-          Coming To You
+      <Box fontWeight="fontWeightBold" textAlign="left">
+        <Typography color="textPrimary" variant="h1">
+          Crops Near You
         </Typography>
-        <Typography variant="body1">
+        <Typography color="textSecondary" variant="h2" className={classes.mb1}>
+          Tend to your crops
+        </Typography>
+        <Typography color="textPrimary" variant="body1">
           {" "}
           - yNAZ{" "}
           <span role="img" aria-label="watermelon">
@@ -51,7 +53,7 @@ export default () => {
             🧑‍🌾
           </span>{" "}
         </Typography>
-        <Typography variant="body2">
+        <Typography color="textPrimary" variant="body2">
           <br />- Integration with calendar API (e.g. Callendly) for you to be
           able to redeem your $NAZ for my time at going ETH price rate
           <br />

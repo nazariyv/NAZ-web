@@ -10,10 +10,8 @@ import Fab from "@material-ui/core/Fab";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
-import { ThemeProvider } from "@material-ui/core/styles";
 import BigNumber from "bignumber.js";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
-import { green, red } from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
@@ -31,13 +29,6 @@ const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-    secondary: red,
-  },
-});
-
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: "1rem",
@@ -48,6 +39,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
+    backgroundColor: "black",
+    // backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -260,19 +253,17 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
 
   return (
     <Box>
-      <ThemeProvider theme={theme}>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          startIcon={<SentimentVeryDissatisfiedIcon />}
-          size="large"
-          disabled={!contract}
-          onClick={handleOpen}
-        >
-          BURN
-        </Button>
-      </ThemeProvider>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.button}
+        startIcon={<SentimentVeryDissatisfiedIcon />}
+        size="large"
+        disabled={!contract}
+        onClick={handleOpen}
+      >
+        BURN
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -287,7 +278,11 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
       >
         <Fade in={open}>
           <Box className={classes.paper}>
-            <Typography variant="h4" id="transition-modal-title">
+            <Typography
+              variant="h4"
+              id="transition-modal-title"
+              color="textPrimary"
+            >
               How much $NAZ will you sell?
             </Typography>
             <Typography className={classes.moveTextRight} variant="caption">

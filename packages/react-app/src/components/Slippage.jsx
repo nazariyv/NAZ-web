@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
+  label: {
+    color: "#fff",
+  },
 }));
 
 export default ({ slippage, handleSlippageChange }) => {
@@ -25,20 +28,44 @@ export default ({ slippage, handleSlippageChange }) => {
 
   return (
     <FormControl component="fieldset" className={classes.root}>
-      <FormLabel component="legend">Max slippage</FormLabel>
-      <Typography variant="caption">
+      <FormLabel>Max slippage</FormLabel>
+      <Typography variant="caption" color="textPrimary">
         If you don't know what this is, leave at 1%
       </Typography>
       <RadioGroup
         aria-label="slippage"
-        name="1%"
+        name="slippage"
         value={slippage}
         onChange={handleSlippageChange}
         className={classes.rowRadio}
+        color="textPrimary"
       >
-        <FormControlLabel value="100" control={<Radio />} label="1%" />
-        <FormControlLabel value="500" control={<Radio />} label="5%" />
-        <FormControlLabel value="1000" control={<Radio />} label="10%" />
+        <FormControlLabel
+          value="100"
+          classes={{
+            label: classes.label,
+          }}
+          control={<Radio />}
+          label="1%"
+        />
+        <FormControlLabel
+          value="500"
+          classes={{
+            label: classes.label,
+          }}
+          color="textPrimary"
+          control={<Radio />}
+          label="5%"
+        />
+        <FormControlLabel
+          value="1000"
+          classes={{
+            label: classes.label,
+          }}
+          color="textPrimary"
+          control={<Radio />}
+          label="10%"
+        />
       </RadioGroup>
     </FormControl>
   );

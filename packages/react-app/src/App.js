@@ -3,13 +3,16 @@ import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
 import Share from "./components/Share";
 import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import Web3 from "web3";
 import Torus from "@toruslabs/torus-embed";
@@ -18,47 +21,45 @@ import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
 import ComingSoon from "./components/ComingSoon";
 import TelegramIcon from "@material-ui/icons/Telegram";
-import BgColor from "./static/images/cool-background4.svg";
+import BgColor from "./static/images/cool-background2.svg";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
-    flexGrow: 1,
-    // backgroundColor: theme.palette.background.paper,
+    backgroundColor: "black",
     backgroundImage: `url(${BgColor})`,
-    height: "100vh",
-    /* Center and scale the image nicely */
-    backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
+    backgroundPosition: "100% 0%",
+    display: "flex",
+    flexDirection: "column",
+    width: "100vw",
+    // height: "100vh",
+    zIndex: "5",
   },
-  fullWidthAppBar: {
+  bgback: {
+    display: "flex",
     width: "100%",
+    justifyContent: "center",
+    backgroundColor: "black",
   },
-  alignItems: {
-    alignItems: "center",
-  },
-  paddingBot: {
+  navigation: {
     position: "fixed",
     left: 0,
     bottom: 0,
     textAlign: "center",
     display: "flex",
+    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    height: "70px",
-    backgroundColor: theme.palette.background.paper,
   },
-  arrangeIcons: {
-    display: "flex",
-    flexDirection: "row",
-    padding: "1rem",
+  fullWidth: {
+    width: "100%",
   },
-  noPad: {
-    padding: "0px",
+  fullViewportHeight: {
+    height: "100vh",
   },
-  displayBlock: {
-    display: "block",
+  botnav: {
+    minWidth: "60px",
   },
 }));
 
@@ -70,9 +71,6 @@ const providerOptions = {
         chainId: 1,
         networkId: 1,
       },
-      // config: {
-      //   buildEnv: "development", // optional
-      // },
     },
   },
 };
@@ -105,12 +103,18 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function a11yProps(index) {
+const a11yProps = (index) => {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
-}
+};
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark",
+  },
+});
 
 const App = () => {
   const [provider, setProvider] = useState(null);
@@ -118,7 +122,6 @@ const App = () => {
   const [web3, setWeb3] = useState(null);
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [bottomNavValue] = useState(0);
 
   const promptSetProvider = useCallback(async () => {
     setIsLoading(true);
@@ -134,8 +137,8 @@ const App = () => {
   };
 
   return (
-    <Box className={classes.root}>
-      <Box className={classes.fullWidthAppBar}>
+    <ThemeProvider theme={darkTheme}>
+      <Box className={classes.root}>
         <AppBar
           position="sticky"
           color="default"
@@ -146,14 +149,18 @@ const App = () => {
             value={value}
             onChange={handleChange}
             aria-label="naz token bar"
+            // className={classes.root}
           >
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
             <Tab label="What is $NAZ?" {...a11yProps(1)} />
             <Tab label="Coming Soon..." {...a11yProps(2)} />
-            <Tab label="SHARE" {...a11yProps(3)} />
           </Tabs>
         </AppBar>
-        <TabPanel value={value} index={0}>
+        <TabPanel
+          value={value}
+          index={0}
+          className={classes.fullViewportHeight}
+        >
           <BuyNAZ
             promptSetProvider={promptSetProvider}
             web3={web3}
@@ -170,40 +177,46 @@ const App = () => {
         <TabPanel value={value} index={3}>
           <Share />
         </TabPanel>
-      </Box>
-      <Box className={classes.paddingBot}>
-        <Box className={classes.displayBlock}>
-          <BottomNavigation value={bottomNavValue}>
-            <BottomNavigationAction
-              icon={
-                <TelegramIcon style={{ fontSize: "3rem", color: "grey" }} />
-              }
-              href="https://t.me/nazbondsurf"
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-            <BottomNavigationAction
-              icon={<TwitterIcon style={{ fontSize: "3rem", color: "grey" }} />}
-              href="https://twitter.com/AlgorithmicBot"
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-            <BottomNavigationAction
-              icon={<YouTubeIcon style={{ fontSize: "3rem", color: "grey" }} />}
-              href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-            <BottomNavigationAction
-              icon={<CreateIcon style={{ fontSize: "3rem", color: "grey" }} />}
-              href="https://medium.com/@parzival.is.sweet"
-              target="_blank"
-              rel="noopener noreferrer"
-            />
-          </BottomNavigation>
+        <Box className={classes.navigation}>
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<TelegramIcon style={{ fontSize: "3rem" }} />}
+            href="https://t.me/nazbondsurf"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<TwitterIcon style={{ fontSize: "3rem" }} />}
+            href="https://twitter.com/AlgorithmicBot"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<YouTubeIcon style={{ fontSize: "3rem" }} />}
+            href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<CreateIcon style={{ fontSize: "3rem" }} />}
+            href="https://medium.com/@parzival.is.sweet"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
         </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 
