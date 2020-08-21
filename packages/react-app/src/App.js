@@ -1,72 +1,223 @@
-import React from "react";
-import logo from "./ethereumLogo.png";
-import { Contract } from "@ethersproject/contracts";
-import { getDefaultProvider } from "@ethersproject/providers";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
-import { addresses, abis } from "@project/contracts";
-import "./App.css";
+import React, { useCallback, useState } from "react";
+import BuyNAZ from "./components/BuyNAZ";
+import WhatIsThis from "./components/WhatIsThis";
+import Share from "./components/Share";
+import PropTypes from "prop-types";
+import {
+  makeStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Box from "@material-ui/core/Box";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import Web3 from "web3";
+import Torus from "@toruslabs/torus-embed";
+import Web3Modal from "web3modal";
+import YouTubeIcon from "@material-ui/icons/YouTube";
+import CreateIcon from "@material-ui/icons/Create";
+import ComingSoon from "./components/ComingSoon";
+import TelegramIcon from "@material-ui/icons/Telegram";
+import BgColor from "./static/images/cool-background2.svg";
 
-const GET_TRANSFERS = gql`
-  {
-    transfers(first: 10) {
-      id
-      from
-      to
-      value
-    }
-  }
-`;
+const useStyles = makeStyles(() => ({
+  root: {
+    backgroundColor: "black",
+    backgroundImage: `url(${BgColor})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "100% 0%",
+    display: "flex",
+    flexDirection: "column",
+    width: "100vw",
+    // height: "100vh",
+    zIndex: "5",
+  },
+  bgback: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "center",
+    backgroundColor: "black",
+  },
+  navigation: {
+    position: "fixed",
+    left: 0,
+    bottom: 0,
+    textAlign: "center",
+    display: "flex",
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  fullWidth: {
+    width: "100%",
+  },
+  fullViewportHeight: {
+    height: "100vh",
+  },
+  botnav: {
+    minWidth: "60px",
+  },
+}));
 
-async function readOnChainData() {
-  // Should replace with the end-user wallet, e.g. Metamask
-  const defaultProvider = getDefaultProvider();
-  // Create an instance of an ethers.js Contract
-  // Read more about ethers.js on https://docs.ethers.io/v5/api/contract/contract/
-  const ceaErc20 = new Contract(addresses.ceaErc20, abis.erc20, defaultProvider);
-  // A pre-defined address that owns some CEAERC20 tokens
-  const tokenBalance = await ceaErc20.balanceOf("0x3f8CB69d9c0ED01923F11c829BaE4D9a4CB6c82C");
-  console.log({ tokenBalance: tokenBalance.toString() });
-}
+const providerOptions = {
+  torus: {
+    package: Torus,
+    options: {
+      networkParams: {
+        chainId: 1,
+        networkId: 1,
+      },
+    },
+  },
+};
 
-function App() {
-  const { loading, error, data } = useQuery(GET_TRANSFERS);
+const web3Modal = new Web3Modal({
+  network: "mainnet",
+  cacheProvider: true,
+  providerOptions,
+});
 
-  React.useEffect(() => {
-    if (!loading && !error && data && data.transfers) {
-      console.log({ transfers: data.transfers });
-    }
-  }, [loading, error, data]);
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="react-logo" />
-        <p>
-          Edit <code>packages/react-app/src/App.js</code> and save to reload.
-        </p>
-        {/* Remove the "display: none" style and open the JavaScript console in the browser to see what this function does */}
-        <button onClick={() => readOnChainData()} style={{ display: "none" }}>
-          Read On-Chain Balance
-        </button>
-        <a
-          className="App-link"
-          href="https://ethereum.org/developers/#getting-started"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ marginTop: "0px" }}
-        >
-          Learn Ethereum
-        </a>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-        <a className="App-link" href="https://thegraph.com/docs/quick-start" target="_blank" rel="noopener noreferrer">
-          Learn The Graph
-        </a>
-      </header>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+const a11yProps = (index) => {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+};
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark",
+  },
+});
+
+const App = () => {
+  const [provider, setProvider] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [web3, setWeb3] = useState(null);
+  const classes = useStyles();
+  const [value, setValue] = useState(0);
+
+  const promptSetProvider = useCallback(async () => {
+    setIsLoading(true);
+    const provider = await web3Modal.connect();
+    setProvider(provider);
+    const w3 = new Web3(provider);
+    setWeb3(w3);
+    setIsLoading(false);
+  }, []);
+
+  const handleChange = (_, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <Box className={classes.root}>
+        <AppBar
+          position="sticky"
+          color="default"
+          className={classes.alignItems}
+        >
+          <Tabs
+            variant="fullWidth"
+            value={value}
+            onChange={handleChange}
+            aria-label="naz token bar"
+            // className={classes.root}
+          >
+            <Tab label="Buy $NAZ" {...a11yProps(0)} />
+            <Tab label="What is $NAZ?" {...a11yProps(1)} />
+            <Tab label="Coming Soon..." {...a11yProps(2)} />
+          </Tabs>
+        </AppBar>
+        <TabPanel
+          value={value}
+          index={0}
+          className={classes.fullViewportHeight}
+        >
+          <BuyNAZ
+            promptSetProvider={promptSetProvider}
+            web3={web3}
+            provider={provider}
+            isLoading={isLoading}
+          />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <WhatIsThis />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <ComingSoon />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <Share />
+        </TabPanel>
+        <Box className={classes.navigation}>
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<TelegramIcon style={{ fontSize: "3rem" }} />}
+            href="https://t.me/nazbondsurf"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<TwitterIcon style={{ fontSize: "3rem" }} />}
+            href="https://twitter.com/AlgorithmicBot"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<YouTubeIcon style={{ fontSize: "3rem" }} />}
+            href="https://www.youtube.com/channel/UC7KZmVBDuvLd_jhkp66pbiw"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+          <BottomNavigationAction
+            classes={{
+              root: classes.botnav,
+            }}
+            icon={<CreateIcon style={{ fontSize: "3rem" }} />}
+            href="https://medium.com/@parzival.is.sweet"
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
+};
 
 export default App;
