@@ -4,7 +4,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import loading from "../static/images/loading.png";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
     display: "flex",
@@ -38,20 +38,6 @@ export default () => {
       <Box fontWeight="fontWeightBold" textAlign="left">
         <Typography color="textPrimary" variant="h1">
           Crops Near You
-        </Typography>
-        <Typography color="textSecondary" variant="h2" className={classes.mb1}>
-          Tend to your crops
-        </Typography>
-        <Typography color="textPrimary" variant="body1">
-          {" "}
-          - yNAZ{" "}
-          <span role="img" aria-label="watermelon">
-            🍉
-          </span>{" "}
-          for some juicy crop circles{" "}
-          <span role="img" aria-label="farmer">
-            🧑‍🌾
-          </span>{" "}
         </Typography>
         <Typography color="textPrimary" variant="body2">
           <br />- Integration with calendar API (e.g. Callendly) for you to be

@@ -389,13 +389,6 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
           flexDirection="center"
           alignSelf="center"
           alignItems="center"
-          // height={
-          //   incorrectNetwork ||
-          //   isLoading ||
-          //   ((!provider || !web3) && !isLoading)
-          //     ? "1200px"
-          //     : "0px"
-          // }
         >
           {incorrectNetwork && (
             <Box className={classes.notOnMainnet}>

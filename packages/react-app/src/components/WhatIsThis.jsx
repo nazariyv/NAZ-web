@@ -77,22 +77,6 @@ export default () => {
           essential role in such a future. You are your own company. You are the
           value that you have been trying to give to the world.
         </Typography>
-        {/* <Typography variant="h4" className={classes.typography}>
-          And you are?
-        </Typography>
-        <Typography
-          color="textPrimary"
-          variant="body1"
-          className={classes.typography}
-        >
-          My name is Nazariy. I love maths & coding, I have a small YouTube
-          channel, and I am trying to figure out Twitter. I have had enough of
-          corporate grinding (I am burning the bridges so that there is no going
-          back) and resigned two months ago. Now I freelance and code in web3
-          mostly. I am enjoying what I do immensely, although I am running on
-          three days of no sleep due to this website. Let's keep it short and
-          sweet.
-        </Typography> */}
         <Typography variant="h4" color="textPrimary">
           How does $NAZ work?
         </Typography>
@@ -158,7 +142,14 @@ export default () => {
           >
             here
           </a>
-          .
+          . If you want to contribute to this website, then the source code is{" "}
+          <a
+            href="https://github.com/nazariyv/NAZ-web"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            here
+          </a>
         </Typography>
         <Box>
           <Typography variant="h2" color="error">

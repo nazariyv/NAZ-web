@@ -68,22 +68,6 @@ const useStyles = makeStyles((theme) => ({
       marginRight: "auto",
       width: "50%",
     },
-    // shares: {
-    //   width: "100%",
-    //   display: "flex",
-    //   flexDirection: "row",
-    //   justifyContent: "space-between",
-    //   flexWrap: "wrap",
-    //   alignItems: "center",
-    //   textAlign: "center",
-    //   height: "100%",
-    //   flexGrow: 1,
-    //   "& > *": {
-    //     margin: theme.spacing(1),
-    //     width: theme.spacing(16),
-    //     height: theme.spacing(8),
-    //   },
-    // },
   },
 }));
 
@@ -108,7 +92,7 @@ export default () => {
         <Box className={classes.paddingBot}>
           <TwitterShareButton
             url={url}
-            title="This guy used linear bonding curve to tokenize himself. Fully collateralized $NAZ"
+            title="This guy used a linear bonding curve to tokenize himself. Fully collateralized $NAZ"
             via="AlgorithmicBot"
             hashtags={[
               "ethereum",
