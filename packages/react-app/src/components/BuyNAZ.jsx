@@ -128,16 +128,16 @@ const Stats = ({
     addressPresent && (
       <>
         <Box flexBasis="0" flexGrow="1">
-          <Typography variant="h5" color="textPrimary">
+          <Typography variant="h5">
             # of $NAZ : {Number(totalSupply).toFixed(2)}{" "}
             <span role="img" aria-label="tree">
               🌲
             </span>
           </Typography>
-          <Typography variant="h5" color="textPrimary">
+          <Typography variant="h5">
             ETH price : ${Number(ethP).toFixed(2)}{" "}
           </Typography>
-          <Typography variant="h5" color="textPrimary">
+          <Typography variant="h5">
             ETH collateral: {Number(reserveBalance).toFixed(2)}{" "}
           </Typography>
         </Box>
@@ -145,10 +145,10 @@ const Stats = ({
           {children}
         </Box>
         <Box flexBasis="0" flexGrow="1" textAlign="right">
-          <Typography variant="h5" color="textPrimary">
+          <Typography variant="h5">
             Your $NAZ: {Number(yourNaz).toFixed(6)}
           </Typography>
-          <Typography variant="h5" color="textPrimary">
+          <Typography variant="h5">
             Your ETH: {Number(yourEth).toFixed(6)}
           </Typography>
         </Box>
@@ -327,19 +327,18 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
       <Box className={classes.root}>
         <Box>
           <Box className={classes.surfStyle}>
-            <Typography variant="h1" color="textPrimary">
-              <span role="img" aria-label="farmer">
+            <Typography variant="h1">
+              {/* <span role="img" aria-label="farmer">
                 🧑‍🌾
-              </span>{" "}
+              </span>{" "} */}
               Join $NAZ
             </Typography>
-            <Typography variant="caption" color="textSecondary">
-              This is the first of its kind personal token built with a linear
-              bonding curve
+            <Typography variant="caption">
+              The bigger our community the more valueable it will be
             </Typography>
           </Box>
           <Box className={classes.textCenter}>
-            <Typography variant="h3" color="textPrimary">
+            <Typography variant="h3">
               $NAZ total value{" "}
               <span role="img" aria-label="watermelon">
                 🍉
@@ -348,27 +347,13 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
           </Box>
           <Box>
             <Box className={classes.linearProgress}>
-              <Typography
-                variant="h6"
-                className={classes.flexEnd}
-                color="textPrimary"
-              >
+              <Typography variant="h6" className={classes.flexEnd}>
                 $0
               </Typography>
-              {/* <TextGradient
-                text="React Text Gradient"
-                fromColor="#FFFF00"
-                toColor="#FF8008"
-                direction="right"
-              /> */}
-              <Typography variant="h2" color="textPrimary">
+              <Typography variant="h2">
                 ${Number(marketCap).toFixed(0)}
               </Typography>
-              <Typography
-                variant="h6"
-                className={classes.flexEnd}
-                color="textPrimary"
-              >
+              <Typography variant="h6" className={classes.flexEnd}>
                 $100k
               </Typography>
             </Box>

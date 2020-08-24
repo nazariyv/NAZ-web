@@ -37,11 +37,13 @@ export default () => {
     <Box className={classes.root}>
       <Box fontWeight="fontWeightBold" textAlign="left">
         <Typography color="textPrimary" variant="h1">
-          Crops Near You
+          Upcoming features
         </Typography>
         <Typography color="textPrimary" variant="body2">
           <br />- Integration with calendar API (e.g. Callendly) for you to be
           able to redeem your $NAZ for my time at going ETH price rate
+          <br /> Simple explanation of how $NAZ token works and derives its
+          price
           <br />
           - Listing my token on Uniswap
           <br />- Integration with Twitter for retweet payout incentives if you
@@ -51,8 +53,6 @@ export default () => {
           obliged to pay back to the community however I can. And so I pledged
           to give back 20% of all of the $NAZ redeem amounts to my lovely
           community of geniuses and kind and awesome people
-          <br /> - Dark theme? (let me know on Twitter if you care about this at
-          all)
         </Typography>
       </Box>
       <Box className={classes.center}>

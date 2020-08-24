@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
 import Share from "./components/Share";
 import PropTypes from "prop-types";
 import {
   makeStyles,
-  createMuiTheme,
   ThemeProvider,
+  createMuiTheme,
 } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -21,14 +21,17 @@ import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
 import ComingSoon from "./components/ComingSoon";
 import TelegramIcon from "@material-ui/icons/Telegram";
-import BgColor from "./static/images/cool-background2.svg";
+// import BgColor from "./static/images/cool-background2.svg";
+import CSSBaseline from "@material-ui/core/CssBaseline";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import loading from "./static/sounds/ui_loading.wav";
 
 const useStyles = makeStyles(() => ({
   root: {
-    backgroundColor: "black",
-    backgroundImage: `url(${BgColor})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "100% 0%",
+    // backgroundColor: "black",
+    // backgroundImage: `url(${BgColor})`,
+    // backgroundRepeat: "no-repeat",
+    // backgroundPosition: "100% 0%",
     display: "flex",
     flexDirection: "column",
     width: "100vw",
@@ -39,7 +42,7 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     width: "100%",
     justifyContent: "center",
-    backgroundColor: "black",
+    // backgroundColor: "black",
   },
   navigation: {
     position: "fixed",
@@ -47,7 +50,7 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
     textAlign: "center",
     display: "flex",
-    backgroundColor: "black",
+    // backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -110,12 +113,6 @@ const a11yProps = (index) => {
   };
 };
 
-const darkTheme = createMuiTheme({
-  palette: {
-    type: "dark",
-  },
-});
-
 const App = () => {
   const [provider, setProvider] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -123,21 +120,41 @@ const App = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
+  const connectAudio = new Audio(loading);
+  const playSound = useCallback((audioFile) => {
+    try {
+      audioFile.play();
+    } catch (e) {}
+  }, []);
+
   const promptSetProvider = useCallback(async () => {
+    playSound(connectAudio);
     setIsLoading(true);
     const provider = await web3Modal.connect();
     setProvider(provider);
     const w3 = new Web3(provider);
     setWeb3(w3);
     setIsLoading(false);
-  }, []);
+  }, [connectAudio, playSound]);
+
+  const prefersDarkMode = useMediaQuery("prefers-color-scheme: dark");
+
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? "dark" : "light",
+        },
+      }),
+    [prefersDarkMode]
+  );
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <Box className={classes.root}>
         <AppBar
           position="sticky"
