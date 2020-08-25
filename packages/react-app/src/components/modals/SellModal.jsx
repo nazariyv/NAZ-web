@@ -285,7 +285,11 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
             >
               How much $NAZ will you sell?
             </Typography>
-            <Typography className={classes.moveTextRight} variant="caption">
+            <Typography
+              className={classes.moveTextRight}
+              variant="caption"
+              color="textPrimary"
+            >
               Don't make it rain
             </Typography>
             <TextField

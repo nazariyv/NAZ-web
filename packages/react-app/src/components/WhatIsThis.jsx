@@ -3,7 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -75,7 +75,7 @@ export default () => {
           and so on
           <br />
           currently, there are about 6.5 NAZ in total supply, that means that 1
-          + 2 + 3 + 4 + 5 + 6 + 0.5 = 21.5 ETH had to be paid to acquire this
+          + 2 + 3 + 4 + 5 + 6 + 0.5 * 7 =~ 24 ETH had to be paid to acquire this
           many $NAZ
         </Typography>
         <Typography variant="h4" color="textPrimary">

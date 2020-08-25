@@ -17,8 +17,8 @@ import { CircularProgress, Container } from "@material-ui/core";
 // import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import {
   makeStyles,
-  createMuiTheme,
-  ThemeProvider,
+  // createMuiTheme,
+  // ThemeProvider,
 } from "@material-ui/core/styles";
 
 const bn = new BigNumber("1e18");
@@ -98,12 +98,6 @@ const BorderLinearProgress = withStyles((theme) => ({
   },
 }))(LinearProgress);
 
-const darkTheme = createMuiTheme({
-  palette: {
-    type: "dark",
-  },
-});
-
 const Stats = ({
   contract,
   addressPresent,
@@ -127,17 +121,17 @@ const Stats = ({
     contract !== null &&
     addressPresent && (
       <>
-        <Box flexBasis="0" flexGrow="1">
-          <Typography variant="h5">
+        <Box flexBasis="0" flexGrow="1" fontWeight="fontWeightBold">
+          <Typography variant="h5" color="textPrimary">
             # of $NAZ : {Number(totalSupply).toFixed(2)}{" "}
             <span role="img" aria-label="tree">
               🌲
             </span>
           </Typography>
-          <Typography variant="h5">
+          <Typography variant="h5" color="textPrimary">
             ETH price : ${Number(ethP).toFixed(2)}{" "}
           </Typography>
-          <Typography variant="h5">
+          <Typography variant="h5" color="textPrimary">
             ETH collateral: {Number(reserveBalance).toFixed(2)}{" "}
           </Typography>
         </Box>
@@ -145,10 +139,10 @@ const Stats = ({
           {children}
         </Box>
         <Box flexBasis="0" flexGrow="1" textAlign="right">
-          <Typography variant="h5">
+          <Typography variant="h5" color="textPrimary">
             Your $NAZ: {Number(yourNaz).toFixed(6)}
           </Typography>
-          <Typography variant="h5">
+          <Typography variant="h5" color="textPrimary">
             Your ETH: {Number(yourEth).toFixed(6)}
           </Typography>
         </Box>
@@ -323,138 +317,144 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
   ]);
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <Box className={classes.root}>
-        <Box>
-          <Box className={classes.surfStyle}>
-            <Typography variant="h1">
-              {/* <span role="img" aria-label="farmer">
+    <Box className={classes.root}>
+      <Box>
+        <Box className={classes.surfStyle}>
+          <Typography variant="h1" color="textPrimary">
+            {/* <span role="img" aria-label="farmer">
                 🧑‍🌾
               </span>{" "} */}
-              Join $NAZ
+            Join $NAZ
+          </Typography>
+          <Typography variant="caption" color="textPrimary">
+            The bigger our community the more valueable it will be
+          </Typography>
+        </Box>
+        <Box className={classes.textCenter}>
+          <Typography variant="h3" color="textPrimary">
+            $NAZ total value{" "}
+            <span role="img" aria-label="watermelon">
+              🍉
+            </span>
+          </Typography>
+        </Box>
+        <Box>
+          <Box className={classes.linearProgress}>
+            <Typography
+              variant="h6"
+              className={classes.flexEnd}
+              color="textPrimary"
+            >
+              $0
             </Typography>
-            <Typography variant="caption">
-              The bigger our community the more valueable it will be
+            <Typography variant="h2" color="textPrimary">
+              ${Number(marketCap).toFixed(0)}
             </Typography>
-          </Box>
-          <Box className={classes.textCenter}>
-            <Typography variant="h3">
-              $NAZ total value{" "}
-              <span role="img" aria-label="watermelon">
-                🍉
-              </span>
+            <Typography
+              variant="h6"
+              className={classes.flexEnd}
+              color="textPrimary"
+            >
+              $100k
             </Typography>
           </Box>
           <Box>
-            <Box className={classes.linearProgress}>
-              <Typography variant="h6" className={classes.flexEnd}>
-                $0
-              </Typography>
-              <Typography variant="h2">
-                ${Number(marketCap).toFixed(0)}
-              </Typography>
-              <Typography variant="h6" className={classes.flexEnd}>
-                $100k
-              </Typography>
-            </Box>
-            <Box>
-              <BorderLinearProgress
-                variant="determinate"
-                value={
-                  Number(marketCap) > 1000000
-                    ? 100
-                    : parseInt(Number(marketCap) / 1000.0)
-                }
-              />
-            </Box>
+            <BorderLinearProgress
+              variant="determinate"
+              value={
+                Number(marketCap) > 1000000
+                  ? 100
+                  : parseInt(Number(marketCap) / 1000.0)
+              }
+            />
           </Box>
         </Box>
-        <Box
-          display="flex"
-          flexDirection="center"
-          alignSelf="center"
-          alignItems="center"
-        >
-          {incorrectNetwork && (
-            <Box className={classes.notOnMainnet}>
-              <Alert severity="error">
-                You are not on the mainnet. Switch your network.
-              </Alert>
-            </Box>
-          )}
-          {isLoading && (
-            <Container>
-              <CircularProgress className={classes.center} />
-            </Container>
-          )}
-          {(!provider || !web3) && !isLoading && (
-            <Box className={classes.warningButton}>
-              <Fab
-                variant="extended"
-                aria-label="connect your wallet"
-                className={classes.warning}
-                onClick={promptSetProvider}
-              >
-                <Box className={classes.error}>
-                  <ErrorIcon className={classes.extendedIcon} />
-                  <Typography>Connect</Typography>
-                </Box>
-              </Fab>
-            </Box>
-          )}
-        </Box>
-        {!incorrectNetwork && (
-          <Box
-            display="flex"
-            justifyContent="space-around"
-            flexWrap="wrap"
-            flexGrow="1"
-            paddingTop="3rem"
-            marginBottom="64px"
-          >
-            <Stats
-              contract={contract}
-              initiateContract={initiateContract}
-              marketCap={marketCap}
-              setMarketCap={setMarketCap}
-              addressPresent={addressPresent}
-              fetchAll={fetchAll}
-              ethP={ethP}
-              reserveBalance={reserveBalance}
-              totalSupply={totalSupply}
-              yourNaz={yourNaz}
-              yourEth={yourEth}
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="center"
+        alignSelf="center"
+        alignItems="center"
+      >
+        {incorrectNetwork && (
+          <Box className={classes.notOnMainnet}>
+            <Alert severity="error">
+              You are not on the mainnet. Switch your network.
+            </Alert>
+          </Box>
+        )}
+        {isLoading && (
+          <Container>
+            <CircularProgress className={classes.center} />
+          </Container>
+        )}
+        {(!provider || !web3) && !isLoading && (
+          <Box className={classes.warningButton}>
+            <Fab
+              variant="extended"
+              aria-label="connect your wallet"
+              className={classes.warning}
+              onClick={promptSetProvider}
             >
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                alignContent="center"
-              >
-                <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
-                <Box display="flex" flexDirection="row" alignSelf="center">
-                  <BuyModal
-                    web3={web3}
-                    eth={eth}
-                    setEth={setEth}
-                    onModal={onModal}
-                    contract={contract}
-                    fetchAll={fetchAll}
-                  />
-                  <SellModal
-                    web3={web3}
-                    naz={naz}
-                    setNaz={setNaz}
-                    onModal={onModal}
-                    contract={contract}
-                    fetchAll={fetchAll}
-                  />
-                </Box>
+              <Box className={classes.error}>
+                <ErrorIcon className={classes.extendedIcon} />
+                <Typography color="textPrimary">Connect</Typography>
               </Box>
-            </Stats>
+            </Fab>
           </Box>
         )}
       </Box>
-    </ThemeProvider>
+      {!incorrectNetwork && (
+        <Box
+          display="flex"
+          justifyContent="space-around"
+          flexWrap="wrap"
+          flexGrow="1"
+          paddingTop="3rem"
+          marginBottom="64px"
+        >
+          <Stats
+            contract={contract}
+            initiateContract={initiateContract}
+            marketCap={marketCap}
+            setMarketCap={setMarketCap}
+            addressPresent={addressPresent}
+            fetchAll={fetchAll}
+            ethP={ethP}
+            reserveBalance={reserveBalance}
+            totalSupply={totalSupply}
+            yourNaz={yourNaz}
+            yourEth={yourEth}
+          >
+            <Box
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignContent="center"
+            >
+              <Avatar alt="Nazariy" src={nazAva} className={classes.large} />
+              <Box display="flex" flexDirection="row" alignSelf="center">
+                <BuyModal
+                  web3={web3}
+                  eth={eth}
+                  setEth={setEth}
+                  onModal={onModal}
+                  contract={contract}
+                  fetchAll={fetchAll}
+                />
+                <SellModal
+                  web3={web3}
+                  naz={naz}
+                  setNaz={setNaz}
+                  onModal={onModal}
+                  contract={contract}
+                  fetchAll={fetchAll}
+                />
+              </Box>
+            </Box>
+          </Stats>
+        </Box>
+      )}
+    </Box>
   );
 };
