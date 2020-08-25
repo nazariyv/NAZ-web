@@ -147,8 +147,7 @@ const App = () => {
     () =>
       createMuiTheme({
         palette: {
-          type: "dark",
-          // type: prefersDarkMode ? "dark" : "light",
+          type: prefersDarkMode ? "dark" : "light",
         },
       }),
     [prefersDarkMode]
