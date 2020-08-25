@@ -39,24 +39,25 @@ export default () => {
         <Typography color="textPrimary" variant="h1">
           Upcoming features
         </Typography>
+        <Box className={classes.center}>
+          <img alt="fire animation" src={loading} />
+        </Box>
         <Typography color="textPrimary" variant="body2">
-          <br />- Integration with calendar API (e.g. Callendly) for you to be
-          able to redeem your $NAZ for my time at going ETH price rate
-          <br /> Simple explanation of how $NAZ token works and derives its
-          price
+          <br />- smart contract to lock up my $NAZ (maybe even DAICO style)
           <br />
           - Listing my token on Uniswap
-          <br />- Integration with Twitter for retweet payout incentives if you
-          have $NAZ
           <br /> - Internationalisation for bigger community
           <br /> - A DAO for KERNEL members. KERNEL has given me so much, I feel
           obliged to pay back to the community however I can. And so I pledged
           to give back 20% of all of the $NAZ redeem amounts to my lovely
           community of geniuses and kind and awesome people
+          <br /> - New section here on the website where naz will host
+          interactive jupyter notebooks that will supplement his{" "}
+          <a href="https://medium.com/@parzival.is.sweet/ethereum-primitives-1-1-97c29d1d4ebf">
+            Ethereum Primitives
+          </a>{" "}
+          series on Medium
         </Typography>
-      </Box>
-      <Box className={classes.center}>
-        <img alt="fire animation" src={loading} />
       </Box>
     </Box>
   );

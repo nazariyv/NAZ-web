@@ -8,8 +8,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     marginBottom: "64px",
-    paddingLeft: "16px",
-    paddingRight: "16px",
+    padding: "0 32px",
   },
   moveRight: {
     textAlign: "right",
@@ -31,110 +30,85 @@ export default () => {
       </Box>
       <Box fontWeight="fontWeightBold">
         <Typography variant="body1" className={classes.mb1} color="textPrimary">
-          naz, the creator of the $NAZ crew was a quant in London for 4 years.
-          He got fed up with the 9-5 and quit. He self-taught himself maths and
-          coding. $NAZ is a brand. It is the community. When you buy $NAZ, you
-          become part of the family. We foster the philosophy of trust, giving
-          first, caring and kindness. Everyone in the $NAZ band gets to build
-          businesses together, gets to help one another (you need me to sit your
-          cat?), yield farms that sweet yNAZ (you better get that $NAZ...) and
-          hangs out together! Think about it as a family that you join and are
-          unlikely leave ;)
+          naz, the creator of the $NAZ personal token worked as a<br />{" "}
+          <span>
+            <Typography variant="h6">quantitative developer</Typography>
+          </span>{" "}
+          for some time, that means you should know computer science and
+          mathematics well
+          <br />
+          In practice that usually means you are good in one, but bad in the
+          other, or as often is the case you are: "jack of all trades"
         </Typography>
         <Typography variant="h4" color="textPrimary">
-          What else can I do with $NAZ?
+          Why $NAZ?
         </Typography>
         <Typography color="textPrimary" variant="body1" className={classes.mb1}>
-          $NAZ can be exchanged for (more to come soon)
+          $NAZ is the <Typography variant="h6">COMMUNITY</Typography> first and
+          foremost
           <br />
-          - my time (14/08/2020 @ $200ph)
+          I want to build meaningful relationships with people who are in $NAZ
           <br />
-          - get to hang out with me (subject to KYC)
-          <br />
-          - get to play DOTA 2 with me (Alex B., I will try LOL for you if you
-          get some $NAZ)
-          <br />
-          - get featured / advertise stuff on my YouTube channel / Twitter
-          <br />
-          - get early access to my content
-          <br />
-          - access to a closed Telegram / Slack / Discord group, where we talk
-          protocols and GPT-3
-          <br />
-          - assess/test my future products before anyone else
-          <br />
-          - code crazy cool projects with me
+          You do not have to buy $NAZ to join, just click the Telegram icon
+          below
           <br />
         </Typography>
-        <Typography variant="h4" color="textPrimary">
-          Anything else?
-        </Typography>
-        <Typography color="textPrimary" variant="body1" className={classes.mb1}>
-          I believe in the future where there are no middlemen, no guards and no
-          guardians. Our security, wellbeing, wealth are the concepts that have
-          no meaning in that future. Protocols govern all, there is enough for
-          everyone; jobs are the thing of the past. Personal tokens will play an
-          essential role in such a future. You are your own company. You are the
-          value that you have been trying to give to the world.
-        </Typography>
+
         <Typography variant="h4" color="textPrimary">
           How does $NAZ work?
         </Typography>
         <Typography color="textPrimary" variant="body1" className={classes.mb1}>
-          If you decide to buy $NAZ, then that will increase its price. I have
-          defined this to be the case in the code (in the smart contract, for
-          the technical folk). I will drop in an interactive chart here in the
-          future when I have more time. If you are wondering, this concept is
-          called a "Bonding Curve". The uniqueness of our brand token $NAZ is in
-          the fact that the price of it will increase inevitably, the more
-          supply there is.{" "}
-          <b>
-            To those who say that this is a pyramid scheme, learn Solidity, and
-            then read the source code{" "}
-            <a
-              href="https://etherscan.io/address/0x4BBBD966ea913545aD556045b7aF18f52A0aE91c"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              here
-            </a>
-          </b>
-          . On top of that, it is fully collateralized. There is more ETH
-          backing it up than the total supply of $NAZ. It means the $NAZ band is
-          more expensive than ETH. Traditional personal tokens are ERC20 tokens
-          that have no intrinsic value, $NAZ fam token is overcollateralised
-          with ETH. As we grow the $NAZ brand, we shall benefit from (i) ETH
-          appreciation, (ii) $NAZ appreciation due to the widespread adoption.
-          naz has no f*** interest in dumping his tokens on you when you buy in,
-          that is not the intention. We are meant to grow this rockstar band
-          together, it is easier to get to your destination with a team than
-          solo. naz will ensure that $NAZ can only be joined by the qualifying
-          people that share in these core principles and values
+          If you decide to buy $NAZ, then that will increase its price <br />
+          Price of $NAZ = total supply of $NAZ
+          <br />
+          EXAMPLE
+          <br />
+          Total supply of $NAZ = 0<br />
+          1. Buy 1 $NAZ for 1 ETH
+          <br />
+          Total supply of $NAZ becomes = 1 $NAZ
+          <br />
+          2. Buy 1 $NAZ for 2 ETH
+          <br />
+          Total supply of $NAZ becomes = 2 $NAZ
+          <br />
+          and so on
+          <br />
+          currently, there are about 6.5 NAZ in total supply, that means that 1
+          + 2 + 3 + 4 + 5 + 6 + 0.5 = 21.5 ETH had to be paid to acquire this
+          many $NAZ
         </Typography>
         <Typography variant="h4" color="textPrimary">
-          What is the price of 1 $NAZ right now?
+          Why such HARD MATHS, Why SUCH MUCH!?
         </Typography>
         <Typography color="textPrimary" variant="body1" className={classes.mb1}>
-          Price = total number of $NAZ in the wild. Check the "BUY $NAZ" tab to
-          see what this is
+          We need to incentivise people to hold $NAZ. If you join $NAZ, it is
+          not for speculation, it is for building the community together, so
+          that everyone in it will benefit intellectually, emotionally and
+          financially. This is not some wishy washy new age philosophy, this is
+          the fact
         </Typography>
         <Typography variant="h4" color="textPrimary">
           Final words?
         </Typography>
         <Typography color="textPrimary" variant="body1" className={classes.mb1}>
-          Yes, glad you asked! ETH backs all $NAZ, and its price is
-          mathematically determined. The more people buy it, the more expensive
-          it gets. So act fast. I cannot and would not mint $NAZ without buying
-          it for my own skin-in-the-game ETH. This avoids ridiculous
-          "air-drops." that depress the price. Rest assured: $NAZ - is quality,
-          it is not "meme" potential, although, it may be. So, the only real way
-          I can get $NAZ is by you converting it for my services listed above. I
-          think this is a great mechanism and ensures that our incentives are
-          aligned.
+          Yes, glad you asked! There are a couple of changes incoming to $NAZ
           <br />
-          <br />I have created this as part of an incubator I am in, to
-          incentivise people to give me the feedback on my business idea (retail
-          adoption of Ethereum). You can inspect the contract{" "}
+          1. I will lock up my $NAZ in a smart contract so that new people to
+          our community know I am not going to "dump" my $NAZ on them
+          <br />
+          2. I will think about how to make the buying process cheaper and
+          easier
+          <br />
+          3. Create a "less-hard" loyalty token for those who own $NAZ to (i)
+          incentivise holding $NAZ, (ii) use it for governance. As mentioned
+          earlier, this is a community first and foremost, and so on I want
+          everyone to be involved in developing $NAZ. That includes building
+          businesses together, deciding where our profits / revenues should go,
+          and so on.
+          <br />
+          <br />
+          P.S. You can inspect the contract{" "}
           <a
             href="https://etherscan.io/address/0x4BBBD966ea913545aD556045b7aF18f52A0aE91c"
             target="_blank"

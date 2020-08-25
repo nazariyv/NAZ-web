@@ -235,7 +235,7 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
       .get(
         "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
       )
-      .then(function(response) {
+      .then((response) => {
         try {
           const data = response["data"];
           const ethereum = data["ethereum"];

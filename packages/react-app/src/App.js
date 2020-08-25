@@ -25,6 +25,7 @@ import TelegramIcon from "@material-ui/icons/Telegram";
 import CSSBaseline from "@material-ui/core/CssBaseline";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import loading from "./static/sounds/ui_loading.wav";
+import Sky from "react-sky";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -155,6 +156,33 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <Sky
+        images={{
+          /* FORMAT AS FOLLOWS */
+          0: "https://image.flaticon.com/icons/svg/124/124574.svg",
+          1: "https://image.flaticon.com/icons/svg/124/124570.svg",
+          2: "https://image.flaticon.com/icons/svg/124/124567.svg",
+          3: "https://image.flaticon.com/icons/svg/124/124560.svg",
+          4: "https://image.flaticon.com/icons/svg/124/124559.svg",
+          5: "https://image.flaticon.com/icons/svg/124/124582.svg",
+          6: "https://image.flaticon.com/icons/svg/124/124558.svg",
+          7: "https://image.flaticon.com/icons/svg/124/124588.svg",
+          8: "https://image.flaticon.com/icons/svg/124/124542.svg",
+          9: "https://image.flaticon.com/icons/svg/124/124569.svg",
+          10: "https://image.flaticon.com/icons/svg/124/124573.svg",
+          11: "https://image.flaticon.com/icons/svg/124/124586.svg",
+          12: "https://image.flaticon.com/icons/svg/124/124548.svg",
+          13: "https://image.flaticon.com/icons/svg/124/124555.svg",
+          // 0: "https://linkToYourImage0" /* You can pass as many images as you want */,
+          // 1: "https://linkToYourImage1",
+        }}
+        how={
+          40
+        } /* Pass the number of images Sky will render chosing randomly */
+        time={15} /* time of animation */
+        size={"50px"} /* size of the rendered images */
+        background={"palettedvioletred"} /* color of background */
+      />
       <Box className={classes.root}>
         <AppBar
           position="sticky"
