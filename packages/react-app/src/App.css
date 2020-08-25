@@ -6,3 +6,9 @@
   position: relative;
   min-height: 100vh;
 }
+
+/* TODO: the above, is a better version. but won't work in prod */
+.jss1 {
+  position: relative;
+  min-height: 100vh;
+}
