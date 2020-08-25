@@ -39,9 +39,9 @@ export default () => {
         <Typography color="textPrimary" variant="h1">
           Upcoming features
         </Typography>
-        <Box className={classes.center}>
+        {/* <Box className={classes.center}>
           <img alt="fire animation" src={loading} />
-        </Box>
+        </Box> */}
         <Typography color="textPrimary" variant="body2">
           <br />- smart contract to lock up my $NAZ (maybe even DAICO style)
           <br />
