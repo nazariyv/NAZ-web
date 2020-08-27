@@ -45,8 +45,9 @@ export default ({ slippage, handleSlippageChange }) => {
           classes={{
             label: classes.label,
           }}
+          color="textPrimary"
           control={<Radio />}
-          label="1%"
+          label={<Typography color="textPrimary">1%</Typography>}
         />
         <FormControlLabel
           value="500"
@@ -55,7 +56,7 @@ export default ({ slippage, handleSlippageChange }) => {
           }}
           color="textPrimary"
           control={<Radio />}
-          label="5%"
+          label={<Typography color="textPrimary">5%</Typography>}
         />
         <FormControlLabel
           value="1000"
@@ -64,7 +65,7 @@ export default ({ slippage, handleSlippageChange }) => {
           }}
           color="textPrimary"
           control={<Radio />}
-          label="10%"
+          label={<Typography color="textPrimary">10%</Typography>}
         />
       </RadioGroup>
     </FormControl>

@@ -29,6 +29,7 @@ import loading from "./static/sounds/ui_loading.wav";
 import Sky from "react-sky";
 import Brightness5Icon from "@material-ui/icons/Brightness5";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
+import Knowledge from "./components/Knowledge";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -208,6 +209,7 @@ const App = () => {
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
             <Tab label="What is $NAZ?" {...a11yProps(1)} />
             <Tab label="Coming Soon..." {...a11yProps(2)} />
+            <Tab label="Learn" {...a11yProps(3)} />
           </Tabs>
         </AppBar>
         <TabPanel
@@ -229,8 +231,11 @@ const App = () => {
           <ComingSoon />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <Share />
+          <Knowledge />
         </TabPanel>
+        {/* <TabPanel value={value} index={3}>
+          <Share />
+        </TabPanel> */}
         <Box className={classes.navigation}>
           <BottomNavigationAction
             classes={{
