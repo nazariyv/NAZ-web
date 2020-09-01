@@ -333,9 +333,9 @@ export default ({ web3, provider, isLoading, promptSetProvider }) => {
         <Box className={classes.textCenter}>
           <Typography variant="h3" color="textPrimary">
             $NAZ total value{" "}
-            <span role="img" aria-label="watermelon">
+            {/* <span role="img" aria-label="watermelon">
               🍉
-            </span>
+            </span> */}
           </Typography>
         </Box>
         <Box>

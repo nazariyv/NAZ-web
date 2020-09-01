@@ -1,7 +1,7 @@
+/*eslint no-unused-vars: "off"*/
 import React, { useCallback, useState, useMemo } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
-import Share from "./components/Share";
 import PropTypes from "prop-types";
 import {
   makeStyles,
@@ -27,27 +27,20 @@ import CSSApp from "./App.css";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import loading from "./static/sounds/ui_loading.wav";
 import Sky from "react-sky";
-import Brightness5Icon from "@material-ui/icons/Brightness5";
-import Brightness7Icon from "@material-ui/icons/Brightness7";
+// import Brightness5Icon from "@material-ui/icons/Brightness5";
+// import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Knowledge from "./components/Knowledge";
 
 const useStyles = makeStyles(() => ({
   root: {
-    // backgroundColor: "black",
-    // backgroundImage: `url(${BgColor})`,
-    // backgroundRepeat: "no-repeat",
-    // backgroundPosition: "100% 0%",
     display: "flex",
     flexDirection: "column",
-    // width: "100vw",
-    // height: "100vh",
     zIndex: "5",
   },
   bgback: {
     display: "flex",
     width: "100%",
     justifyContent: "center",
-    // backgroundColor: "black",
   },
   navigation: {
     position: "fixed",
@@ -55,7 +48,6 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
     textAlign: "center",
     display: "flex",
-    // backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -63,9 +55,6 @@ const useStyles = makeStyles(() => ({
   fullWidth: {
     width: "100%",
   },
-  // fullViewportHeight: {
-  //   height: "100vh",
-  // },
   botnav: {
     minWidth: "60px",
   },
@@ -85,8 +74,9 @@ const providerOptions = {
 
 const web3Modal = new Web3Modal({
   network: "mainnet",
+  disableInjectedProvider: false,
   cacheProvider: true,
-  providerOptions,
+  // providerOptions,  // TODO: problems with this rn: https://github.com/Web3Modal/web3modal/issues/184
 });
 
 function TabPanel(props) {
@@ -133,13 +123,17 @@ const App = () => {
   }, []);
 
   const promptSetProvider = useCallback(async () => {
-    playSound(connectAudio);
-    setIsLoading(true);
-    const provider = await web3Modal.connect();
-    setProvider(provider);
-    const w3 = new Web3(provider);
-    setWeb3(w3);
-    setIsLoading(false);
+    try {
+      playSound(connectAudio);
+      setIsLoading(true);
+      const provider = await web3Modal.connect();
+      setProvider(provider);
+      const w3 = new Web3(provider);
+      setWeb3(w3);
+      setIsLoading(false);
+    } catch (e) {
+      console.error(e)
+    }
   }, [connectAudio, playSound]);
 
   const prefersDarkMode = useMediaQuery("prefers-color-scheme: dark");
@@ -154,11 +148,6 @@ const App = () => {
     [prefersDarkMode]
   );
 
-  // const [currTheme, setCurrTheme] = useState("dark");
-  // const toggleTheme = useCallback(() => {
-  //   setCurrTheme(currTheme === "dark" ? "light" : "dark");
-  // }, [currTheme]);
-
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
@@ -168,7 +157,6 @@ const App = () => {
       <Box className={classes.root}>
         <Sky
           images={{
-            /* FORMAT AS FOLLOWS */
             0: "https://image.flaticon.com/icons/svg/124/124574.svg",
             1: "https://image.flaticon.com/icons/svg/124/124570.svg",
             2: "https://image.flaticon.com/icons/svg/124/124567.svg",
@@ -183,8 +171,6 @@ const App = () => {
             11: "https://image.flaticon.com/icons/svg/124/124586.svg",
             12: "https://image.flaticon.com/icons/svg/124/124548.svg",
             13: "https://image.flaticon.com/icons/svg/124/124555.svg",
-            // 0: "https://linkToYourImage0" /* You can pass as many images as you want */,
-            // 1: "https://linkToYourImage1",
           }}
           how={
             21
@@ -204,7 +190,6 @@ const App = () => {
             value={value}
             onChange={handleChange}
             aria-label="naz token bar"
-            // className={classes.root}
           >
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
             <Tab label="What is $NAZ?" {...a11yProps(1)} />
@@ -215,7 +200,6 @@ const App = () => {
         <TabPanel
           value={value}
           index={0}
-          // className={classes.fullViewportHeight}
         >
           <BuyNAZ
             promptSetProvider={promptSetProvider}
@@ -233,9 +217,6 @@ const App = () => {
         <TabPanel value={value} index={3}>
           <Knowledge />
         </TabPanel>
-        {/* <TabPanel value={value} index={3}>
-          <Share />
-        </TabPanel> */}
         <Box className={classes.navigation}>
           <BottomNavigationAction
             classes={{
