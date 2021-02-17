@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    backgroundColor: "black",
-    // backgroundColor: theme.palette.background.paper,
+    // backgroundColor: "black",
+    backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -83,6 +83,8 @@ const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
+// TODO: make context for modals and let buy and sell modals implement some / most / all of the functions in context
+// TODO: bundle up the state changes
 export default ({ contract, web3, onModal, eth, setEth, fetchAll }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);

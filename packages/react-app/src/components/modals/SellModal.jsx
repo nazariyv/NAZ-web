@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    backgroundColor: "black",
-    // backgroundColor: theme.palette.background.paper,
+    // backgroundColor: "black",
+    backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -285,7 +285,11 @@ export default ({ contract, web3, onModal, naz, setNaz, fetchAll }) => {
             >
               How much $NAZ will you sell?
             </Typography>
-            <Typography className={classes.moveTextRight} variant="caption">
+            <Typography
+              className={classes.moveTextRight}
+              variant="caption"
+              color="textPrimary"
+            >
               Don't make it rain
             </Typography>
             <TextField

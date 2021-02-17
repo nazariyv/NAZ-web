@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from "react";
+/*eslint no-unused-vars: "off"*/
+import React, { useCallback, useState, useMemo } from "react";
 import BuyNAZ from "./components/BuyNAZ";
 import WhatIsThis from "./components/WhatIsThis";
-import Share from "./components/Share";
 import PropTypes from "prop-types";
 import {
   makeStyles,
-  createMuiTheme,
   ThemeProvider,
+  createMuiTheme,
 } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -21,25 +21,26 @@ import YouTubeIcon from "@material-ui/icons/YouTube";
 import CreateIcon from "@material-ui/icons/Create";
 import ComingSoon from "./components/ComingSoon";
 import TelegramIcon from "@material-ui/icons/Telegram";
-import BgColor from "./static/images/cool-background2.svg";
+// import BgColor from "./static/images/cool-background2.svg";
+import CSSBaseline from "@material-ui/core/CssBaseline";
+import CSSApp from "./App.css";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import loading from "./static/sounds/ui_loading.wav";
+import Sky from "react-sky";
+// import Brightness5Icon from "@material-ui/icons/Brightness5";
+// import Brightness7Icon from "@material-ui/icons/Brightness7";
+import Knowledge from "./components/Knowledge";
 
 const useStyles = makeStyles(() => ({
   root: {
-    backgroundColor: "black",
-    backgroundImage: `url(${BgColor})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "100% 0%",
     display: "flex",
     flexDirection: "column",
-    width: "100vw",
-    // height: "100vh",
     zIndex: "5",
   },
   bgback: {
     display: "flex",
     width: "100%",
     justifyContent: "center",
-    backgroundColor: "black",
   },
   navigation: {
     position: "fixed",
@@ -47,16 +48,12 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
     textAlign: "center",
     display: "flex",
-    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
   },
   fullWidth: {
     width: "100%",
-  },
-  fullViewportHeight: {
-    height: "100vh",
   },
   botnav: {
     minWidth: "60px",
@@ -77,8 +74,9 @@ const providerOptions = {
 
 const web3Modal = new Web3Modal({
   network: "mainnet",
+  disableInjectedProvider: false,
   cacheProvider: true,
-  providerOptions,
+  // providerOptions,  // TODO: problems with this rn: https://github.com/Web3Modal/web3modal/issues/184
 });
 
 function TabPanel(props) {
@@ -110,12 +108,6 @@ const a11yProps = (index) => {
   };
 };
 
-const darkTheme = createMuiTheme({
-  palette: {
-    type: "dark",
-  },
-});
-
 const App = () => {
   const [provider, setProvider] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -123,22 +115,71 @@ const App = () => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
-  const promptSetProvider = useCallback(async () => {
-    setIsLoading(true);
-    const provider = await web3Modal.connect();
-    setProvider(provider);
-    const w3 = new Web3(provider);
-    setWeb3(w3);
-    setIsLoading(false);
+  const connectAudio = new Audio(loading);
+  const playSound = useCallback((audioFile) => {
+    try {
+      audioFile.play();
+    } catch (e) {}
   }, []);
+
+  const promptSetProvider = useCallback(async () => {
+    try {
+      playSound(connectAudio);
+      setIsLoading(true);
+      const provider = await web3Modal.connect();
+      setProvider(provider);
+      const w3 = new Web3(provider);
+      setWeb3(w3);
+      setIsLoading(false);
+    } catch (e) {
+      console.error(e)
+    }
+  }, [connectAudio, playSound]);
+
+  const prefersDarkMode = useMediaQuery("prefers-color-scheme: dark");
+
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? "dark" : "light",
+        },
+      }),
+    [prefersDarkMode]
+  );
 
   const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <Box className={classes.root}>
+        <Sky
+          images={{
+            0: "https://image.flaticon.com/icons/svg/124/124574.svg",
+            1: "https://image.flaticon.com/icons/svg/124/124570.svg",
+            2: "https://image.flaticon.com/icons/svg/124/124567.svg",
+            3: "https://image.flaticon.com/icons/svg/124/124560.svg",
+            4: "https://image.flaticon.com/icons/svg/124/124559.svg",
+            5: "https://image.flaticon.com/icons/svg/124/124582.svg",
+            6: "https://image.flaticon.com/icons/svg/124/124558.svg",
+            7: "https://image.flaticon.com/icons/svg/124/124588.svg",
+            8: "https://image.flaticon.com/icons/svg/124/124542.svg",
+            9: "https://image.flaticon.com/icons/svg/124/124569.svg",
+            10: "https://image.flaticon.com/icons/svg/124/124573.svg",
+            11: "https://image.flaticon.com/icons/svg/124/124586.svg",
+            12: "https://image.flaticon.com/icons/svg/124/124548.svg",
+            13: "https://image.flaticon.com/icons/svg/124/124555.svg",
+          }}
+          how={
+            21
+          } /* Pass the number of images Sky will render chosing randomly */
+          time={120} /* time of animation */
+          size={"69px"} /* size of the rendered images */
+          background={theme.palette.background.default}
+          // background={"palettedvioletred"} /* color of background */
+        />
         <AppBar
           position="sticky"
           color="default"
@@ -149,17 +190,16 @@ const App = () => {
             value={value}
             onChange={handleChange}
             aria-label="naz token bar"
-            // className={classes.root}
           >
             <Tab label="Buy $NAZ" {...a11yProps(0)} />
             <Tab label="What is $NAZ?" {...a11yProps(1)} />
             <Tab label="Coming Soon..." {...a11yProps(2)} />
+            <Tab label="Learn" {...a11yProps(3)} />
           </Tabs>
         </AppBar>
         <TabPanel
           value={value}
           index={0}
-          className={classes.fullViewportHeight}
         >
           <BuyNAZ
             promptSetProvider={promptSetProvider}
@@ -175,7 +215,7 @@ const App = () => {
           <ComingSoon />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <Share />
+          <Knowledge />
         </TabPanel>
         <Box className={classes.navigation}>
           <BottomNavigationAction
